@@ -1,0 +1,318 @@
+.daily-section {
+  position: relative;
+  padding: 5rem 0;
+  background-color: rgba(255, 255, 255, 0.22);
+  border-block: 1px solid rgba(15, 61, 46, 0.05);
+}
+
+.section-heading {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.section-heading h2 {
+  margin: 1rem 0 0.7rem;
+  color: var(--color-primary-dark);
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+}
+
+.section-heading p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--color-muted);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 2;
+}
+
+.section-heading > small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  margin-top: 1rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: rgba(15, 61, 46, 0.08);
+  font-weight: 900;
+}
+
+.section-heading > small svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+}
+
+.daily-loader,
+.daily-grid {
+  width: min(100%, 1020px);
+  margin: 0 auto;
+}
+
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.zikr-card {
+  grid-column: 1 / -1;
+}
+
+.daily-card {
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem;
+  border-radius: 26px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 14px 34px rgba(15, 61, 46, 0.07);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.12s ease;
+}
+
+.daily-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 1.35rem;
+  top: 0;
+  height: 4px;
+  border-radius: 0 0 999px 999px;
+  background-color: rgba(201, 162, 39, 0.78);
+}
+
+.daily-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(201, 162, 39, 0.42);
+  box-shadow: 0 22px 48px rgba(15, 61, 46, 0.11);
+}
+
+.zikr-card {
+  min-height: 245px;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.card-label {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.42rem 0.35rem 0.75rem;
+  border-radius: 999px;
+  color: var(--color-primary-dark);
+  background-color: rgba(15, 61, 46, 0.06);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.label-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--color-primary-dark);
+  background: linear-gradient(135deg, #ecd46d, #caa331);
+}
+
+.label-icon svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.6;
+}
+
+.card-label strong {
+  font: inherit;
+}
+
+.daily-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.daily-actions > button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36rem;
+  padding: 0.48rem 0.78rem;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background-color: var(--color-primary);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.16s ease,
+    background-color 0.12s ease;
+}
+
+.daily-actions > button svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  stroke-width: 2.6;
+}
+
+.daily-actions > button:hover {
+  transform: translateY(-2px);
+  background-color: var(--color-primary-dark);
+}
+
+.main-text {
+  flex: 1;
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-quran);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 400;
+  line-height: 2.12;
+}
+
+.zikr-card .main-text {
+  font-size: clamp(1.55rem, 2.1vw, 2.1rem);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 61, 46, 0.08);
+}
+
+.card-footer small {
+  color: var(--color-primary);
+  font-weight: 900;
+  line-height: 1.7;
+}
+
+.card-footer a {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  padding: 0.42rem 0.75rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: rgba(15, 61, 46, 0.07);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    transform 0.16s ease,
+    color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.card-footer a svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.6;
+}
+
+.card-footer a:hover {
+  transform: translateY(-2px);
+  color: #ffffff;
+  background-color: var(--color-primary);
+}
+
+.reveal {
+  animation: fadeUp 0.65s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .daily-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .zikr-card {
+    grid-column: auto;
+  }
+
+  .daily-card,
+  .zikr-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .daily-section {
+    padding: 3.5rem 0;
+  }
+
+  .daily-card {
+    padding: 1.2rem;
+    border-radius: 22px;
+  }
+
+  .daily-card::before {
+    inset-inline: 1.2rem;
+  }
+
+  .main-text,
+  .zikr-card .main-text {
+    font-size: clamp(1.45rem, 8vw, 2rem);
+  }
+
+  .card-top,
+  .daily-actions,
+  .card-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .card-label,
+  .daily-actions,
+  .daily-actions app-favorite-button,
+  .daily-actions > button,
+  .card-footer a {
+    width: 100%;
+  }
+
+  .daily-actions > button,
+  .card-footer a {
+    justify-content: center;
+  }
+
+  .card-footer {
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,94 @@
+.favorite-button {
+  position: relative;
+  z-index: 2;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(201, 162, 39, 0.38);
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(15, 61, 46, 0.08);
+  transition:
+    transform 0.22s ease,
+    background-color 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.favorite-button:hover {
+  transform: translateY(-2px);
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  border-color: rgba(201, 162, 39, 0.7);
+}
+
+.favorite-button.saved {
+  color: #ffffff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.favorite-button.hero {
+  min-height: 44px;
+  margin-top: 1.2rem;
+  padding: 0.65rem 1.1rem;
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  border-color: rgba(243, 223, 140, 0.55);
+}
+
+.favorite-button.hero.saved {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(243, 223, 140, 0.7);
+}
+
+.favorite-button.small {
+  min-height: 36px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.favorite-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  transition:
+    fill 0.22s ease,
+    transform 0.22s ease;
+}
+
+.favorite-button:hover .favorite-icon {
+  transform: scale(1.08);
+}
+
+.favorite-button.saved .favorite-icon {
+  fill: currentColor;
+}
+
+.favorite-button.hero .favorite-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.favorite-button.small .favorite-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 520px) {
+  .favorite-button {
+    width: 100%;
+  }
+}

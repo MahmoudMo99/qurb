@@ -1,0 +1,256 @@
+<section class="hero-section">
+  <div class="container hero-grid">
+    <div class="hero-content reveal">
+      <span class="section-badge">قُرب | تطبيق إسلامي عربي</span>
+
+      <h1>اقترب من وردك اليومي بسهولة</h1>
+
+      <p>
+        قُرب مساحة هادئة تجمع القرآن الكريم، السنة النبوية، الأذكار، ومواقيت الصلاة في تجربة بسيطة
+        تساعدك تجعل الذكر جزءًا ثابتًا من يومك.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/quran" class="primary-action">
+          <span>ابدأ بالقرآن</span>
+          <svg lucideChevronLeft aria-hidden="true"></svg>
+        </a>
+
+        <a href="#daily-content" class="secondary-action">
+          <svg lucideSparkles aria-hidden="true"></svg>
+          <span>ورد اليوم</span>
+        </a>
+      </div>
+
+      <div class="hero-stats" aria-label="إحصائيات التطبيق">
+        @for (stat of stats; track stat.label) {
+          <div class="stat-card">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hero-visual reveal delay-1">
+      <div class="hero-card">
+        <span class="quote-label">من القرآن الكريم</span>
+
+        <p>﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</p>
+
+        <small>سورة طه - الآية 114</small>
+      </div>
+
+      <div class="hero-mini-row">
+        <div class="next-prayer-card">
+          <span>
+            <svg lucideClock aria-hidden="true"></svg>
+            الصلاة القادمة
+          </span>
+
+          @if (isPrayerLoading()) {
+            <strong>جاري التحميل</strong>
+            <small>{{ selectedLocationLabel() }}</small>
+          } @else if (nextPrayer(); as prayer) {
+            <strong>{{ prayer.name }}</strong>
+            <small>{{ prayer.time }} - {{ selectedLocationLabel() }}</small>
+          } @else {
+            <strong>غير متاحة</strong>
+            <small>حاول مرة أخرى لاحقًا</small>
+          }
+        </div>
+
+        <div class="daily-reminder-card">
+          <span>
+            <svg lucideSparkles aria-hidden="true"></svg>
+            تذكير هادئ
+          </span>
+
+          <strong>ابدأ ولو بالقليل</strong>
+          <small>ثبات الورد أهم من كثرته.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-daily-content id="daily-content"></app-daily-content>
+
+<section class="features-section section-padding">
+  <div class="container">
+    <div class="section-heading center reveal">
+      <span class="section-badge">أقسام قُرب</span>
+
+      <h2>كل باب قريب منك</h2>
+
+      <p>بدل ما تتنقل بين أكثر من مكان، قُرب يجمع الأساسيات اليومية في واجهة واحدة واضحة وسهلة.</p>
+    </div>
+
+    <div class="features-grid">
+      @for (card of featureCards; track card.id) {
+        <article class="feature-card reveal" [id]="card.id">
+          <div class="feature-top">
+            <div class="feature-icon">
+              @switch (card.icon) {
+                @case ('quran') {
+                  <svg lucideBookOpen aria-hidden="true"></svg>
+                }
+
+                @case ('prayer') {
+                  <svg lucideClock aria-hidden="true"></svg>
+                }
+
+                @case ('azkar') {
+                  <svg lucideSparkles aria-hidden="true"></svg>
+                }
+
+                @case ('hadith') {
+                  <svg lucideScrollText aria-hidden="true"></svg>
+                }
+              }
+            </div>
+
+            <span>{{ card.eyebrow }}</span>
+          </div>
+
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+
+          <a [routerLink]="card.route">
+            <span>{{ card.action }}</span>
+            <svg lucideChevronLeft aria-hidden="true"></svg>
+          </a>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="routine-section section-padding">
+  <div class="container routine-grid">
+    <div class="routine-intro reveal">
+      <span class="section-badge">استخدام يومي بسيط</span>
+
+      <h2>خطوات قليلة تكفي لتبدأ</h2>
+
+      <p>
+        الهدف من قُرب إنك توصل للمحتوى الإيماني بسرعة، من غير ما تحس إن التطبيق مليان اختيارات متعبة
+        أو تفاصيل زيادة.
+      </p>
+
+      <a routerLink="/favorites" class="routine-link">
+        <svg lucideHeart aria-hidden="true"></svg>
+        <span>اذهب إلى المفضلة</span>
+        <svg lucideChevronLeft aria-hidden="true"></svg>
+      </a>
+    </div>
+
+    <div class="routine-list">
+      @for (step of routineSteps; track step.title) {
+        <article class="routine-item reveal">
+          <span>{{ step.marker }}</span>
+
+          <div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="prayer-preview-section section-padding">
+  <div class="container">
+    <div class="prayer-card reveal" id="prayer-times">
+      <div class="prayer-header">
+        <div>
+          <span class="section-badge">مواقيت الصلاة</span>
+          <h2>مواقيت اليوم في لمحة</h2>
+        </div>
+
+        <div class="prayer-header-actions">
+          <span class="city-pill">
+            <svg lucideMapPin aria-hidden="true"></svg>
+            <span>{{ selectedLocationLabel() }}</span>
+          </span>
+
+          <a routerLink="/prayer-times" class="prayer-page-link">
+            <span>تغيير المدينة</span>
+            <svg lucideChevronLeft aria-hidden="true"></svg>
+          </a>
+        </div>
+      </div>
+
+      @if (isPrayerLoading()) {
+        <div class="home-prayer-state">
+          <span class="mini-loader"></span>
+          <p>جاري تحميل مواقيت الصلاة...</p>
+        </div>
+      } @else if (prayerErrorMessage()) {
+        <div class="home-prayer-state error">
+          <p>{{ prayerErrorMessage() }}</p>
+
+          <button type="button" (click)="reloadPrayerPreview()">
+            <svg lucideRotateCcw aria-hidden="true"></svg>
+            <span>إعادة المحاولة</span>
+          </button>
+        </div>
+      } @else {
+        <div class="prayer-preview-layout">
+          <div class="next-prayer-box">
+            <span>الصلاة القادمة</span>
+
+            @if (nextPrayer(); as prayer) {
+              <strong>{{ prayer.name }}</strong>
+              <small>{{ prayer.time }}</small>
+            } @else {
+              <strong>غير متاحة</strong>
+              <small>حاول مرة أخرى لاحقًا</small>
+            }
+          </div>
+
+          <div class="prayer-list">
+            @for (prayer of prayerPreview(); track prayer.key) {
+              <div class="prayer-item" [class.next]="prayer.isNext">
+                <span>{{ prayer.name }}</span>
+                <strong>{{ prayer.time }}</strong>
+
+                @if (prayer.isNext) {
+                  <small>القادمة</small>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="experience-section section-padding">
+  <div class="container">
+    <div class="experience-panel reveal">
+      <div class="section-heading">
+        <span class="section-badge">تجربة قُرب</span>
+
+        <h2>تصميم يخدم المعنى قبل الشكل</h2>
+
+        <p>
+          الواجهة مبنية حول الهدوء والوضوح، عشان المحتوى نفسه يفضل هو الأساس: آية، ذكر، حديث، وموعد
+          صلاة.
+        </p>
+      </div>
+
+      <div class="values-grid">
+        @for (item of values; track item.title) {
+          <article class="value-card">
+            <span>{{ item.marker }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </div>
+</section>

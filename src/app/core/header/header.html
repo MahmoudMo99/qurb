@@ -1,0 +1,83 @@
+<header class="site-header" [class.scrolled]="isScrolled()" [class.menu-open]="isMenuOpen()">
+  <nav class="container header-nav" aria-label="القائمة الرئيسية">
+    <a class="brand" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية" (click)="closeMenu()">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-letter">ق</span>
+      </span>
+
+      <span class="brand-content">
+        <strong>قُرب</strong>
+        <small>Quran • Sunnah • Azkar</small>
+      </span>
+    </a>
+
+    <button
+      class="menu-button"
+      type="button"
+      (click)="toggleMenu()"
+      [class.open]="isMenuOpen()"
+      [attr.aria-expanded]="isMenuOpen()"
+      [attr.aria-label]="isMenuOpen() ? 'إغلاق القائمة' : 'فتح القائمة'"
+    >
+      @if (isMenuOpen()) {
+        <svg lucideX aria-hidden="true"></svg>
+      } @else {
+        <svg lucideMenu aria-hidden="true"></svg>
+      }
+    </button>
+
+    <div class="nav-panel" [class.show]="isMenuOpen()">
+      <ul class="nav-links">
+        @for (link of navLinks; track link.route) {
+          <li>
+            <a
+              [routerLink]="link.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: link.exact === true }"
+              (click)="closeMenu()"
+            >
+              <span class="link-icon">
+                @switch (link.icon) {
+                  @case ('home') {
+                    <svg lucideHome aria-hidden="true"></svg>
+                  }
+
+                  @case ('quran') {
+                    <svg lucideBookOpen aria-hidden="true"></svg>
+                  }
+
+                  @case ('prayer') {
+                    <svg lucideClock aria-hidden="true"></svg>
+                  }
+
+                  @case ('azkar') {
+                    <svg lucideSparkles aria-hidden="true"></svg>
+                  }
+
+                  @case ('hadith') {
+                    <svg lucideScrollText aria-hidden="true"></svg>
+                  }
+
+                  @case ('favorites') {
+                    <svg lucideHeart aria-hidden="true"></svg>
+                  }
+                }
+              </span>
+
+              <span>{{ link.label }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </nav>
+
+  @if (isMenuOpen()) {
+    <button
+      class="nav-backdrop"
+      type="button"
+      aria-label="إغلاق القائمة"
+      (click)="closeMenu()"
+    ></button>
+  }
+</header>

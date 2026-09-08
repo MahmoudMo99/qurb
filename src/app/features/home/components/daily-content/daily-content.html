@@ -1,0 +1,154 @@
+<section class="daily-section">
+  <div class="container">
+    <div class="section-heading reveal">
+      <span class="section-badge">ورد اليوم</span>
+
+      <h2>ثلاث وقفات هادئة ليومك</h2>
+
+      <p>آية وحديث وذكر يتم اختيارهم يوميًا داخل قُرب، لتبدأ يومك بمعنى قصير وسهل الرجوع إليه.</p>
+
+      <small>
+        <svg lucideCalendarDays aria-hidden="true"></svg>
+        <span>{{ todayLabel() }}</span>
+      </small>
+    </div>
+
+    @if (isLoading()) {
+      <div class="daily-loader">
+        <app-skeleton-card [count]="3" [rows]="4"></app-skeleton-card>
+      </div>
+    } @else if (errorMessage()) {
+      <app-page-state
+        type="error"
+        title="تعذر تحميل ورد اليوم"
+        [message]="errorMessage()"
+        actionLabel="إعادة المحاولة"
+        (action)="reloadDailyContent()"
+      ></app-page-state>
+    } @else if (dailyContent(); as content) {
+      <div class="daily-grid">
+        @if (content.ayah) {
+          <article class="daily-card ayah-card reveal">
+            <div class="card-top">
+              <span class="card-label">
+                <span class="label-icon">
+                  <svg lucideBookOpen aria-hidden="true"></svg>
+                </span>
+                <strong>آية اليوم</strong>
+              </span>
+
+              <div class="daily-actions">
+                <app-favorite-button
+                  mode="small"
+                  label="حفظ"
+                  savedLabel="محفوظ"
+                  [favoriteItem]="getDailyAyahFavoriteItem(content.ayah)"
+                ></app-favorite-button>
+
+                <button type="button" (click)="copyText('ayah')">
+                  <svg lucideCopy aria-hidden="true"></svg>
+                  <span>{{ copiedItem() === 'ayah' ? 'تم النسخ' : 'نسخ' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <p class="main-text">{{ content.ayah.ayah.text }}</p>
+
+            <div class="card-footer">
+              <small
+                >{{ content.ayah.surah.name }} - آية {{ content.ayah.ayah.numberInSurah }}</small
+              >
+
+              <a [routerLink]="['/quran', content.ayah.surah.number]">
+                <span>فتح السورة</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </a>
+            </div>
+          </article>
+        }
+
+        @if (content.hadith) {
+          <article class="daily-card hadith-card reveal">
+            <div class="card-top">
+              <span class="card-label">
+                <span class="label-icon">
+                  <svg lucideScrollText aria-hidden="true"></svg>
+                </span>
+                <strong>حديث اليوم</strong>
+              </span>
+
+              <div class="daily-actions">
+                <app-favorite-button
+                  mode="small"
+                  label="حفظ"
+                  savedLabel="محفوظ"
+                  [favoriteItem]="getDailyHadithFavoriteItem(content.hadith)"
+                ></app-favorite-button>
+
+                <button type="button" (click)="copyText('hadith')">
+                  <svg lucideCopy aria-hidden="true"></svg>
+                  <span>{{ copiedItem() === 'hadith' ? 'تم النسخ' : 'نسخ' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <p class="main-text">{{ content.hadith.hadith.text }}</p>
+
+            <div class="card-footer">
+              <small>{{ content.hadith.bookLabel }}</small>
+
+              <a routerLink="/hadith">
+                <span>فتح الأحاديث</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </a>
+            </div>
+          </article>
+        }
+
+        @if (content.zikr) {
+          <article class="daily-card zikr-card reveal">
+            <div class="card-top">
+              <span class="card-label">
+                <span class="label-icon">
+                  <svg lucideSparkles aria-hidden="true"></svg>
+                </span>
+                <strong>ذكر اليوم</strong>
+              </span>
+
+              <div class="daily-actions">
+                <app-favorite-button
+                  mode="small"
+                  label="حفظ"
+                  savedLabel="محفوظ"
+                  [favoriteItem]="getDailyZikrFavoriteItem(content.zikr)"
+                ></app-favorite-button>
+
+                <button type="button" (click)="copyText('zikr')">
+                  <svg lucideCopy aria-hidden="true"></svg>
+                  <span>{{ copiedItem() === 'zikr' ? 'تم النسخ' : 'نسخ' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <p class="main-text">{{ content.zikr.zikr.ar.text }}</p>
+
+            <div class="card-footer">
+              <small>{{ content.zikr.categoryLabel }}</small>
+
+              <a routerLink="/azkar">
+                <span>فتح الأذكار</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <app-page-state
+        type="empty"
+        title="لا يوجد ورد اليوم"
+        message="حاول إعادة تحميل الصفحة مرة أخرى."
+      ></app-page-state>
+    }
+  </div>
+</section>

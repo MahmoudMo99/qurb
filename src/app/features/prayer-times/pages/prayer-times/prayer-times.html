@@ -1,0 +1,157 @@
+<section class="prayer-page">
+  <div class="container">
+    <div class="page-hero reveal">
+      <span class="section-badge">مواقيت الصلاة</span>
+
+      <h1>مواقيت الصلاة في لمحة واضحة</h1>
+
+      <p>اختر مدينتك أو استخدم موقعك الحالي، وسيعرض قُرب مواقيت اليوم مع تمييز الصلاة القادمة.</p>
+
+      <div class="location-toolbar">
+        <div class="select-wrapper">
+          <svg class="select-location-icon" lucideMapPin aria-hidden="true"></svg>
+
+          <select id="location" aria-label="اختر المدينة" (change)="updateLocation($event)">
+            <option
+              [value]="currentLocationId"
+              [selected]="selectedLocationId() === currentLocationId"
+            >
+              موقعك الحالي
+            </option>
+
+            @for (location of locations; track location.id) {
+              <option [value]="location.id" [selected]="selectedLocationId() === location.id">
+                {{ location.label }}
+              </option>
+            }
+          </select>
+
+          <svg class="select-arrow" lucideChevronDown aria-hidden="true"></svg>
+        </div>
+
+        <button
+          class="location-button"
+          type="button"
+          (click)="useCurrentLocation()"
+          [disabled]="isDetectingLocation() || isLoading()"
+          [class.detecting]="isDetectingLocation()"
+        >
+          <svg lucideLocateFixed aria-hidden="true"></svg>
+          <span>{{ isDetectingLocation() ? 'جاري تحديد الموقع...' : 'استخدم موقعي الحالي' }}</span>
+        </button>
+      </div>
+
+      @if (locationMessage()) {
+        <p class="location-message">
+          <svg lucideCircleAlert aria-hidden="true"></svg>
+          <span>{{ locationMessage() }}</span>
+        </p>
+      }
+    </div>
+
+    @if (isLoading()) {
+      <app-skeleton-card [count]="4" [rows]="3"></app-skeleton-card>
+    } @else if (errorMessage()) {
+      <app-page-state
+        type="error"
+        title="تعذر تحميل مواقيت الصلاة"
+        [message]="errorMessage()"
+        actionLabel="إعادة المحاولة"
+        (action)="reloadPrayerTimes()"
+      ></app-page-state>
+    } @else if (prayerData(); as data) {
+      @if (prayerItems().length) {
+        <div class="prayer-layout">
+          <article class="next-prayer-panel reveal">
+            <span class="panel-label">
+              <svg lucideClock aria-hidden="true"></svg>
+              <strong>الصلاة القادمة</strong>
+            </span>
+
+            @if (nextPrayer(); as prayer) {
+              <h2>{{ prayer.name }}</h2>
+              <strong class="next-time">{{ prayer.time }}</strong>
+            }
+
+            <p>
+              <svg lucideMapPin aria-hidden="true"></svg>
+              <span>{{ selectedLocationLabel() }}</span>
+            </p>
+          </article>
+
+          <article class="date-card reveal">
+            <span class="date-title">
+              <svg lucideCalendarDays aria-hidden="true"></svg>
+              <strong>تاريخ اليوم</strong>
+            </span>
+
+            <div class="date-list">
+              <div>
+                <small>هجري</small>
+                <strong>
+                  {{ data.date.hijri.weekday.ar }} -
+                  {{ data.date.hijri.day }}
+                  {{ data.date.hijri.month.ar }}
+                  {{ data.date.hijri.year }}
+                </strong>
+              </div>
+
+              <div>
+                <small>ميلادي</small>
+                <strong>
+                  {{ data.date.gregorian.weekday.en }} - {{ data.date.gregorian.date }}
+                </strong>
+              </div>
+
+              <div>
+                <small>طريقة الحساب</small>
+                <strong>{{ data.meta.method.name }}</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="prayer-grid">
+          @for (prayer of prayerItems(); track prayer.key) {
+            <article class="prayer-card reveal" [class.next]="prayer.isNext">
+              <div class="prayer-icon">
+                @if (prayer.key === 'Fajr') {
+                  <svg lucideSparkles aria-hidden="true"></svg>
+                } @else if (prayer.key === 'Sunrise') {
+                  <svg lucideSunrise aria-hidden="true"></svg>
+                } @else if (prayer.key === 'Dhuhr') {
+                  <svg lucideSun aria-hidden="true"></svg>
+                } @else if (prayer.key === 'Asr') {
+                  <svg lucideCompass aria-hidden="true"></svg>
+                } @else if (prayer.key === 'Maghrib') {
+                  <svg lucideSunset aria-hidden="true"></svg>
+                } @else {
+                  <svg lucideMoon aria-hidden="true"></svg>
+                }
+              </div>
+
+              <span>{{ prayer.name }}</span>
+              <strong>{{ prayer.time }}</strong>
+
+              @if (prayer.isNext) {
+                <small>القادمة</small>
+              }
+            </article>
+          }
+        </div>
+      } @else {
+        <app-page-state
+          type="empty"
+          title="لا توجد مواقيت متاحة"
+          message="لم يتم العثور على مواقيت الصلاة لهذه المدينة الآن."
+        ></app-page-state>
+      }
+    } @else {
+      <app-page-state
+        type="empty"
+        title="لا توجد بيانات"
+        message="اختر مدينة أخرى أو حاول إعادة تحميل الصفحة."
+      ></app-page-state>
+    }
+  </div>
+</section>

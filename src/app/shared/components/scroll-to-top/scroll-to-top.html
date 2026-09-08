@@ -1,0 +1,11 @@
+@if (isVisible()) {
+  <button
+    type="button"
+    class="scroll-to-top"
+    aria-label="الرجوع إلى أعلى الصفحة"
+    title="الرجوع إلى أعلى الصفحة"
+    (click)="scrollToTop()"
+  >
+    <svg lucideChevronUp aria-hidden="true"></svg>
+  </button>
+}

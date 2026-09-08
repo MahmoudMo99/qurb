@@ -1,0 +1,115 @@
+/* Importing @ngxpert/hot-toast base styles. */
+@use '@ngxpert/hot-toast/styles';
+
+/* Importing @ngxpert/hot-toast minimal theme. */
+@use '@ngxpert/hot-toast/themes/minimal';
+
+:root {
+  --color-primary: #0f3d2e;
+  --color-primary-dark: #08251c;
+  --color-secondary: #c9a227;
+  --color-secondary-light: #f3df8c;
+  --color-bg: #f7f5ef;
+  --color-surface: #ffffff;
+  --color-text: #1f2933;
+  --color-muted: #667085;
+  --color-border: rgba(15, 61, 46, 0.12);
+  --shadow-soft: 0 18px 45px rgba(15, 61, 46, 0.1);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+
+  --font-ui: 'Cairo', system-ui, sans-serif;
+  --font-quran: 'Amiri Quran', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  direction: rtl;
+  font-family: var(--font-ui);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.container {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+
+.section-padding {
+  padding: 5rem 0;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: rgba(201, 162, 39, 0.16);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+::selection {
+  color: #ffffff;
+  background-color: var(--color-primary);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(201, 162, 39, 0.55);
+  outline-offset: 4px;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 3.5rem 0;
+  }
+}

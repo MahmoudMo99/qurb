@@ -1,0 +1,23 @@
+<div class="skeleton-wrapper" [class.list]="variant() === 'list'">
+  @for (item of items(); track item) {
+    <article class="skeleton-card">
+      <div class="skeleton-header">
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="skeleton-title"></div>
+
+      <div class="skeleton-lines">
+        @for (line of lines(); track line) {
+          <span></span>
+        }
+      </div>
+
+      <div class="skeleton-footer">
+        <span></span>
+        <span></span>
+      </div>
+    </article>
+  }
+</div>

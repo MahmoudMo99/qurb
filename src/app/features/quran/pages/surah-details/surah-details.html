@@ -1,0 +1,163 @@
+<section class="surah-page">
+  <div class="container">
+    <div class="top-actions">
+      <a class="back-link" routerLink="/quran">
+        <svg lucideArrowRight aria-hidden="true"></svg>
+        <span>العودة إلى السور</span>
+      </a>
+
+      <div class="surah-nav">
+        @if (previousSurahNumber(); as previousNumber) {
+          <a [routerLink]="['/quran', previousNumber]">
+            <svg lucideChevronRight aria-hidden="true"></svg>
+            <span>السورة السابقة</span>
+          </a>
+        } @else {
+          <span class="disabled-link">
+            <svg lucideChevronRight aria-hidden="true"></svg>
+            <span>السورة السابقة</span>
+          </span>
+        }
+
+        @if (nextSurahNumber(); as nextNumber) {
+          <a [routerLink]="['/quran', nextNumber]">
+            <span>السورة التالية</span>
+            <svg lucideChevronLeft aria-hidden="true"></svg>
+          </a>
+        } @else {
+          <span class="disabled-link">
+            <span>السورة التالية</span>
+            <svg lucideChevronLeft aria-hidden="true"></svg>
+          </span>
+        }
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <app-skeleton-card [count]="2" [rows]="5" variant="list"></app-skeleton-card>
+    } @else if (errorMessage()) {
+      <app-page-state
+        type="error"
+        title="تعذر تحميل السورة"
+        [message]="errorMessage()"
+        [actionLabel]="canRetry() ? 'إعادة المحاولة' : ''"
+        (action)="reloadSurah()"
+      ></app-page-state>
+    } @else if (surah(); as currentSurah) {
+      <header class="surah-hero reveal">
+        <span class="section-badge">
+          {{ currentSurah.revelationType === 'Meccan' ? 'سورة مكية' : 'سورة مدنية' }}
+        </span>
+
+        <h1>{{ currentSurah.name }}</h1>
+
+        <p>{{ currentSurah.englishName }} - {{ currentSurah.englishNameTranslation }}</p>
+
+        <div class="surah-info">
+          <span>{{ currentSurah.number }} رقم السورة</span>
+          <span>{{ currentSurah.numberOfAyahs }} آية</span>
+        </div>
+
+        <app-favorite-button
+          mode="hero"
+          label="حفظ السورة"
+          savedLabel="محفوظة في المفضلة"
+          [favoriteItem]="getCurrentSurahFavoriteItem(currentSurah)"
+        ></app-favorite-button>
+      </header>
+
+      @if (displayAyahs().length) {
+        <article
+          class="reading-card reveal"
+          [class.reading-small]="fontSizeLevel() === 0"
+          [class.reading-large]="fontSizeLevel() === 2"
+        >
+          <div class="reading-header">
+            <div>
+              <span>
+                <svg lucideBookOpen aria-hidden="true"></svg>
+                <strong>قراءة السورة</strong>
+              </span>
+              <small>النص بالرسم العثماني</small>
+            </div>
+
+            <div class="reading-tools" aria-label="أدوات القراءة">
+              <button
+                type="button"
+                aria-label="تصغير حجم الخط"
+                (click)="decreaseFontSize()"
+                [disabled]="fontSizeLevel() === 0"
+              >
+                <svg lucideMinus aria-hidden="true"></svg>
+              </button>
+
+              <button type="button" (click)="resetFontSize()">
+                <svg lucideRotateCcw aria-hidden="true"></svg>
+                <span>حجم الخط</span>
+              </button>
+
+              <button
+                type="button"
+                aria-label="تكبير حجم الخط"
+                (click)="increaseFontSize()"
+                [disabled]="fontSizeLevel() === 2"
+              >
+                <svg lucidePlus aria-hidden="true"></svg>
+              </button>
+            </div>
+          </div>
+
+          @if (shouldShowBasmalah()) {
+            <p class="basmalah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+          }
+
+          <div class="ayahs-list">
+            @for (ayah of displayAyahs(); track ayah.number) {
+              <p class="ayah-line">
+                <span class="ayah-text">{{ ayah.text }}</span>
+                <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+              </p>
+            }
+          </div>
+        </article>
+
+        <div class="bottom-navigation">
+          @if (previousSurahNumber(); as previousNumber) {
+            <a [routerLink]="['/quran', previousNumber]">
+              <svg lucideChevronRight aria-hidden="true"></svg>
+              <span>السورة السابقة</span>
+            </a>
+          } @else {
+            <span class="disabled-link">
+              <svg lucideChevronRight aria-hidden="true"></svg>
+              <span>السورة السابقة</span>
+            </span>
+          }
+
+          <a routerLink="/quran">
+            <svg lucideList aria-hidden="true"></svg>
+            <span>كل السور</span>
+          </a>
+
+          @if (nextSurahNumber(); as nextNumber) {
+            <a [routerLink]="['/quran', nextNumber]">
+              <span>السورة التالية</span>
+              <svg lucideChevronLeft aria-hidden="true"></svg>
+            </a>
+          } @else {
+            <span class="disabled-link">
+              <span>السورة التالية</span>
+              <svg lucideChevronLeft aria-hidden="true"></svg>
+            </span>
+          }
+        </div>
+      } @else {
+        <app-page-state
+          type="empty"
+          title="لا توجد آيات"
+          message="لم يتم العثور على آيات لهذه السورة الآن."
+        ></app-page-state>
+      }
+    }
+  </div>
+</section>

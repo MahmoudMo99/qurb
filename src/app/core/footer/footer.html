@@ -1,0 +1,90 @@
+<footer id="contact" class="site-footer">
+  <div class="container footer-content">
+    <div class="footer-brand">
+      <a class="footer-logo" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية">
+        <span class="footer-mark" aria-hidden="true">
+          <span>ق</span>
+        </span>
+
+        <span>
+          <strong>قُرب</strong>
+          <small>Quran • Sunnah • Azkar</small>
+        </span>
+      </a>
+
+      <p>
+        قُرب تطبيق إسلامي عربي يجمع القرآن الكريم، مواقيت الصلاة، الأذكار، والأحاديث النبوية في
+        تجربة هادئة ومنظمة تساعدك على جعل الذكر جزءًا من يومك.
+      </p>
+    </div>
+
+    <div class="footer-column">
+      <h3>روابط سريعة</h3>
+
+      <div class="footer-nav">
+        @for (link of quickLinks; track link.route) {
+          <a [routerLink]="link.route">
+            <span class="footer-link-icon">
+              @switch (link.icon) {
+                @case ('quran') {
+                  <svg lucideBookOpen aria-hidden="true"></svg>
+                }
+
+                @case ('prayer') {
+                  <svg lucideClock aria-hidden="true"></svg>
+                }
+
+                @case ('azkar') {
+                  <svg lucideSparkles aria-hidden="true"></svg>
+                }
+
+                @case ('hadith') {
+                  <svg lucideScrollText aria-hidden="true"></svg>
+                }
+
+                @case ('favorites') {
+                  <svg lucideHeart aria-hidden="true"></svg>
+                }
+              }
+            </span>
+
+            <span>{{ link.label }}</span>
+          </a>
+        }
+      </div>
+    </div>
+
+    <div class="footer-column">
+      <h3>تواصل معي</h3>
+
+      <div class="footer-links">
+        @for (link of links; track link.href) {
+          <a [href]="link.href" target="_blank" rel="noopener noreferrer">
+            <span class="footer-link-icon">
+              @switch (link.icon) {
+                @case ('github') {
+                  <svg lucideLink aria-hidden="true"></svg>
+                }
+
+                @case ('portfolio') {
+                  <svg lucideGlobe aria-hidden="true"></svg>
+                }
+
+                @case ('linkedin') {
+                  <svg lucideLink aria-hidden="true"></svg>
+                }
+              }
+            </span>
+
+            <span>{{ link.label }}</span>
+            <svg class="external-icon" lucideExternalLink aria-hidden="true"></svg>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p dir="ltr">© {{ currentYear }} Mahmoud Mohamed. Built with care for Qurb.</p>
+  </div>
+</footer>

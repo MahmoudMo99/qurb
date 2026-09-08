@@ -1,0 +1,444 @@
+.surah-page {
+  --surah-control-height: 42px;
+  --surah-control-padding: 0 0.9rem;
+
+  position: relative;
+  padding: 3.2rem 0 5rem;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1140px;
+  margin: 0 auto 1.2rem;
+}
+
+.back-link,
+.surah-nav a,
+.surah-nav span,
+.bottom-navigation a,
+.bottom-navigation span {
+  height: var(--surah-control-height);
+  min-height: var(--surah-control-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: var(--surah-control-padding);
+  border-radius: 999px;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 0.84rem;
+  font-weight: 900;
+  box-sizing: border-box;
+}
+
+.back-link svg,
+.surah-nav svg,
+.bottom-navigation svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  stroke-width: 2.7;
+}
+
+.back-link,
+.surah-nav a,
+.bottom-navigation a {
+  color: var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 22px rgba(15, 61, 46, 0.055);
+  transition:
+    transform 0.16s ease,
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.16s ease;
+}
+
+.back-link:hover,
+.surah-nav a:hover,
+.bottom-navigation a:hover {
+  transform: translateY(-2px);
+  background-color: #ffffff;
+  border-color: rgba(201, 162, 39, 0.5);
+  box-shadow: 0 14px 30px rgba(15, 61, 46, 0.08);
+}
+
+.surah-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.disabled-link {
+  color: rgba(15, 61, 46, 0.34);
+  background-color: rgba(255, 255, 255, 0.48);
+  border: 1px solid rgba(15, 61, 46, 0.08);
+  cursor: not-allowed;
+}
+
+.surah-hero {
+  position: relative;
+  max-width: 1140px;
+  margin: 0 auto 1.35rem;
+  padding: 1.9rem 1.6rem;
+  border-radius: 30px;
+  text-align: center;
+  color: #ffffff;
+  background-color: #07372c;
+  box-shadow: 0 22px 48px rgba(15, 61, 46, 0.16);
+}
+
+.surah-hero::before {
+  content: '';
+  position: absolute;
+  inset-inline: 2rem;
+  top: 0;
+  height: 4px;
+  border-radius: 0 0 999px 999px;
+  background-color: var(--color-secondary);
+}
+
+.surah-hero .section-badge {
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+}
+
+.surah-hero h1 {
+  margin: 0.75rem 0 0.25rem;
+  color: #ffffff;
+  font-family: var(--font-quran);
+  font-size: clamp(3rem, 6.6vw, 5rem);
+  font-weight: 400;
+  line-height: 1.28;
+}
+
+.surah-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.96rem;
+  font-weight: 900;
+}
+
+.surah-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.58rem;
+  margin: 1.15rem 0 0.95rem;
+}
+
+.surah-info span {
+  display: inline-flex;
+  padding: 0.46rem 0.78rem;
+  border-radius: 999px;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.reading-card {
+  position: relative;
+  overflow: hidden;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 1.85rem 2rem;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 18px 44px rgba(15, 61, 46, 0.09);
+}
+
+.reading-card::before {
+  content: '';
+  position: absolute;
+  inset-inline-end: -3.5rem;
+  top: -3.5rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  background-color: rgba(201, 162, 39, 0.09);
+}
+
+.reading-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.4rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reading-header span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-primary-dark);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.reading-header span svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.6;
+}
+
+.reading-header span strong {
+  font: inherit;
+}
+
+.reading-header small {
+  display: block;
+  margin-top: 0.22rem;
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.reading-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.32rem;
+  border-radius: 999px;
+  background-color: #f8f5ec;
+  border: 1px solid rgba(15, 61, 46, 0.08);
+}
+
+.reading-tools button {
+  min-width: 38px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: #ffffff;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.16s ease,
+    background-color 0.12s ease;
+}
+
+.reading-tools button svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.7;
+}
+
+.reading-tools button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background-color: var(--color-secondary-light);
+}
+
+.reading-tools button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.basmalah {
+  position: relative;
+  margin: 0 0 1.35rem;
+  color: var(--color-primary-dark);
+  font-family: var(--font-quran);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 2;
+  text-align: center;
+}
+
+.ayahs-list {
+  position: relative;
+  text-align: justify;
+  text-align-last: center;
+}
+
+.ayah-line {
+  display: inline;
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-quran);
+  font-size: clamp(1.95rem, 2.45vw, 2.58rem);
+  font-weight: 400;
+  line-height: 2.7;
+  word-spacing: 0.1rem;
+}
+
+.reading-small .ayah-line {
+  font-size: clamp(1.7rem, 2.15vw, 2.2rem);
+  line-height: 2.6;
+}
+
+.reading-large .ayah-line {
+  font-size: clamp(2.18rem, 2.85vw, 2.9rem);
+  line-height: 2.78;
+}
+
+.ayah-number {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-inline: 0.38rem;
+  border-radius: 50%;
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  font-weight: 900;
+  vertical-align: middle;
+}
+
+.bottom-navigation {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  max-width: 1140px;
+  margin: 1.25rem auto 0;
+}
+
+.bottom-navigation a,
+.bottom-navigation span {
+  min-width: 148px;
+}
+
+.reveal {
+  animation: fadeUp 0.65s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .surah-page {
+    --surah-control-height: 44px;
+    --surah-control-padding: 0 0.9rem;
+
+    padding: 3rem 0 4rem;
+  }
+
+  .top-actions,
+  .reading-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .surah-nav,
+  .reading-tools {
+    width: 100%;
+  }
+
+  .surah-nav a,
+  .surah-nav span,
+  .back-link {
+    flex: 1;
+  }
+
+  .reading-tools {
+    justify-content: space-between;
+  }
+
+  .reading-tools button {
+    flex: 1;
+  }
+
+  .surah-hero,
+  .reading-card {
+    padding: 1.35rem;
+    border-radius: 24px;
+  }
+
+  .surah-hero h1 {
+    font-size: clamp(3rem, 15vw, 4.4rem);
+  }
+
+  .reading-header span {
+    font-size: 1rem;
+  }
+
+  .ayahs-list {
+    text-align: start;
+    text-align-last: auto;
+  }
+
+  .ayah-line {
+    font-size: clamp(1.75rem, 8vw, 2.3rem);
+    line-height: 2.7;
+  }
+
+  .reading-small .ayah-line {
+    font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .reading-large .ayah-line {
+    font-size: clamp(2rem, 9vw, 2.55rem);
+  }
+
+  .ayah-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .surah-nav,
+  .bottom-navigation {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .surah-nav a,
+  .surah-nav span,
+  .bottom-navigation a,
+  .bottom-navigation span {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .surah-info {
+    gap: 0.5rem;
+  }
+
+  .surah-info span {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .reading-tools button span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .back-link,
+  .surah-nav a,
+  .bottom-navigation a,
+  .reading-tools button {
+    animation: none;
+    transition: none;
+  }
+}

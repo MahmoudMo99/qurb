@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="favorite-button"
+  [class.saved]="isSaved()"
+  [class.hero]="mode() === 'hero'"
+  [class.small]="mode() === 'small'"
+  [attr.aria-pressed]="isSaved()"
+  (click)="toggleFavorite($event)"
+>
+  <svg class="favorite-icon" lucideHeart aria-hidden="true"></svg>
+  <span>{{ isSaved() ? savedLabel() : label() }}</span>
+</button>

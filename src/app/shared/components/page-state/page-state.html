@@ -1,0 +1,26 @@
+<div class="page-state" [class.error]="type() === 'error'" [class.empty]="type() === 'empty'">
+  <div class="state-icon" [class.loading]="type() === 'loading'">
+    @if (type() === 'loading') {
+      <span class="loader"></span>
+    } @else if (type() === 'error') {
+      <svg lucideCircleAlert aria-hidden="true"></svg>
+    } @else {
+      <svg lucideInbox aria-hidden="true"></svg>
+    }
+  </div>
+
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+
+  @if (message()) {
+    <p>{{ message() }}</p>
+  }
+
+  @if (actionLabel()) {
+    <button type="button" (click)="handleAction()">
+      <svg lucideRotateCcw aria-hidden="true"></svg>
+      <span>{{ actionLabel() }}</span>
+    </button>
+  }
+</div>

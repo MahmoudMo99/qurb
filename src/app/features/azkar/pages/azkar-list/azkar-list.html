@@ -1,0 +1,217 @@
+<section class="azkar-page">
+  <div class="container">
+    <div class="page-hero reveal">
+      <span class="section-badge">الأذكار والأدعية</span>
+
+      <h1>أذكار يومية قريبة منك</h1>
+
+      <p>تصفح أذكار الصباح والمساء والنوم والسفر وغيرها، مع بحث سريع وعداد يساعدك على المتابعة.</p>
+
+      <div class="azkar-stats">
+        <div>
+          <strong>{{ totalAzkar() }}</strong>
+          <span>دعاء وذكر</span>
+        </div>
+
+        <div>
+          <strong>{{ totalCategories() }}</strong>
+          <span>تصنيف</span>
+        </div>
+
+        <div>
+          <strong>{{ resultCount() }}</strong>
+          <span>نتيجة معروضة</span>
+        </div>
+      </div>
+
+      <div class="azkar-toolbar">
+        <div class="search-box">
+          <svg lucideSearch aria-hidden="true"></svg>
+
+          <input
+            type="text"
+            placeholder="ابحث في الذكر أو التصنيف..."
+            [value]="searchTerm()"
+            (input)="updateSearchTerm($event)"
+          />
+
+          @if (searchTerm()) {
+            <button type="button" aria-label="مسح البحث" (click)="clearSearch()">
+              <svg lucideX aria-hidden="true"></svg>
+            </button>
+          }
+        </div>
+
+        <button type="button" class="all-categories-toggle" (click)="toggleAllCategories()">
+          {{ showAllCategories() ? 'إخفاء التصنيفات' : 'كل التصنيفات' }}
+        </button>
+      </div>
+
+      <div class="shortcut-carousel">
+        <button
+          type="button"
+          class="slider-arrow prev-arrow"
+          aria-label="التصنيفات السابقة"
+          (click)="scrollShortcuts('previous')"
+        >
+          <svg lucideChevronLeft aria-hidden="true"></svg>
+        </button>
+
+        <div class="shortcut-viewport">
+          <div
+            #shortcutScroller
+            class="shortcut-track"
+            [class.dragging]="isShortcutDragging()"
+            aria-label="الأقسام السريعة"
+            (pointerdown)="startShortcutDrag($event)"
+            (pointermove)="moveShortcutDrag($event)"
+            (pointerup)="endShortcutDrag()"
+            (pointercancel)="endShortcutDrag()"
+            (pointerleave)="endShortcutDrag()"
+          >
+            @for (shortcut of shortcutOptions; track shortcut.value) {
+              <button
+                type="button"
+                class="shortcut-button"
+                [class.active]="selectedCategory() === shortcut.value"
+                (click)="selectShortcut(shortcut.value)"
+              >
+                <span>{{ shortcut.label }}</span>
+                <small>{{ shortcut.description }}</small>
+              </button>
+            }
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="slider-arrow next-arrow"
+          aria-label="التصنيفات التالية"
+          (click)="scrollShortcuts('next')"
+        >
+          <svg lucideChevronRight aria-hidden="true"></svg>
+        </button>
+      </div>
+
+      @if (showAllCategories()) {
+        <div class="all-categories-panel reveal">
+          @if (isCategoriesLoading()) {
+            <div class="categories-loading">
+              <span class="loader"></span>
+              <p>جاري تحميل التصنيفات...</p>
+            </div>
+          } @else if (categories().length) {
+            <div class="all-categories-grid">
+              @for (category of categories(); track category.number) {
+                <button
+                  type="button"
+                  class="full-category-button"
+                  [class.active]="selectedCategory() === category.number"
+                  (click)="selectCategory(category.number)"
+                >
+                  <span>{{ category.ar }}</span>
+                  <small>{{ category.count }} ذكر</small>
+                </button>
+              }
+            </div>
+          } @else {
+            <p class="categories-empty">تعذر تحميل التصنيفات الآن.</p>
+          }
+        </div>
+      }
+    </div>
+
+    @if (isAzkarLoading()) {
+      <app-skeleton-card [count]="6" [rows]="4"></app-skeleton-card>
+    } @else if (errorMessage()) {
+      <app-page-state
+        type="error"
+        title="تعذر تحميل الأذكار"
+        [message]="errorMessage()"
+        actionLabel="إعادة المحاولة"
+        (action)="reloadAzkar()"
+      ></app-page-state>
+    } @else if (azkarData(); as data) {
+      <div class="category-summary reveal">
+        <div>
+          <span>{{ selectedCategoryDescription() }}</span>
+          <h2>{{ selectedCategoryTitle() }}</h2>
+        </div>
+
+        <strong>{{ data.count }} ذكر</strong>
+      </div>
+
+      @if (filteredAzkar().length) {
+        <div class="azkar-grid">
+          @for (zikr of filteredAzkar(); track getZikrId(zikr)) {
+            <article class="zikr-card reveal" [class.completed]="isZikrCompleted(zikr)">
+              <div class="zikr-header">
+                <span class="category-pill">{{ zikr.category.ar }}</span>
+                <span class="number-pill">#{{ zikr.number }}</span>
+              </div>
+
+              <p class="zikr-text">{{ zikr.ar.text }}</p>
+
+              <div class="zikr-counter" [class.completed]="isZikrCompleted(zikr)">
+                <div>
+                  <span>عداد التكرار</span>
+                  <strong>{{ getCurrentRepeat(zikr) }} / {{ getRepeatTarget(zikr) }}</strong>
+                </div>
+
+                <div class="counter-actions">
+                  <button
+                    type="button"
+                    class="counter-main"
+                    [disabled]="isZikrCompleted(zikr)"
+                    (click)="increaseZikrCounter(zikr)"
+                  >
+                    <svg lucideCheck aria-hidden="true"></svg>
+                    <span>{{ isZikrCompleted(zikr) ? 'اكتمل' : 'تمت القراءة' }}</span>
+                  </button>
+
+                  @if (getCurrentRepeat(zikr) > 0) {
+                    <button type="button" class="counter-reset" (click)="resetZikrCounter(zikr)">
+                      <svg lucideRotateCcw aria-hidden="true"></svg>
+                      <span>إعادة</span>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              @if (zikr.en.text) {
+                <details class="translation-box">
+                  <summary>عرض المعنى بالإنجليزية</summary>
+                  <p>{{ zikr.en.text }}</p>
+                </details>
+              }
+
+              <div class="zikr-actions">
+                <small>حصن المسلم</small>
+
+                <div class="action-buttons">
+                  <app-favorite-button
+                    mode="small"
+                    label="حفظ"
+                    savedLabel="محفوظ"
+                    [favoriteItem]="getZikrFavoriteItem(zikr)"
+                  ></app-favorite-button>
+
+                  <button type="button" (click)="copyZikr(zikr)">
+                    <svg lucideCopy aria-hidden="true"></svg>
+                    <span>{{ copiedZikrId() === getZikrId(zikr) ? 'تم النسخ' : 'نسخ الذكر' }}</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <app-page-state
+          type="empty"
+          title="لا توجد نتائج"
+          message="جرّب كلمة بحث مختلفة أو اختر تصنيفًا آخر."
+        ></app-page-state>
+      }
+    }
+  </div>
+</section>

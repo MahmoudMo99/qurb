@@ -1,7 +1,7 @@
 # Qurb | قُرب
 
 <p align="center">
-  <strong>قُرب</strong> is a modern Arabic Islamic web application that brings Quran reading, prayer times, azkar, hadith collections, and personal favorites into one calm, responsive, RTL-first experience.
+  <strong>Qurb</strong> is a modern Arabic Islamic web application that brings Quran reading, prayer times, azkar, hadith collections, and personal favorites into one calm, responsive, RTL-first experience.
 </p>
 
 <p align="center">

@@ -5,6 +5,9 @@
 </p>
 
 <p align="center">
+  <a href="https://qurb-islamic.vercel.app" target="_blank">
+    <img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-0F3D2E?style=for-the-badge&logo=vercel&logoColor=white" />
+  </a>
   <img alt="Angular" src="https://img.shields.io/badge/Angular-22-DD0031?style=for-the-badge&logo=angular&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
   <img alt="SCSS" src="https://img.shields.io/badge/SCSS-Styling-C6538C?style=for-the-badge&logo=sass&logoColor=white" />
@@ -13,23 +16,19 @@
 
 ---
 
-## Overview
+## Live Demo
 
-**Qurb | قُرب** is a single-page Islamic application built with **Angular**, designed especially for Arabic users.
-
-The project focuses on a peaceful reading experience, fast navigation, clear Islamic content organization, and useful daily features such as prayer times, azkar counters, favorites, and daily Islamic content.
-
-The application was rebuilt with a clean architecture, standalone Angular components, lazy-loaded feature pages, Angular Signals, local caching, and a consistent modern UI identity.
+https://qurb-islamic.vercel.app
 
 ---
 
-## Live Demo
+## Overview
 
-Add the deployed project link here after publishing on Vercel.
+**Qurb | قُرب** is a single-page Islamic web application built with **Angular** for Arabic users.
 
-```text
-https://your-project-url.vercel.app
-```
+The application provides a calm and organized experience for reading the Quran, checking prayer times, browsing daily azkar, exploring selected hadith collections, and saving important content to personal favorites.
+
+The project was rebuilt from scratch with a modern front-end structure, standalone Angular components, lazy-loaded routes, Angular Signals, local caching, responsive layouts, and a consistent Arabic RTL user interface.
 
 ---
 
@@ -42,8 +41,8 @@ https://your-project-url.vercel.app
 - Filter surahs by revelation type: Meccan or Medinan.
 - Read surah details in a clean Quran-focused layout.
 - Save surahs and individual ayahs to favorites.
-- Store last-read surah locally.
-- Remember reading font-size preference.
+- Store the last-read surah locally.
+- Remember the reading font-size preference.
 
 ### Prayer Times
 
@@ -52,7 +51,7 @@ https://your-project-url.vercel.app
 - Use current location when permission is granted.
 - Highlight the upcoming prayer.
 - Save the selected location locally.
-- Cache prayer-time responses to improve fallback behavior.
+- Cache prayer-time responses for fallback use.
 
 ### Azkar
 
@@ -61,8 +60,8 @@ https://your-project-url.vercel.app
 - Copy azkar text.
 - Save azkar to favorites.
 - Use a daily repeat counter.
-- Store counter progress locally per day.
-- Cache azkar API data for fallback use.
+- Store daily counter progress locally.
+- Cache azkar API responses for fallback use.
 
 ### Hadith
 
@@ -79,21 +78,21 @@ https://your-project-url.vercel.app
 - Filter favorites by content type.
 - Search inside saved items.
 - Copy saved text.
-- Remove individual items.
+- Remove individual saved items.
 - Clear all favorites.
 - Store favorites using browser local storage.
 
 ### User Experience
 
 - Fully RTL Arabic interface.
-- Responsive layout for desktop, tablet, and mobile.
-- Clean Islamic visual identity using dark green and gold.
-- Modern reusable components.
+- Responsive design for desktop, tablet, and mobile.
+- Calm Islamic visual identity using deep green and gold.
+- Reusable UI components.
 - Loading skeletons.
 - Empty and error states.
 - Toast notifications for user feedback.
 - Scroll-to-top interaction.
-- SEO-ready titles and meta descriptions.
+- SEO-ready page titles and meta descriptions.
 
 ---
 
@@ -107,7 +106,7 @@ https://your-project-url.vercel.app
 | UI Architecture  | Standalone Components |
 | State Management | Angular Signals       |
 | Routing          | Angular Router        |
-| HTTP             | Angular HttpClient    |
+| HTTP Client      | Angular HttpClient    |
 | Async Handling   | RxJS                  |
 | Icons            | Lucide Angular        |
 | Notifications    | ngxpert Hot Toast     |
@@ -153,13 +152,13 @@ src/
 | Azkar        | Islamic App API                 |
 | Hadith       | Hadith API dataset via jsDelivr |
 
-The app also uses local caching to keep previously loaded content available when a network request fails.
+The application uses local caching to keep previously loaded content available when a network request fails.
 
 ---
 
 ## Local Storage Usage
 
-Qurb uses browser local storage to improve the user experience.
+Qurb uses browser local storage to improve the user experience without requiring authentication or a backend.
 
 Stored data includes:
 
@@ -167,11 +166,9 @@ Stored data includes:
 - Last-read surah.
 - Reading font-size preference.
 - Selected prayer location.
-- Current-location coordinates, when allowed by the user.
+- Current-location coordinates when allowed by the user.
 - Daily azkar counters.
 - Cached Quran, Azkar, Hadith, and Prayer Times responses.
-
-No backend or user account is required for these local features.
 
 ---
 
@@ -179,9 +176,9 @@ No backend or user account is required for these local features.
 
 ### Prerequisites
 
-Make sure you have Node.js and npm installed.
+Make sure Node.js and npm are installed on your machine.
 
-This project was built with:
+The project was built using:
 
 ```text
 Angular CLI 22
@@ -202,7 +199,7 @@ npm install
 npm start
 ```
 
-Then open:
+Open the app in the browser:
 
 ```text
 http://localhost:4200
@@ -251,14 +248,14 @@ The project includes a `vercel.json` file to support Angular client-side routing
 
 ## Available Scripts
 
-| Command                | Description                             |
-| ---------------------- | --------------------------------------- |
-| `npm start`            | Run the development server              |
-| `npm run build`        | Build the app for production            |
-| `npm run build:prod`   | Build using production configuration    |
-| `npm run watch`        | Build in watch mode for development     |
-| `npm run format`       | Format source files using Prettier      |
-| `npm run format:check` | Check formatting without changing files |
+| Command                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `npm start`            | Run the development server               |
+| `npm run build`        | Build the application for production     |
+| `npm run build:prod`   | Build using the production configuration |
+| `npm run watch`        | Build in watch mode for development      |
+| `npm run format`       | Format source files using Prettier       |
+| `npm run format:check` | Check formatting without changing files  |
 
 ---
 
@@ -266,9 +263,9 @@ The project includes a `vercel.json` file to support Angular client-side routing
 
 Qurb uses a calm Islamic visual identity based on:
 
-- Deep green primary color.
-- Gold accent color.
-- Soft warm background.
+- Deep green as the primary color.
+- Gold as the accent color.
+- Soft warm page backgrounds.
 - Large Arabic headings.
 - Clear Quran-style reading text.
 - Rounded cards and buttons.
@@ -277,7 +274,7 @@ Qurb uses a calm Islamic visual identity based on:
 
 Main fonts:
 
-- Cairo for UI.
+- Cairo for the user interface.
 - Amiri Quran for Quranic and Islamic text display.
 
 ---
@@ -286,12 +283,12 @@ Main fonts:
 
 The application uses:
 
-- Lazy-loaded routes for feature pages.
-- Shared reusable components.
+- Lazy-loaded feature routes.
+- Reusable shared components.
 - Local caching for repeated API calls.
 - `shareReplay` for selected API request reuse.
 - Production output hashing.
-- Angular build budgets configured for production.
+- Production build budgets.
 
 ---
 
@@ -299,34 +296,12 @@ The application uses:
 
 The interface includes:
 
-- Arabic `lang` and RTL direction.
+- Arabic `lang` and RTL document direction.
 - Accessible button labels.
 - Keyboard-friendly controls.
 - Clear visual focus styles.
-- Responsive layout for small screens.
+- Responsive layouts for small screens.
 - Reduced-motion handling for users who prefer less animation.
-
----
-
-## Suggested Screenshots
-
-Add screenshots later after deployment:
-
-```text
-docs/screenshots/home.png
-docs/screenshots/quran.png
-docs/screenshots/surah-details.png
-docs/screenshots/prayer-times.png
-docs/screenshots/azkar.png
-docs/screenshots/hadith.png
-docs/screenshots/favorites.png
-```
-
-Example:
-
-```md
-![Qurb Home](docs/screenshots/home.png)
-```
 
 ---
 
@@ -335,11 +310,11 @@ Example:
 Possible future improvements:
 
 - Add audio recitations.
-- Add prayer notification reminders.
 - Add tafsir support.
 - Add multiple Quran editions.
+- Add prayer notification reminders.
 - Add dark mode.
-- Add offline-first support using service workers.
+- Add offline-first support.
 - Add PWA installation support.
 - Add user accounts and cloud sync.
 - Add advanced hadith filtering.
@@ -359,4 +334,6 @@ Built with care by **Mahmoud Mohamed**.
 
 ## License
 
-No license has been specified yet.
+This repository currently does not include an open-source license.
+
+All rights reserved © 2026 Mahmoud Mohamed.

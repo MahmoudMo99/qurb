@@ -351,16 +351,12 @@ Possible future improvements:
 
 Built with care by **Mahmoud Mohamed**.
 
-```text
-GitHub: https://github.com/MahmoudMo99
-Portfolio: https://mahmoud-mohamed-portfolio.vercel.app/
-LinkedIn: https://www.linkedin.com/in/mahmoud-mo-mahmoud/
-```
+- GitHub: https://github.com/MahmoudMo99
+- Portfolio: https://mahmoud-mohamed-portfolio.vercel.app/
+- LinkedIn: https://www.linkedin.com/in/mahmoud-mo-mahmoud/
 
 ---
 
 ## License
 
-This project is private by default.
-
-Add a license only if you decide to publish it as an open-source project.
+No license has been specified yet.

@@ -40,6 +40,9 @@ The project was rebuilt from scratch with a modern front-end structure, standalo
 - Search by Arabic surah name, English name, translation, or surah number.
 - Filter surahs by revelation type: Meccan or Medinan.
 - Read surah details in a clean Quran-focused layout.
+- Switch between full-surah reading and Mushaf page reading.
+- Read long surahs by Mushaf page number with page-by-page navigation.
+- Use focus reading mode for a distraction-free Quran reading experience.
 - Save surahs and individual ayahs to favorites.
 - Store the last-read surah locally.
 - Remember the reading font-size preference.
@@ -165,6 +168,8 @@ Stored data includes:
 - Favorite items.
 - Last-read surah.
 - Reading font-size preference.
+- Quran reading mode preference.
+- Last selected Mushaf page per surah.
 - Selected prayer location.
 - Current-location coordinates when allowed by the user.
 - Daily azkar counters.
@@ -248,14 +253,12 @@ The project includes a `vercel.json` file to support Angular client-side routing
 
 ## Available Scripts
 
-| Command                | Description                              |
-| ---------------------- | ---------------------------------------- |
-| `npm start`            | Run the development server               |
-| `npm run build`        | Build the application for production     |
-| `npm run build:prod`   | Build using the production configuration |
-| `npm run watch`        | Build in watch mode for development      |
-| `npm run format`       | Format source files using Prettier       |
-| `npm run format:check` | Check formatting without changing files  |
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `npm start`     | Run the development server           |
+| `npm run build` | Build the application for production |
+| `npm run watch` | Build in watch mode for development  |
+| `npm test`      | Run tests                            |
 
 ---
 
@@ -309,6 +312,8 @@ The interface includes:
 
 Possible future improvements:
 
+- Add Daily Wird Tracker for tasbeeh, tahmeed, istighfar, and daily Quran reading.
+- Add daily Names of Allah content with reviewed explanations.
 - Add audio recitations.
 - Add tafsir support.
 - Add multiple Quran editions.

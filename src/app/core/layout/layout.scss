@@ -7,7 +7,16 @@
     linear-gradient(180deg, #f8f5ec 0%, #f3efe2 100%);
 }
 
+.app-shell.focus-mode {
+  min-height: 100dvh;
+  background: #f7f5ef;
+}
+
 .app-main {
   flex: 1;
   padding-top: 82px;
+}
+
+.app-main.focus-mode {
+  padding-top: 0;
 }

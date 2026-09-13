@@ -1,4 +1,24 @@
-<section class="surah-page" [class.focus-mode]="isFocusMode()">
+<section
+  class="surah-page"
+  [class.focus-mode]="isFocusMode()"
+  [class.show-focus-controls]="isFocusControlsVisible()"
+  (pointerdown)="onFocusPointerDown($event)"
+  (pointermove)="onFocusPointerMove($event)"
+  (pointerup)="onFocusPointerUp($event)"
+  (pointercancel)="onFocusPointerCancel()"
+>
+  @if (isFocusMode()) {
+    <button
+      type="button"
+      class="focus-exit-floating"
+      [class.visible]="isFocusControlsVisible()"
+      (pointerdown)="$event.stopPropagation()"
+      (click)="exitFocusMode()"
+    >
+      إنهاء التركيز
+    </button>
+  }
+
   <div class="container">
     <div class="top-actions">
       <a class="back-link" routerLink="/quran">

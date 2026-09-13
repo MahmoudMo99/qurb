@@ -1,10 +1,14 @@
-<div class="app-shell">
-  <app-header></app-header>
+<div class="app-shell" [class.focus-mode]="isFocusMode()">
+  @if (!isFocusMode()) {
+    <app-header></app-header>
+  }
 
-  <main class="app-main">
+  <main class="app-main" [class.focus-mode]="isFocusMode()">
     <router-outlet></router-outlet>
   </main>
 
-  <app-footer></app-footer>
-  <app-scroll-to-top></app-scroll-to-top>
+  @if (!isFocusMode()) {
+    <app-footer></app-footer>
+    <app-scroll-to-top></app-scroll-to-top>
+  }
 </div>

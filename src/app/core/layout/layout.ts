@@ -6,6 +6,7 @@ import { filter } from 'rxjs';
 import { ScrollToTop } from '../../shared/components/scroll-to-top/scroll-to-top';
 import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
+import { FocusModeService } from '../services/focus-mode';
 import { SeoService } from '../services/seo';
 
 @Component({
@@ -20,6 +21,9 @@ export class Layout implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly seoService = inject(SeoService);
+  private readonly focusModeService = inject(FocusModeService);
+
+  readonly isFocusMode = this.focusModeService.isEnabled;
 
   ngOnInit(): void {
     this.updateSeo();

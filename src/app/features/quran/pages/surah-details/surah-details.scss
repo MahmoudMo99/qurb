@@ -3,7 +3,7 @@
   --surah-control-padding: 0 0.9rem;
 
   position: relative;
-  padding: 3.2rem 0 5rem;
+  padding: 3rem 0 5rem;
 }
 
 .top-actions {
@@ -12,7 +12,7 @@
   justify-content: space-between;
   gap: 1rem;
   max-width: 1140px;
-  margin: 0 auto 1.2rem;
+  margin: 0 auto 1rem;
 }
 
 .back-link,
@@ -83,10 +83,9 @@
 .surah-hero {
   position: relative;
   max-width: 1140px;
-  margin: 0 auto 1.35rem;
-  padding: 1.9rem 1.6rem;
+  margin: 0 auto 1.15rem;
+  padding: 1.45rem 1.6rem 1.5rem;
   border-radius: 30px;
-  text-align: center;
   color: #ffffff;
   background-color: #07372c;
   box-shadow: 0 22px 48px rgba(15, 61, 46, 0.16);
@@ -102,43 +101,124 @@
   background-color: var(--color-secondary);
 }
 
+.surah-hero-top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .surah-hero .section-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
   color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  font-size: 0.88rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.surah-save {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 0 0 auto;
+}
+
+:host ::ng-deep .surah-save .favorite-button {
+  min-height: 46px;
+  padding: 0.58rem 1.05rem;
+  border: 1px solid rgba(201, 162, 39, 0.6);
+  color: var(--color-primary-dark);
+  background-color: #ffffff;
+  box-shadow: 0 14px 32px rgba(15, 61, 46, 0.12);
+}
+
+:host ::ng-deep .surah-save .favorite-button:hover {
+  background-color: var(--color-secondary-light);
+  border-color: rgba(201, 162, 39, 0.85);
+}
+
+:host ::ng-deep .surah-save .favorite-button.saved {
+  color: var(--color-primary-dark);
+  background-color: #ffffff;
+  border-color: rgba(201, 162, 39, 0.75);
+}
+
+:host ::ng-deep .surah-save .favorite-button.saved:hover {
   background-color: var(--color-secondary-light);
 }
 
-.surah-hero h1 {
-  margin: 0.75rem 0 0.25rem;
-  color: #ffffff;
-  font-family: var(--font-quran);
-  font-size: clamp(3rem, 6.6vw, 5rem);
-  font-weight: 400;
-  line-height: 1.28;
+.surah-title-area {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 172px;
+  padding: 0.35rem 0 0.95rem;
+  text-align: center;
 }
 
-.surah-hero p {
+.surah-hero h1 {
   margin: 0;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 0.96rem;
-  font-weight: 900;
+  color: #ffffff;
+  font-family: var(--font-quran);
+  font-size: clamp(3.2rem, 5.6vw, 4.9rem);
+  font-weight: 400;
+  line-height: 1.38;
 }
 
 .surah-info {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.58rem;
-  margin: 1.15rem 0 0.95rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  max-width: 760px;
+  margin: 0.35rem auto 0;
 }
 
 .surah-info span {
+  min-height: 46px;
   display: inline-flex;
-  padding: 0.46rem 0.78rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.48rem 0.82rem;
   border-radius: 999px;
   color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
-  font-size: 0.82rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  font-size: 0.88rem;
   font-weight: 900;
+  text-align: center;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+.surah-page.focus-mode {
+  padding-top: 1.4rem;
+}
+
+.surah-page.focus-mode .top-actions,
+.surah-page.focus-mode .surah-hero,
+.surah-page.focus-mode .bottom-navigation {
+  display: none;
+}
+
+.surah-page.focus-mode .reading-card {
+  max-width: 1040px;
+}
+
+.surah-page.focus-mode .reading-header {
+  margin-bottom: 0.95rem;
+}
+
+.focus-button.active {
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
 }
 
 .reading-card {
@@ -146,7 +226,7 @@
   overflow: hidden;
   max-width: 1140px;
   margin: 0 auto;
-  padding: 1.85rem 2rem;
+  padding: 1.45rem 1.65rem 1.65rem;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--color-border);
@@ -167,95 +247,182 @@
 .reading-header {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: 1rem;
-  margin-bottom: 1.4rem;
+  padding-bottom: 0.95rem;
+  margin-bottom: 1.05rem;
   border-bottom: 1px solid var(--color-border);
 }
 
-.reading-header span {
+.reading-header > div:first-child > span {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   color: var(--color-primary-dark);
-  font-size: 1.08rem;
+  font-size: 1.06rem;
   font-weight: 900;
 }
 
-.reading-header span svg {
+.reading-header > div:first-child > span svg {
   width: 18px;
   height: 18px;
   stroke-width: 2.6;
 }
 
-.reading-header span strong {
+.reading-header > div:first-child > span strong {
   font: inherit;
 }
 
 .reading-header small {
   display: block;
-  margin-top: 0.22rem;
+  margin-top: 0.18rem;
   color: var(--color-muted);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 800;
 }
 
+.reading-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.reading-mode-switch,
 .reading-tools {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  padding: 0.32rem;
+  gap: 0.3rem;
+  padding: 0.3rem;
   border-radius: 999px;
   background-color: #f8f5ec;
   border: 1px solid rgba(15, 61, 46, 0.08);
 }
 
-.reading-tools button {
-  min-width: 38px;
-  height: 36px;
+.reading-mode-switch button,
+.reading-tools button,
+.mushaf-page-nav button {
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.32rem;
   border: 0;
   border-radius: 999px;
-  color: var(--color-primary);
-  background-color: #ffffff;
   font-family: var(--font-ui);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 900;
   cursor: pointer;
   transition:
     transform 0.16s ease,
-    background-color 0.12s ease;
+    background-color 0.12s ease,
+    color 0.12s ease,
+    opacity 0.12s ease;
 }
 
-.reading-tools button svg {
+.reading-mode-switch button {
+  padding: 0.4rem 0.76rem;
+  color: var(--color-primary);
+  background-color: transparent;
+}
+
+.reading-mode-switch button.active,
+.reading-mode-switch button:hover {
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+}
+
+.reading-tools button {
+  min-width: 38px;
+  height: 36px;
+  gap: 0.28rem;
+  padding: 0.38rem 0.58rem;
+  color: var(--color-primary);
+  background-color: #ffffff;
+}
+
+.reading-tools button span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.reading-tools button svg,
+.mushaf-page-nav button svg {
   width: 15px;
   height: 15px;
   stroke-width: 2.7;
 }
 
-.reading-tools button:hover:not(:disabled) {
+.reading-tools button:hover:not(:disabled),
+.mushaf-page-nav button:hover:not(:disabled) {
   transform: translateY(-2px);
   background-color: var(--color-secondary-light);
 }
 
-.reading-tools button:disabled {
+.reading-tools button:disabled,
+.mushaf-page-nav button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
+.mushaf-page-nav {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border-radius: 22px;
+  background-color: #f8f5ec;
+  border: 1px solid rgba(15, 61, 46, 0.08);
+}
+
+.mushaf-page-nav.top {
+  margin-bottom: 1.05rem;
+}
+
+.mushaf-page-nav.bottom {
+  margin-top: 1.2rem;
+}
+
+.mushaf-page-nav strong {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  font-size: 0.88rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.mushaf-page-nav button {
+  gap: 0.35rem;
+  padding: 0.42rem 0.85rem;
+  color: var(--color-primary);
+  background-color: #ffffff;
+}
+
+.mushaf-page-nav button:first-child {
+  justify-self: start;
+}
+
+.mushaf-page-nav button:last-child {
+  justify-self: end;
+}
+
 .basmalah {
   position: relative;
-  margin: 0 0 1.35rem;
+  margin: 0 0 1.1rem;
   color: var(--color-primary-dark);
   font-family: var(--font-quran);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.85rem, 3.55vw, 2.7rem);
   font-weight: 400;
-  line-height: 2;
+  line-height: 1.9;
   text-align: center;
 }
 
@@ -265,38 +432,44 @@
   text-align-last: center;
 }
 
+.mushaf-mode .ayahs-list {
+  min-height: 48vh;
+  display: block;
+  padding: 0.35rem 0.15rem;
+}
+
 .ayah-line {
   display: inline;
   margin: 0;
   color: var(--color-primary-dark);
   font-family: var(--font-quran);
-  font-size: clamp(1.95rem, 2.45vw, 2.58rem);
+  font-size: clamp(1.78rem, 2.2vw, 2.28rem);
   font-weight: 400;
-  line-height: 2.7;
-  word-spacing: 0.1rem;
+  line-height: 2.52;
+  word-spacing: 0.08rem;
 }
 
 .reading-small .ayah-line {
-  font-size: clamp(1.7rem, 2.15vw, 2.2rem);
-  line-height: 2.6;
+  font-size: clamp(1.52rem, 1.95vw, 1.98rem);
+  line-height: 2.45;
 }
 
 .reading-large .ayah-line {
-  font-size: clamp(2.18rem, 2.85vw, 2.9rem);
-  line-height: 2.78;
+  font-size: clamp(2.02rem, 2.6vw, 2.68rem);
+  line-height: 2.65;
 }
 
 .ayah-number {
   display: inline-grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  margin-inline: 0.38rem;
+  width: 31px;
+  height: 31px;
+  margin-inline: 0.32rem;
   border-radius: 50%;
   color: var(--color-primary-dark);
   background-color: var(--color-secondary-light);
   font-family: var(--font-ui);
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 900;
   vertical-align: middle;
 }
@@ -305,9 +478,9 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.55rem;
   max-width: 1140px;
-  margin: 1.25rem auto 0;
+  margin: 1.1rem auto 0;
 }
 
 .bottom-navigation a,
@@ -331,51 +504,195 @@
   }
 }
 
-@media (max-width: 768px) {
-  .surah-page {
-    --surah-control-height: 44px;
-    --surah-control-padding: 0 0.9rem;
-
-    padding: 3rem 0 4rem;
-  }
-
-  .top-actions,
+@media (max-width: 900px) {
   .reading-header {
     align-items: stretch;
     flex-direction: column;
+    gap: 0.72rem;
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.8rem;
   }
 
-  .surah-nav,
+  .reading-controls {
+    justify-content: stretch;
+    gap: 0.42rem;
+  }
+
+  .reading-mode-switch,
   .reading-tools {
     width: 100%;
+    justify-content: space-between;
+    padding: 0.24rem;
+  }
+
+  .reading-mode-switch button,
+  .reading-tools button {
+    flex: 1;
+    min-height: 34px;
+  }
+}
+
+@media (max-width: 768px) {
+  .surah-page {
+    --surah-control-height: 40px;
+    --surah-control-padding: 0 0.75rem;
+
+    padding: 2rem 0 3.2rem;
+  }
+
+  .top-actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .surah-nav {
+    width: 100%;
+    gap: 0.45rem;
   }
 
   .surah-nav a,
   .surah-nav span,
   .back-link {
     flex: 1;
+    font-size: 0.78rem;
   }
 
-  .reading-tools {
-    justify-content: space-between;
+  .surah-hero {
+    padding: 0.95rem 0.85rem 1rem;
+    border-radius: 22px;
+    margin-bottom: 0.85rem;
   }
 
-  .reading-tools button {
-    flex: 1;
+  .surah-hero::before {
+    inset-inline: 1.4rem;
+    height: 3px;
   }
 
-  .surah-hero,
-  .reading-card {
-    padding: 1.35rem;
-    border-radius: 24px;
+  .surah-hero-top {
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .surah-hero .section-badge {
+    min-height: 38px;
+    padding: 0.38rem 0.72rem;
+    font-size: 0.74rem;
+  }
+
+  :host ::ng-deep .surah-save .favorite-button {
+    min-height: 38px;
+    padding: 0.42rem 0.78rem;
+    font-size: 0.74rem;
+  }
+
+  .surah-title-area {
+    min-height: 120px;
+    padding: 0.16rem 0 0.7rem;
   }
 
   .surah-hero h1 {
-    font-size: clamp(3rem, 15vw, 4.4rem);
+    font-size: clamp(2.7rem, 13vw, 3.65rem);
+    line-height: 1.36;
   }
 
-  .reading-header span {
-    font-size: 1rem;
+  .surah-info {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.38rem;
+    max-width: none;
+  }
+
+  .surah-info span {
+    min-height: 42px;
+    padding: 0.34rem 0.32rem;
+    font-size: 0.66rem;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .reading-card {
+    padding: 0.95rem 0.9rem;
+    border-radius: 22px;
+  }
+
+  .reading-card::before {
+    width: 7.5rem;
+    height: 7.5rem;
+    inset-inline-end: -3.8rem;
+    top: -3.8rem;
+  }
+
+  .reading-header > div:first-child {
+    text-align: center;
+  }
+
+  .reading-header > div:first-child > span {
+    justify-content: center;
+    font-size: 0.96rem;
+  }
+
+  .reading-header small {
+    margin-top: 0.14rem;
+    font-size: 0.74rem;
+  }
+
+  .reading-mode-switch button,
+  .reading-tools button {
+    font-size: 0.74rem;
+  }
+
+  .reading-tools button span {
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .mushaf-page-nav {
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    gap: 0.42rem;
+    padding: 0.45rem;
+    border-radius: 18px;
+  }
+
+  .mushaf-page-nav.top {
+    margin-bottom: 0.75rem;
+  }
+
+  .mushaf-page-nav.bottom {
+    margin-top: 0.9rem;
+  }
+
+  .mushaf-page-nav strong {
+    min-height: 34px;
+    padding: 0.38rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .mushaf-page-nav button {
+    width: 42px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+  }
+
+  .mushaf-page-nav button span {
+    display: none;
+  }
+
+  .mushaf-page-nav button:first-child,
+  .mushaf-page-nav button:last-child {
+    justify-self: stretch;
+  }
+
+  .mushaf-page-nav button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .basmalah {
+    margin-bottom: 0.75rem;
+    font-size: clamp(1.68rem, 7.8vw, 2.25rem);
+    line-height: 1.72;
   }
 
   .ayahs-list {
@@ -383,52 +700,201 @@
     text-align-last: auto;
   }
 
+  .mushaf-mode .ayahs-list {
+    min-height: auto;
+    padding-top: 0.05rem;
+  }
+
   .ayah-line {
-    font-size: clamp(1.75rem, 8vw, 2.3rem);
-    line-height: 2.7;
+    font-size: clamp(1.56rem, 7.2vw, 2.08rem);
+    line-height: 2.45;
   }
 
   .reading-small .ayah-line {
-    font-size: clamp(1.55rem, 7vw, 2rem);
+    font-size: clamp(1.36rem, 6.5vw, 1.85rem);
+    line-height: 2.38;
   }
 
   .reading-large .ayah-line {
-    font-size: clamp(2rem, 9vw, 2.55rem);
+    font-size: clamp(1.82rem, 8.4vw, 2.35rem);
+    line-height: 2.52;
   }
 
   .ayah-number {
-    width: 32px;
-    height: 32px;
-    font-size: 0.84rem;
+    width: 28px;
+    height: 28px;
+    margin-inline: 0.28rem;
+    font-size: 0.74rem;
+  }
+
+  .bottom-navigation {
+    gap: 0.46rem;
   }
 }
 
 @media (max-width: 520px) {
-  .surah-nav,
-  .bottom-navigation {
-    display: grid;
-    grid-template-columns: 1fr;
+  .surah-page {
+    padding-top: 1.45rem;
   }
 
-  .surah-nav a,
-  .surah-nav span,
-  .bottom-navigation a,
-  .bottom-navigation span {
+  .top-actions {
+    gap: 0.48rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .top-actions .surah-nav {
+    display: none;
+  }
+
+  .back-link {
     width: 100%;
-    min-width: 0;
+    height: 38px;
+    min-height: 38px;
+    font-size: 0.78rem;
+  }
+
+  .surah-hero {
+    padding: 0.82rem 0.72rem 0.92rem;
+    margin-bottom: 0.7rem;
+    border-radius: 20px;
+  }
+
+  .surah-hero-top {
+    align-items: center;
+    gap: 0.48rem;
+  }
+
+  .surah-hero .section-badge {
+    min-height: 36px;
+    padding: 0.32rem 0.58rem;
+    font-size: 0.7rem;
+  }
+
+  :host ::ng-deep .surah-save .favorite-button {
+    min-height: 36px;
+    padding: 0.36rem 0.62rem;
+    font-size: 0.7rem;
+  }
+
+  .surah-title-area {
+    min-height: 108px;
+    padding: 0.1rem 0 0.62rem;
+  }
+
+  .surah-hero h1 {
+    font-size: clamp(2.35rem, 12.8vw, 3.2rem);
+    line-height: 1.34;
   }
 
   .surah-info {
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.34rem;
   }
 
   .surah-info span {
-    flex: 1;
-    justify-content: center;
+    min-height: 40px;
+    padding: 0.34rem 0.25rem;
+    font-size: 0.6rem;
+  }
+
+  .reading-card {
+    padding: 0.85rem 0.75rem;
+    border-radius: 20px;
+  }
+
+  .reading-controls {
+    gap: 0.38rem;
+  }
+
+  .reading-mode-switch {
+    order: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .reading-tools {
+    order: 2;
+  }
+
+  .reading-mode-switch button,
+  .reading-tools button {
+    min-height: 32px;
+    font-size: 0.72rem;
+  }
+
+  .reading-mode-switch button {
+    padding-inline: 0.35rem;
   }
 
   .reading-tools button span {
     display: none;
+  }
+
+  .mushaf-page-nav {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    padding: 0.4rem;
+  }
+
+  .mushaf-page-nav button {
+    width: 40px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .mushaf-page-nav strong {
+    min-height: 32px;
+    font-size: 0.76rem;
+  }
+
+  .ayah-line {
+    font-size: clamp(1.48rem, 7vw, 1.98rem);
+    line-height: 2.38;
+  }
+
+  .reading-small .ayah-line {
+    font-size: clamp(1.3rem, 6.3vw, 1.78rem);
+  }
+
+  .reading-large .ayah-line {
+    font-size: clamp(1.75rem, 8.3vw, 2.28rem);
+  }
+
+  .bottom-navigation {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 0.9rem;
+  }
+
+  .bottom-navigation a,
+  .bottom-navigation span {
+    width: 100%;
+    min-width: 0;
+    height: 38px;
+    min-height: 38px;
+    font-size: 0.78rem;
+  }
+
+  .surah-page.focus-mode {
+    padding-top: 0.9rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .surah-info {
+    grid-template-columns: 1fr;
+  }
+
+  .surah-info span {
+    min-height: 36px;
+    font-size: 0.68rem;
+  }
+
+  .mushaf-page-nav {
+    grid-template-columns: 38px minmax(0, 1fr) 38px;
+  }
+
+  .mushaf-page-nav button {
+    width: 38px;
   }
 }
 
@@ -437,7 +903,9 @@
   .back-link,
   .surah-nav a,
   .bottom-navigation a,
-  .reading-tools button {
+  .reading-mode-switch button,
+  .reading-tools button,
+  .mushaf-page-nav button {
     animation: none;
     transition: none;
   }

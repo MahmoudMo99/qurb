@@ -1,4 +1,4 @@
-<section class="surah-page">
+<section class="surah-page" [class.focus-mode]="isFocusMode()">
   <div class="container">
     <div class="top-actions">
       <a class="back-link" routerLink="/quran">
@@ -45,80 +45,195 @@
       ></app-page-state>
     } @else if (surah(); as currentSurah) {
       <header class="surah-hero reveal">
-        <span class="section-badge">
-          {{ currentSurah.revelationType === 'Meccan' ? 'سورة مكية' : 'سورة مدنية' }}
-        </span>
+        <div class="surah-hero-top">
+          <span class="section-badge">
+            {{ currentSurah.revelationType === 'Meccan' ? 'سورة مكية' : 'سورة مدنية' }}
+          </span>
 
-        <h1>{{ currentSurah.name }}</h1>
-
-        <p>{{ currentSurah.englishName }} - {{ currentSurah.englishNameTranslation }}</p>
-
-        <div class="surah-info">
-          <span>{{ currentSurah.number }} رقم السورة</span>
-          <span>{{ currentSurah.numberOfAyahs }} آية</span>
+          <div class="surah-save">
+            <app-favorite-button
+              mode="default"
+              label="حفظ السورة"
+              savedLabel="محفوظة"
+              [favoriteItem]="getCurrentSurahFavoriteItem(currentSurah)"
+            ></app-favorite-button>
+          </div>
         </div>
 
-        <app-favorite-button
-          mode="hero"
-          label="حفظ السورة"
-          savedLabel="محفوظة في المفضلة"
-          [favoriteItem]="getCurrentSurahFavoriteItem(currentSurah)"
-        ></app-favorite-button>
+        <div class="surah-title-area">
+          <h1>{{ currentSurah.name }}</h1>
+        </div>
+
+        <div class="surah-info">
+          <span>رقم السورة {{ currentSurah.number }}</span>
+          <span>{{ currentSurah.numberOfAyahs }} آية</span>
+
+          @if (firstMushafPage(); as firstPage) {
+            @if (lastMushafPage(); as lastPage) {
+              <span>من صفحة {{ firstPage }} إلى {{ lastPage }}</span>
+            }
+          }
+        </div>
       </header>
 
       @if (displayAyahs().length) {
         <article
+          id="reading-card"
           class="reading-card reveal"
           [class.reading-small]="fontSizeLevel() === 0"
           [class.reading-large]="fontSizeLevel() === 2"
+          [class.mushaf-mode]="readingMode() === 'mushaf'"
         >
           <div class="reading-header">
             <div>
               <span>
                 <svg lucideBookOpen aria-hidden="true"></svg>
-                <strong>قراءة السورة</strong>
+                <strong>
+                  {{ readingMode() === 'surah' ? 'قراءة السورة' : 'صفحات المصحف' }}
+                </strong>
               </span>
-              <small>النص بالرسم العثماني</small>
+
+              <small>
+                @if (readingMode() === 'surah') {
+                  النص بالرسم العثماني
+                } @else {
+                  صفحة {{ currentMushafPage() }} من المصحف
+                  @if (totalMushafPages()) {
+                    - {{ currentMushafPageIndex() }} من {{ totalMushafPages() }} داخل السورة
+                  }
+                }
+              </small>
             </div>
 
-            <div class="reading-tools" aria-label="أدوات القراءة">
-              <button
-                type="button"
-                aria-label="تصغير حجم الخط"
-                (click)="decreaseFontSize()"
-                [disabled]="fontSizeLevel() === 0"
-              >
-                <svg lucideMinus aria-hidden="true"></svg>
-              </button>
+            <div class="reading-controls">
+              <div class="reading-mode-switch" aria-label="طريقة عرض القراءة">
+                <button
+                  type="button"
+                  [class.active]="readingMode() === 'surah'"
+                  (click)="setReadingMode('surah')"
+                >
+                  عرض السورة
+                </button>
 
-              <button type="button" (click)="resetFontSize()">
-                <svg lucideRotateCcw aria-hidden="true"></svg>
-                <span>حجم الخط</span>
-              </button>
+                <button
+                  type="button"
+                  [class.active]="readingMode() === 'mushaf'"
+                  (click)="setReadingMode('mushaf')"
+                >
+                  عرض المصحف
+                </button>
 
-              <button
-                type="button"
-                aria-label="تكبير حجم الخط"
-                (click)="increaseFontSize()"
-                [disabled]="fontSizeLevel() === 2"
-              >
-                <svg lucidePlus aria-hidden="true"></svg>
-              </button>
+                <button
+                  type="button"
+                  class="focus-button"
+                  [class.active]="isFocusMode()"
+                  [attr.aria-pressed]="isFocusMode()"
+                  (click)="toggleFocusMode()"
+                >
+                  {{ isFocusMode() ? 'إنهاء التركيز' : 'تركيز' }}
+                </button>
+              </div>
+
+              <div class="reading-tools" aria-label="أدوات القراءة">
+                <button
+                  type="button"
+                  aria-label="تصغير حجم الخط"
+                  (click)="decreaseFontSize()"
+                  [disabled]="fontSizeLevel() === 0"
+                >
+                  <svg lucideMinus aria-hidden="true"></svg>
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="إعادة حجم الخط للوضع الافتراضي"
+                  (click)="resetFontSize()"
+                >
+                  <svg lucideRotateCcw aria-hidden="true"></svg>
+                  <span>افتراضي</span>
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="تكبير حجم الخط"
+                  (click)="increaseFontSize()"
+                  [disabled]="fontSizeLevel() === 2"
+                >
+                  <svg lucidePlus aria-hidden="true"></svg>
+                </button>
+              </div>
             </div>
           </div>
 
-          @if (shouldShowBasmalah()) {
+          @if (readingMode() === 'mushaf') {
+            <div class="mushaf-page-nav top">
+              <button
+                type="button"
+                (click)="goToPreviousMushafPage()"
+                [disabled]="!canGoToPreviousMushafPage()"
+              >
+                <svg lucideChevronRight aria-hidden="true"></svg>
+                <span>الصفحة السابقة</span>
+              </button>
+
+              <strong>صفحة {{ currentMushafPage() }}</strong>
+
+              <button
+                type="button"
+                (click)="goToNextMushafPage()"
+                [disabled]="!canGoToNextMushafPage()"
+              >
+                <span>الصفحة التالية</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </button>
+            </div>
+          }
+
+          @if (shouldShowBasmalahInView()) {
             <p class="basmalah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
           }
 
           <div class="ayahs-list">
-            @for (ayah of displayAyahs(); track ayah.number) {
-              <p class="ayah-line">
-                <span class="ayah-text">{{ ayah.text }}</span>
-                <span class="ayah-number">{{ ayah.numberInSurah }}</span>
-              </p>
+            @if (readingMode() === 'surah') {
+              @for (ayah of displayAyahs(); track ayah.number) {
+                <p class="ayah-line">
+                  <span class="ayah-text">{{ ayah.text }}</span>
+                  <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                </p>
+              }
+            } @else {
+              @for (ayah of currentMushafPageAyahs(); track ayah.number) {
+                <p class="ayah-line">
+                  <span class="ayah-text">{{ ayah.text }}</span>
+                  <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                </p>
+              }
             }
           </div>
+
+          @if (readingMode() === 'mushaf') {
+            <div class="mushaf-page-nav bottom">
+              <button
+                type="button"
+                (click)="goToPreviousMushafPage()"
+                [disabled]="!canGoToPreviousMushafPage()"
+              >
+                <svg lucideChevronRight aria-hidden="true"></svg>
+                <span>الصفحة السابقة</span>
+              </button>
+
+              <strong>صفحة {{ currentMushafPage() }}</strong>
+
+              <button
+                type="button"
+                (click)="goToNextMushafPage()"
+                [disabled]="!canGoToNextMushafPage()"
+              >
+                <span>الصفحة التالية</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </button>
+            </div>
+          }
         </article>
 
         <div class="bottom-navigation">

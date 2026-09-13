@@ -23,11 +23,18 @@ import {
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { FavoriteItem } from '../../../../core/models/favorite.model';
-import { QuranSurahDetails } from '../../../../core/models/quran.model';
+import { QuranAyah, QuranSurahDetails } from '../../../../core/models/quran.model';
 import { QuranService } from '../../../../core/services/quran';
 import { FavoriteButton } from '../../../../shared/components/favorite-button/favorite-button';
 import { PageState } from '../../../../shared/components/page-state/page-state';
 import { SkeletonCard } from '../../../../shared/components/skeleton-card/skeleton-card';
+
+type ReadingMode = 'surah' | 'mushaf';
+
+interface MushafPageGroup {
+  pageNumber: number;
+  ayahs: QuranAyah[];
+}
 
 @Component({
   selector: 'app-surah-details',
@@ -54,16 +61,22 @@ export class SurahDetails implements OnInit {
   private readonly quranService = inject(QuranService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly viewportScroller = inject(ViewportScroller);
+
   private readonly lastReadStorageKey = 'qurb_last_read_surah';
   private readonly oldLastReadStorageKey = 'quran_sunnah_last_read_surah';
   private readonly fontSizeStorageKey = 'qurb_reading_font_size';
   private readonly oldFontSizeStorageKey = 'quran_sunnah_reading_font_size';
+  private readonly readingModeStorageKey = 'qurb_quran_reading_mode';
+  private readonly mushafPageStoragePrefix = 'qurb_quran_mushaf_page';
 
   readonly surah = signal<QuranSurahDetails | null>(null);
   readonly currentSurahNumber = signal(0);
   readonly fontSizeLevel = signal(this.getStoredFontSizeLevel());
+  readonly readingMode = signal<ReadingMode>(this.getStoredReadingMode());
+  readonly currentMushafPage = signal(0);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly isFocusMode = signal(false);
 
   readonly canRetry = computed(() => {
     const surahNumber = this.currentSurahNumber();
@@ -103,6 +116,85 @@ export class SurahDetails implements OnInit {
     });
   });
 
+  readonly mushafPages = computed<MushafPageGroup[]>(() => {
+    const pages = new Map<number, QuranAyah[]>();
+
+    this.displayAyahs().forEach((ayah) => {
+      const pageAyahs = pages.get(ayah.page) ?? [];
+      pageAyahs.push(ayah);
+      pages.set(ayah.page, pageAyahs);
+    });
+
+    return Array.from(pages.entries())
+      .sort(([firstPage], [secondPage]) => firstPage - secondPage)
+      .map(([pageNumber, ayahs]) => ({
+        pageNumber,
+        ayahs,
+      }));
+  });
+
+  readonly firstMushafPage = computed(() => {
+    return this.mushafPages()[0]?.pageNumber ?? null;
+  });
+
+  readonly lastMushafPage = computed(() => {
+    const pages = this.mushafPages();
+    return pages[pages.length - 1]?.pageNumber ?? null;
+  });
+
+  readonly currentMushafPageIndex = computed(() => {
+    const pages = this.mushafPages();
+    const pageIndex = pages.findIndex((page) => page.pageNumber === this.currentMushafPage());
+
+    return pageIndex >= 0 ? pageIndex + 1 : 0;
+  });
+
+  readonly totalMushafPages = computed(() => {
+    return this.mushafPages().length;
+  });
+
+  readonly currentMushafPageAyahs = computed(() => {
+    const currentPage = this.currentMushafPage();
+
+    return (
+      this.mushafPages().find((page) => page.pageNumber === currentPage)?.ayahs ??
+      this.mushafPages()[0]?.ayahs ??
+      []
+    );
+  });
+
+  readonly shouldShowBasmalahInView = computed(() => {
+    if (!this.shouldShowBasmalah()) {
+      return false;
+    }
+
+    if (this.readingMode() === 'surah') {
+      return true;
+    }
+
+    return this.currentMushafPage() === this.firstMushafPage();
+  });
+
+  readonly canGoToPreviousMushafPage = computed(() => {
+    const firstPage = this.firstMushafPage();
+
+    if (!firstPage) {
+      return false;
+    }
+
+    return this.currentMushafPage() > firstPage;
+  });
+
+  readonly canGoToNextMushafPage = computed(() => {
+    const lastPage = this.lastMushafPage();
+
+    if (!lastPage) {
+      return false;
+    }
+
+    return this.currentMushafPage() < lastPage;
+  });
+
   readonly previousSurahNumber = computed(() => {
     const currentSurah = this.surah();
 
@@ -132,6 +224,8 @@ export class SurahDetails implements OnInit {
           this.isLoading.set(true);
           this.errorMessage.set('');
           this.surah.set(null);
+          this.currentMushafPage.set(0);
+          this.isFocusMode.set(false);
         }),
         switchMap((surahNumber) => {
           if (!surahNumber || surahNumber < 1 || surahNumber > 114) {
@@ -165,6 +259,7 @@ export class SurahDetails implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.surah.set(null);
+    this.currentMushafPage.set(0);
 
     this.quranService
       .getSurahDetails(surahNumber)
@@ -178,6 +273,29 @@ export class SurahDetails implements OnInit {
           this.isLoading.set(false);
         },
       });
+  }
+
+  setReadingMode(mode: ReadingMode): void {
+    if (this.readingMode() === mode) {
+      return;
+    }
+
+    this.readingMode.set(mode);
+    this.saveReadingMode(mode);
+
+    if (mode === 'mushaf') {
+      this.ensureValidMushafPage();
+    }
+
+    this.viewportScroller.scrollToAnchor('reading-card');
+  }
+
+  goToPreviousMushafPage(): void {
+    this.goToMushafPageByOffset(-1);
+  }
+
+  goToNextMushafPage(): void {
+    this.goToMushafPageByOffset(1);
   }
 
   getCurrentSurahFavoriteItem(surah: QuranSurahDetails): Omit<FavoriteItem, 'createdAt'> {
@@ -203,7 +321,7 @@ export class SurahDetails implements OnInit {
   }
 
   resetFontSize(): void {
-    this.updateFontSize(1);
+    this.updateFontSize(0);
   }
 
   private handleSurahResponse(surah: QuranSurahDetails | null): void {
@@ -211,10 +329,86 @@ export class SurahDetails implements OnInit {
 
     if (surah) {
       this.saveLastReadSurah(surah);
+      this.setInitialMushafPage(surah);
       this.viewportScroller.scrollToPosition([0, 0]);
     }
 
     this.isLoading.set(false);
+  }
+
+  private setInitialMushafPage(surah: QuranSurahDetails): void {
+    const firstPage = surah.ayahs[0]?.page;
+
+    if (!firstPage) {
+      this.currentMushafPage.set(0);
+      return;
+    }
+
+    const lastPage = surah.ayahs[surah.ayahs.length - 1]?.page ?? firstPage;
+    const storedPage = this.getStoredMushafPage(surah.number);
+
+    if (storedPage && storedPage >= firstPage && storedPage <= lastPage) {
+      this.currentMushafPage.set(storedPage);
+      return;
+    }
+
+    this.currentMushafPage.set(firstPage);
+  }
+
+  private ensureValidMushafPage(): void {
+    const firstPage = this.firstMushafPage();
+    const lastPage = this.lastMushafPage();
+    const currentPage = this.currentMushafPage();
+
+    if (!firstPage || !lastPage) {
+      return;
+    }
+
+    if (currentPage >= firstPage && currentPage <= lastPage) {
+      return;
+    }
+
+    this.currentMushafPage.set(firstPage);
+  }
+
+  private goToMushafPageByOffset(offset: number): void {
+    const pages = this.mushafPages();
+    const currentIndex = pages.findIndex((page) => page.pageNumber === this.currentMushafPage());
+    const nextPage = pages[currentIndex + offset];
+
+    if (!nextPage) {
+      return;
+    }
+
+    this.currentMushafPage.set(nextPage.pageNumber);
+    this.saveCurrentMushafPage(nextPage.pageNumber);
+    this.viewportScroller.scrollToAnchor('reading-card');
+  }
+
+  private saveCurrentMushafPage(pageNumber: number): void {
+    const surahNumber = this.currentSurahNumber();
+
+    if (surahNumber < 1 || surahNumber > 114) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(`${this.mushafPageStoragePrefix}_${surahNumber}`, pageNumber.toString());
+    } catch {
+      return;
+    }
+  }
+
+  private getStoredMushafPage(surahNumber: number): number | null {
+    try {
+      const storedPage = Number(
+        localStorage.getItem(`${this.mushafPageStoragePrefix}_${surahNumber}`),
+      );
+
+      return Number.isInteger(storedPage) && storedPage > 0 ? storedPage : null;
+    } catch {
+      return null;
+    }
   }
 
   private updateFontSize(level: number): void {
@@ -229,18 +423,45 @@ export class SurahDetails implements OnInit {
 
   private getStoredFontSizeLevel(): number {
     try {
-      const storedLevel = Number(
+      const storedValue =
         localStorage.getItem(this.fontSizeStorageKey) ??
-          localStorage.getItem(this.oldFontSizeStorageKey),
-      );
+        localStorage.getItem(this.oldFontSizeStorageKey);
+
+      if (!storedValue) {
+        return 0;
+      }
+
+      const storedLevel = Number(storedValue);
 
       if ([0, 1, 2].includes(storedLevel)) {
         return storedLevel;
       }
 
-      return 1;
+      return 0;
     } catch {
-      return 1;
+      return 0;
+    }
+  }
+
+  private saveReadingMode(mode: ReadingMode): void {
+    try {
+      localStorage.setItem(this.readingModeStorageKey, mode);
+    } catch {
+      return;
+    }
+  }
+
+  private getStoredReadingMode(): ReadingMode {
+    try {
+      const storedMode = localStorage.getItem(this.readingModeStorageKey);
+
+      if (storedMode === 'surah' || storedMode === 'mushaf') {
+        return storedMode;
+      }
+
+      return 'surah';
+    } catch {
+      return 'surah';
     }
   }
 
@@ -260,6 +481,14 @@ export class SurahDetails implements OnInit {
     } catch {
       return;
     }
+  }
+
+  toggleFocusMode(): void {
+    this.isFocusMode.update((value) => !value);
+
+    setTimeout(() => {
+      this.viewportScroller.scrollToAnchor('reading-card');
+    });
   }
 
   private removeBasmalahFromFirstAyah(text: string): string {

@@ -17,9 +17,9 @@
 
 .back-link,
 .surah-nav a,
-.surah-nav span,
+.surah-nav > span,
 .bottom-navigation a,
-.bottom-navigation span {
+.bottom-navigation > span {
   height: var(--surah-control-height);
   min-height: var(--surah-control-height);
   display: inline-flex;
@@ -475,17 +475,35 @@
 }
 
 .bottom-navigation {
+  direction: rtl;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.55rem;
   max-width: 1140px;
   margin: 1.1rem auto 0;
 }
 
 .bottom-navigation a,
-.bottom-navigation span {
-  min-width: 148px;
+.bottom-navigation > span {
+  width: 180px;
+  min-width: 0;
+}
+
+.previous-surah {
+  order: 1;
+}
+
+.all-surahs-link {
+  order: 2;
+}
+
+.next-surah {
+  order: 3;
+}
+
+.mobile-label {
+  display: none;
 }
 
 .reveal {
@@ -553,7 +571,7 @@
   }
 
   .surah-nav a,
-  .surah-nav span,
+  .surah-nav > span,
   .back-link {
     flex: 1;
     font-size: 0.78rem;
@@ -730,6 +748,11 @@
   .bottom-navigation {
     gap: 0.46rem;
   }
+
+  .bottom-navigation a,
+  .bottom-navigation > span {
+    width: 160px;
+  }
 }
 
 @media (max-width: 520px) {
@@ -861,17 +884,43 @@
 
   .bottom-navigation {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'previous next'
+      'all all';
+    gap: 0.48rem;
     margin-top: 0.9rem;
   }
 
   .bottom-navigation a,
-  .bottom-navigation span {
+  .bottom-navigation > span {
     width: 100%;
     min-width: 0;
     height: 38px;
     min-height: 38px;
-    font-size: 0.78rem;
+    padding-inline: 0.46rem;
+    font-size: 0.74rem;
+    white-space: nowrap;
+  }
+
+  .previous-surah {
+    grid-area: previous;
+  }
+
+  .next-surah {
+    grid-area: next;
+  }
+
+  .all-surahs-link {
+    grid-area: all;
+  }
+
+  .desktop-label {
+    display: none;
+  }
+
+  .mobile-label {
+    display: inline;
   }
 
   .surah-page.focus-mode {
@@ -895,6 +944,23 @@
 
   .mushaf-page-nav button {
     width: 38px;
+  }
+
+  .bottom-navigation {
+    gap: 0.42rem;
+  }
+
+  .bottom-navigation a,
+  .bottom-navigation > span {
+    height: 36px;
+    min-height: 36px;
+    padding-inline: 0.38rem;
+    font-size: 0.7rem;
+  }
+
+  .bottom-navigation svg {
+    width: 14px;
+    height: 14px;
   }
 }
 

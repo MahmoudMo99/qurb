@@ -236,32 +236,50 @@
           }
         </article>
 
-        <div class="bottom-navigation">
+        <div class="bottom-navigation" aria-label="التنقل بين السور">
           @if (previousSurahNumber(); as previousNumber) {
-            <a [routerLink]="['/quran', previousNumber]">
+            <a
+              class="bottom-surah-link previous-surah"
+              [routerLink]="['/quran', previousNumber]"
+              aria-label="الانتقال إلى السورة السابقة"
+            >
               <svg lucideChevronRight aria-hidden="true"></svg>
-              <span>السورة السابقة</span>
+              <span class="desktop-label">السورة السابقة</span>
+              <span class="mobile-label">سورة سابقة</span>
             </a>
           } @else {
-            <span class="disabled-link">
+            <span
+              class="bottom-surah-link previous-surah disabled-link"
+              aria-label="لا توجد سورة سابقة"
+            >
               <svg lucideChevronRight aria-hidden="true"></svg>
-              <span>السورة السابقة</span>
+              <span class="desktop-label">السورة السابقة</span>
+              <span class="mobile-label">سورة سابقة</span>
             </span>
           }
 
-          <a routerLink="/quran">
+          <a class="all-surahs-link" routerLink="/quran" aria-label="العودة إلى كل السور">
             <svg lucideList aria-hidden="true"></svg>
             <span>كل السور</span>
           </a>
 
           @if (nextSurahNumber(); as nextNumber) {
-            <a [routerLink]="['/quran', nextNumber]">
-              <span>السورة التالية</span>
+            <a
+              class="bottom-surah-link next-surah"
+              [routerLink]="['/quran', nextNumber]"
+              aria-label="الانتقال إلى السورة التالية"
+            >
+              <span class="desktop-label">السورة التالية</span>
+              <span class="mobile-label">سورة تالية</span>
               <svg lucideChevronLeft aria-hidden="true"></svg>
             </a>
           } @else {
-            <span class="disabled-link">
-              <span>السورة التالية</span>
+            <span
+              class="bottom-surah-link next-surah disabled-link"
+              aria-label="لا توجد سورة تالية"
+            >
+              <span class="desktop-label">السورة التالية</span>
+              <span class="mobile-label">سورة تالية</span>
               <svg lucideChevronLeft aria-hidden="true"></svg>
             </span>
           }

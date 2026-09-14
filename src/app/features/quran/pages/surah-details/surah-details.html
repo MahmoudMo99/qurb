@@ -186,7 +186,13 @@
           </div>
 
           @if (readingMode() === 'mushaf') {
-            <div class="mushaf-page-nav top">
+            <div
+              class="mushaf-page-nav top"
+              (pointerdown)="$event.stopPropagation()"
+              (pointermove)="$event.stopPropagation()"
+              (pointerup)="$event.stopPropagation()"
+              (click)="$event.stopPropagation()"
+            >
               <button
                 type="button"
                 (click)="goToPreviousMushafPage()"
@@ -232,7 +238,13 @@
           </div>
 
           @if (readingMode() === 'mushaf') {
-            <div class="mushaf-page-nav bottom">
+            <div
+              class="mushaf-page-nav bottom"
+              (pointerdown)="$event.stopPropagation()"
+              (pointermove)="$event.stopPropagation()"
+              (pointerup)="$event.stopPropagation()"
+              (click)="$event.stopPropagation()"
+            >
               <button
                 type="button"
                 (click)="goToPreviousMushafPage()"

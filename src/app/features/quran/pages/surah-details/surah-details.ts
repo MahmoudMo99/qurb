@@ -434,7 +434,6 @@ export class SurahDetails implements OnInit {
 
     this.currentMushafPage.set(nextPage);
     this.saveCurrentMushafPage(nextPage);
-    this.showFocusControls();
     this.scrollToReadingCard();
   }
 

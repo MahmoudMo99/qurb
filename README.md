@@ -1,17 +1,7 @@
 # Qurb | قُرب
 
 <p align="center">
-  <strong>Qurb</strong> is a modern Arabic Islamic web application that brings Quran reading, prayer times, azkar, hadith collections, and personal favorites into one calm, responsive, RTL-first experience.
-</p>
-
-<p align="center">
-  <a href="https://qurb-islamic.vercel.app" target="_blank">
-    <img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-0F3D2E?style=for-the-badge&logo=vercel&logoColor=white" />
-  </a>
-  <img alt="Angular" src="https://img.shields.io/badge/Angular-22-DD0031?style=for-the-badge&logo=angular&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img alt="SCSS" src="https://img.shields.io/badge/SCSS-Styling-C6538C?style=for-the-badge&logo=sass&logoColor=white" />
-  <img alt="RTL" src="https://img.shields.io/badge/RTL-Arabic%20First-0F3D2E?style=for-the-badge" />
+  <strong>Qurb</strong> is a modern Arabic Islamic web application that brings Quran reading, prayer times, azkar, hadith collections, daily wird tracking, and personal favorites into one calm, responsive, RTL-first experience.
 </p>
 
 ---
@@ -26,7 +16,7 @@ https://qurb-islamic.vercel.app
 
 **Qurb | قُرب** is a single-page Islamic web application built with **Angular** for Arabic users.
 
-The application provides a calm and organized experience for reading the Quran, checking prayer times, browsing daily azkar, exploring selected hadith collections, and saving important content to personal favorites.
+The application provides a calm and organized experience for reading the Quran, checking prayer times, browsing daily azkar, exploring selected hadith collections, tracking daily wird habits, and saving important content to personal favorites.
 
 The project was rebuilt from scratch with a modern front-end structure, standalone Angular components, lazy-loaded routes, Angular Signals, local caching, responsive layouts, and a consistent Arabic RTL user interface.
 
@@ -75,6 +65,16 @@ The project was rebuilt from scratch with a modern front-end structure, standalo
 - Save hadiths to favorites.
 - Cache hadith book data locally.
 
+### Daily Wird
+
+- Track daily wird habits such as tasbeeh, tahmeed, takbeer, istighfar, salawat, Quran reading, and morning/evening azkar.
+- Increment and decrement daily counters.
+- Mark check-based habits as completed.
+- Show daily completion progress.
+- Keep the progress saved locally for the current day.
+- Allow counts beyond the daily target and show extra progress.
+- Reset today's progress when needed.
+
 ### Favorites
 
 - Save Quran surahs, ayahs, azkar, and hadiths.
@@ -94,6 +94,7 @@ The project was rebuilt from scratch with a modern front-end structure, standalo
 - Loading skeletons.
 - Empty and error states.
 - Toast notifications for user feedback.
+- Daily progress tracking without requiring authentication.
 - Scroll-to-top interaction.
 - SEO-ready page titles and meta descriptions.
 
@@ -135,6 +136,7 @@ src/
       prayer-times/
       azkar/
       hadith/
+      daily-wird/
       favorites/
     shared/
       components/
@@ -173,6 +175,7 @@ Stored data includes:
 - Selected prayer location.
 - Current-location coordinates when allowed by the user.
 - Daily azkar counters.
+- Daily wird progress.
 - Cached Quran, Azkar, Hadith, and Prayer Times responses.
 
 ---
@@ -312,8 +315,9 @@ The interface includes:
 
 Possible future improvements:
 
-- Add Daily Wird Tracker for tasbeeh, tahmeed, istighfar, and daily Quran reading.
 - Add daily Names of Allah content with reviewed explanations.
+- Add editable daily wird goals.
+- Add weekly wird history and progress insights.
 - Add audio recitations.
 - Add tafsir support.
 - Add multiple Quran editions.

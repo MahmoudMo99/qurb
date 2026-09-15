@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   LucideBookOpen,
+  LucideCheck,
   LucideClock,
   LucideExternalLink,
   LucideGlobe,
@@ -12,7 +13,7 @@ import {
 } from '@lucide/angular';
 
 type FooterExternalIcon = 'github' | 'portfolio' | 'linkedin';
-type FooterNavIcon = 'quran' | 'prayer' | 'azkar' | 'hadith' | 'favorites';
+type FooterNavIcon = 'quran' | 'wird' | 'prayer' | 'azkar' | 'hadith' | 'favorites';
 
 interface FooterLink {
   label: string;
@@ -31,6 +32,7 @@ interface FooterNavLink {
   imports: [
     RouterLink,
     LucideBookOpen,
+    LucideCheck,
     LucideClock,
     LucideExternalLink,
     LucideGlobe,
@@ -48,6 +50,7 @@ export class Footer {
 
   readonly quickLinks: FooterNavLink[] = [
     { label: 'القرآن الكريم', route: '/quran', icon: 'quran' },
+    { label: 'وردي اليومي', route: '/daily-wird', icon: 'wird' },
     { label: 'مواقيت الصلاة', route: '/prayer-times', icon: 'prayer' },
     { label: 'الأذكار', route: '/azkar', icon: 'azkar' },
     { label: 'الأحاديث', route: '/hadith', icon: 'hadith' },

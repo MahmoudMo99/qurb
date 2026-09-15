@@ -9,7 +9,7 @@
 .footer-content {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(180px, 0.65fr) minmax(190px, 0.65fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(185px, 0.65fr) minmax(190px, 0.65fr);
   gap: 2.2rem;
   padding-block: 3rem;
 }
@@ -81,7 +81,7 @@
 }
 
 .footer-brand p {
-  max-width: 600px;
+  max-width: 620px;
   margin: 0;
   color: rgba(255, 255, 255, 0.68);
   font-size: 0.98rem;
@@ -136,6 +136,7 @@
   height: 30px;
   display: grid;
   place-items: center;
+  flex: 0 0 auto;
   border-radius: 12px;
   color: rgba(243, 223, 140, 0.86);
   background-color: rgba(255, 255, 255, 0.07);
@@ -150,6 +151,7 @@
 .external-icon {
   width: 14px;
   height: 14px;
+  flex: 0 0 auto;
   opacity: 0.55;
   stroke-width: 2.5;
 }
@@ -171,6 +173,7 @@
 @media (max-width: 900px) {
   .footer-content {
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
   }
 
   .footer-brand {
@@ -233,6 +236,7 @@
     border-color: rgba(243, 223, 140, 0.08);
     background-color: rgba(255, 255, 255, 0.045);
     font-size: 0.84rem;
+    white-space: nowrap;
   }
 
   .footer-link-icon {
@@ -273,5 +277,12 @@
   .footer-nav a,
   .footer-links a {
     font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-nav a,
+  .footer-links a {
+    transition: none;
   }
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, signal } from '@angul
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   LucideBookOpen,
+  LucideCheck,
   LucideClock,
   LucideHeart,
   LucideHome,
@@ -11,7 +12,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 
-type NavIcon = 'home' | 'quran' | 'prayer' | 'azkar' | 'hadith' | 'favorites';
+type NavIcon = 'home' | 'quran' | 'wird' | 'prayer' | 'azkar' | 'hadith' | 'favorites';
 
 interface NavLink {
   label: string;
@@ -26,6 +27,7 @@ interface NavLink {
     RouterLink,
     RouterLinkActive,
     LucideBookOpen,
+    LucideCheck,
     LucideClock,
     LucideHeart,
     LucideHome,
@@ -45,6 +47,7 @@ export class Header {
   readonly navLinks: NavLink[] = [
     { label: 'الرئيسية', route: '/home', icon: 'home', exact: true },
     { label: 'القرآن', route: '/quran', icon: 'quran' },
+    { label: 'وردي', route: '/daily-wird', icon: 'wird' },
     { label: 'مواقيت الصلاة', route: '/prayer-times', icon: 'prayer' },
     { label: 'الأذكار', route: '/azkar', icon: 'azkar' },
     { label: 'الأحاديث', route: '/hadith', icon: 'hadith' },

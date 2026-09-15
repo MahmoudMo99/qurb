@@ -63,6 +63,18 @@ export const routes: Routes = [
       description: 'تصفح كتب الحديث النبوي والبحث داخل الأحاديث مع حفظ ونسخ ما تحتاج الرجوع إليه.',
     },
   },
+
+  {
+    path: 'daily-wird',
+    loadComponent: () =>
+      import('./features/daily-wird/pages/daily-wird/daily-wird').then((m) => m.DailyWird),
+    title: 'وردي اليومي | قُرب',
+    data: {
+      description:
+        'تابع وردك اليومي من التسبيح، التحميد، الاستغفار، الصلاة على النبي، وقراءة القرآن داخل قُرب.',
+    },
+  },
+
   {
     path: 'favorites',
     loadComponent: () =>

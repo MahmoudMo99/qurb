@@ -1,0 +1,138 @@
+<section class="daily-wird-page">
+  <div class="container">
+    <header class="wird-hero reveal">
+      <div class="hero-content">
+        <span class="section-badge">وردي اليومي</span>
+
+        <h1>تابع وردك اليومي بخطوات بسيطة</h1>
+
+        <p>
+          مساحة هادئة تساعدك تتابع أذكارك ووردك اليومي بدون تسجيل دخول، مع حفظ تقدم اليوم على جهازك.
+        </p>
+      </div>
+
+      <div class="hero-panel">
+        <span>{{ todayLabel }}</span>
+
+        <strong>{{ overallProgressPercentage() }}%</strong>
+
+        <small> {{ completedTasksCount() }} من {{ totalTasksCount() }} مكتمل </small>
+
+        <div class="hero-progress" aria-label="نسبة إنجاز ورد اليوم">
+          <span [style.width.%]="overallProgressPercentage()"></span>
+        </div>
+
+        <button type="button" [disabled]="!hasProgress()" (click)="resetToday()">
+          <svg lucideRotateCcw aria-hidden="true"></svg>
+          <span>تصفير اليوم</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="wird-summary reveal" aria-label="ملخص ورد اليوم">
+      <article>
+        <span>إنجاز اليوم</span>
+        <strong>{{ overallProgressPercentage() }}%</strong>
+      </article>
+
+      <article>
+        <span>العادات المكتملة</span>
+        <strong>{{ completedTasksCount() }}</strong>
+      </article>
+
+      <article>
+        <span>إجمالي العادات</span>
+        <strong>{{ totalTasksCount() }}</strong>
+      </article>
+    </section>
+
+    <section class="wird-grid" aria-label="عادات ورد اليوم">
+      @for (task of tasks(); track task.id) {
+        <article class="wird-card reveal" [class.completed]="task.isCompleted">
+          <div class="card-glow"></div>
+
+          <div class="card-header">
+            <div>
+              <span class="task-type">
+                {{ task.type === 'counter' ? 'عداد' : 'إتمام' }}
+              </span>
+
+              <h2>{{ task.title }}</h2>
+
+              <p>{{ task.description }}</p>
+            </div>
+
+            <span
+              class="completion-mark"
+              [attr.aria-label]="task.isCompleted ? 'مكتمل' : 'غير مكتمل'"
+            >
+              <svg lucideCheck aria-hidden="true"></svg>
+            </span>
+          </div>
+
+          <div class="task-meta">
+            <div>
+              <span>{{ task.value }} / {{ task.target }} {{ task.unit }}</span>
+
+              @if (task.extraValue > 0) {
+                <small>+{{ task.extraValue }} زيادة</small>
+              }
+            </div>
+
+            <strong>{{ task.progressPercentage }}%</strong>
+          </div>
+
+          <div class="task-progress" aria-hidden="true">
+            <span [style.width.%]="task.progressPercentage"></span>
+          </div>
+
+          @if (task.type === 'counter') {
+            <div class="counter-control">
+              <button
+                type="button"
+                aria-label="تقليل العدد"
+                [disabled]="task.value <= 0"
+                (click)="decrement(task.id)"
+              >
+                <svg lucideMinus aria-hidden="true"></svg>
+              </button>
+
+              <strong>{{ task.value }}</strong>
+
+              <button type="button" aria-label="زيادة العدد" (click)="increment(task.id)">
+                <svg lucidePlus aria-hidden="true"></svg>
+              </button>
+            </div>
+
+            <div class="quick-actions">
+              <button type="button" (click)="increment(task.id, 10)">+10</button>
+
+              <button type="button" [disabled]="task.value <= 0" (click)="resetTask(task.id)">
+                تصفير
+              </button>
+            </div>
+          } @else {
+            <button
+              type="button"
+              class="check-action"
+              [class.done]="task.isCompleted"
+              (click)="toggleCheck(task.id)"
+            >
+              <svg lucideCheck aria-hidden="true"></svg>
+              <span>{{ task.isCompleted ? 'تم الإتمام' : 'تحديد كمكتمل' }}</span>
+            </button>
+          }
+        </article>
+      }
+    </section>
+
+    <aside class="wird-note reveal">
+      <svg lucideSparkles aria-hidden="true"></svg>
+
+      <div>
+        <strong>ملاحظة بسيطة</strong>
+        <p>تقدم وردك محفوظ على هذا الجهاز فقط بدون تسجيل دخول، ويبدأ كل يوم بتقدم جديد تلقائيًا.</p>
+      </div>
+    </aside>
+  </div>
+</section>

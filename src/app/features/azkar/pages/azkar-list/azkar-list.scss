@@ -453,7 +453,6 @@
 .zikr-header,
 .zikr-text,
 .zikr-counter,
-.translation-box,
 .zikr-actions {
   position: relative;
 }
@@ -586,29 +585,6 @@
 
 .counter-reset:hover {
   transform: translateY(-2px);
-}
-
-.translation-box {
-  margin-top: 0.9rem;
-  padding: 0.85rem;
-  border-radius: 16px;
-  color: var(--color-muted);
-  background-color: #f8f5ec;
-  border: 1px solid rgba(15, 61, 46, 0.08);
-}
-
-.translation-box summary {
-  color: var(--color-primary);
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.translation-box p {
-  margin: 0.65rem 0 0;
-  direction: ltr;
-  text-align: left;
-  font-size: 0.9rem;
-  line-height: 1.8;
 }
 
 .zikr-actions {

@@ -74,6 +74,9 @@
     border-color 0.12s ease,
     box-shadow 0.16s ease;
 }
+.hero-actions a span {
+  white-space: nowrap;
+}
 
 .hero-actions svg,
 .feature-card a svg,
@@ -105,10 +108,14 @@
   transform: translateY(-2px);
 }
 
-.primary-action:hover,
 .prayer-page-link:hover,
 .home-prayer-state button:hover {
   background-color: var(--color-primary-dark);
+}
+
+.primary-action:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: 0 18px 38px rgba(15, 61, 46, 0.22);
 }
 
 .secondary-action:hover {
@@ -445,18 +452,21 @@
   margin-top: 1.3rem;
   padding: 0.55rem 0.95rem;
   border-radius: 999px;
-  color: var(--color-primary);
-  background-color: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--color-border);
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  box-shadow: 0 12px 26px rgba(15, 61, 46, 0.08);
   transition:
     transform 0.16s ease,
     background-color 0.12s ease,
-    border-color 0.12s ease;
+    border-color 0.12s ease,
+    box-shadow 0.16s ease;
 }
 
 .routine-link:hover {
   background-color: #ffffff;
-  border-color: rgba(201, 162, 39, 0.45);
+  border-color: rgba(201, 162, 39, 0.65);
+  box-shadow: 0 16px 34px rgba(15, 61, 46, 0.12);
 }
 
 .routine-list {

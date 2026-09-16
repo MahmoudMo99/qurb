@@ -45,13 +45,21 @@ export class Layout implements OnInit {
       route = route.firstChild;
     }
 
-    const title = typeof route.title === 'string' ? route.title : 'قُرب';
+    const title = typeof route.title === 'string' ? route.title : 'قُرب | Qurb';
 
     const description =
       typeof route.data['description'] === 'string'
         ? route.data['description']
-        : 'قُرب تطبيق إسلامي عربي لقراءة القرآن الكريم، متابعة مواقيت الصلاة، تصفح الأذكار، وقراءة الأحاديث النبوية.';
+        : 'قُرب Qurb تطبيق إسلامي عربي لقراءة القرآن الكريم، متابعة الورد اليومي، مواقيت الصلاة، الأذكار، والأحاديث النبوية.';
 
-    this.seoService.update(title, description);
+    const robots =
+      typeof route.data['robots'] === 'string' ? route.data['robots'] : 'index, follow';
+
+    this.seoService.update({
+      title,
+      description,
+      path: this.router.url,
+      robots,
+    });
   }
 }

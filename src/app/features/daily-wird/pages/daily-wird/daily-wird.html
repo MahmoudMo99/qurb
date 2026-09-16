@@ -122,6 +122,13 @@
               <span>{{ task.isCompleted ? 'تم الإتمام' : 'تحديد كمكتمل' }}</span>
             </button>
           }
+
+          @if (task.route) {
+            <a class="task-link" [routerLink]="task.route" [queryParams]="task.queryParams">
+              <span>{{ task.actionLabel || 'فتح القسم' }}</span>
+              <svg lucideChevronLeft aria-hidden="true"></svg>
+            </a>
+          }
         </article>
       }
     </section>

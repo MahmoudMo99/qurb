@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   LucideCheck,
+  LucideChevronLeft,
   LucideMinus,
   LucidePlus,
   LucideRotateCcw,
@@ -12,7 +14,15 @@ import { DailyWirdService } from '../../../../core/services/daily-wird';
 
 @Component({
   selector: 'app-daily-wird',
-  imports: [LucideCheck, LucideMinus, LucidePlus, LucideRotateCcw, LucideSparkles],
+  imports: [
+    RouterLink,
+    LucideCheck,
+    LucideChevronLeft,
+    LucideMinus,
+    LucidePlus,
+    LucideRotateCcw,
+    LucideSparkles,
+  ],
   templateUrl: './daily-wird.html',
   styleUrl: './daily-wird.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

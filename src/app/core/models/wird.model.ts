@@ -8,6 +8,9 @@ export interface WirdTask {
   target: number;
   unit: string;
   order: number;
+  route?: string;
+  queryParams?: Record<string, string>;
+  actionLabel?: string;
 }
 
 export interface WirdProgress {

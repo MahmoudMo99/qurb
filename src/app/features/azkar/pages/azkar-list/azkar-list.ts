@@ -20,6 +20,7 @@ import {
 } from '@lucide/angular';
 import { HotToastService } from '@ngxpert/hot-toast';
 
+import { ActivatedRoute } from '@angular/router';
 import {
   AzkarCategoriesData,
   AzkarCategory,
@@ -55,6 +56,7 @@ export class AzkarList {
   private readonly azkarService = inject(AzkarService);
   private readonly toastService = inject(HotToastService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
   private readonly countersStorageKey = 'qurb_azkar_daily_counters';
   private readonly oldCountersStorageKey = 'quran_sunnah_azkar_daily_counters';
 
@@ -83,7 +85,7 @@ export class AzkarList {
     { label: 'الحج والعمرة', value: 'hajj', description: 'أدعية الحج والعمرة' },
   ];
 
-  readonly selectedCategory = signal('morning');
+  readonly selectedCategory = signal(this.getInitialCategory());
   readonly categoriesData = signal<AzkarCategoriesData | null>(null);
   readonly azkarData = signal<AzkarCategoryDetailsData | null>(null);
   readonly searchTerm = signal('');
@@ -154,6 +156,7 @@ export class AzkarList {
   constructor() {
     this.loadCategories();
     this.loadAzkar(this.selectedCategory());
+    this.listenToCategoryQueryParam();
   }
 
   updateSearchTerm(event: Event): void {
@@ -251,6 +254,25 @@ export class AzkarList {
 
   reloadAzkar(): void {
     this.loadAzkar(this.selectedCategory());
+  }
+
+  private listenToCategoryQueryParam(): void {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const category = params.get('category');
+
+      if (!category || category === this.selectedCategory()) {
+        return;
+      }
+
+      this.selectedCategory.set(category);
+      this.searchTerm.set('');
+      this.showAllCategories.set(false);
+      this.loadAzkar(category);
+    });
+  }
+
+  private getInitialCategory(): string {
+    return this.route.snapshot.queryParamMap.get('category') ?? 'morning';
   }
 
   copyZikr(zikr: ZikrItem): void {

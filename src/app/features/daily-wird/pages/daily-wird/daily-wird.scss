@@ -456,6 +456,42 @@
   stroke-width: 3;
 }
 
+.task-link {
+  position: relative;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background-color: rgba(15, 61, 46, 0.07);
+  border: 1px solid rgba(15, 61, 46, 0.06);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    transform 0.16s ease,
+    color 0.12s ease,
+    background-color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.task-link svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.7;
+}
+
+.task-link:hover {
+  transform: translateY(-2px);
+  color: var(--color-primary-dark);
+  background-color: var(--color-secondary-light);
+  border-color: rgba(201, 162, 39, 0.45);
+}
+
 .wird-note {
   display: flex;
   align-items: flex-start;
@@ -608,6 +644,9 @@
     width: 40px;
     height: 34px;
   }
+  .task-link {
+    width: 100%;
+  }
 
   .wird-note {
     margin-top: 0.85rem;
@@ -629,7 +668,8 @@
   .hero-panel button,
   .counter-control button,
   .quick-actions button,
-  .check-action {
+  .check-action,
+  .task-link {
     animation: none;
     transition: none;
   }

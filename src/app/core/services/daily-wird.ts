@@ -60,6 +60,8 @@ export class DailyWirdService {
       target: 1,
       unit: 'صفحة',
       order: 6,
+      route: '/quran',
+      actionLabel: 'فتح القرآن',
     },
     {
       id: 'morning-azkar',
@@ -69,6 +71,9 @@ export class DailyWirdService {
       target: 1,
       unit: 'ورد',
       order: 7,
+      route: '/azkar',
+      queryParams: { category: 'morning' },
+      actionLabel: 'فتح أذكار الصباح',
     },
     {
       id: 'evening-azkar',
@@ -78,6 +83,9 @@ export class DailyWirdService {
       target: 1,
       unit: 'ورد',
       order: 8,
+      route: '/azkar',
+      queryParams: { category: 'evening' },
+      actionLabel: 'فتح أذكار المساء',
     },
   ];
 

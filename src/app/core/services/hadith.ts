@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, of, shareReplay, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, shareReplay, tap, throwError } from 'rxjs';
 
 import { HadithEditionResponse } from '../models/hadith.model';
 
@@ -30,6 +30,7 @@ export class HadithService {
         catchError(() => {
           return this.http.get<HadithEditionResponse>(`${this.apiUrl}/editions/${edition}.json`);
         }),
+        map((data) => this.normalizeHadithResponse(data)),
         tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
         catchError(() => this.getCachedOrThrow(cacheKey, oldCacheKey)),
         shareReplay(1),
@@ -38,6 +39,38 @@ export class HadithService {
     this.memoryCache.set(edition, request$);
 
     return request$;
+  }
+
+  private normalizeHadithResponse(data: HadithEditionResponse): HadithEditionResponse {
+    return {
+      ...data,
+      hadiths: data.hadiths
+        .map((hadith) => ({
+          ...hadith,
+          text: this.normalizeHadithText(hadith.text),
+        }))
+        .filter((hadith) => hadith.text.length > 0),
+    };
+  }
+
+  private normalizeHadithText(value: string): string {
+    return value
+      .replace(/&lt;br\s*\/?&gt;/gi, '\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p\s*>/gi, '\n')
+      .replace(/<p[^>]*>/gi, '')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;|&apos;/gi, "'")
+      .replace(/\s*\(\s*\d+\s*\)/g, '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\r\n?/g, '\n')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n[ \t]+/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/[ \t]{2,}/g, ' ')
+      .trim();
   }
 
   private saveCache(key: string, oldKey: string, data: HadithEditionResponse): void {
@@ -60,7 +93,7 @@ export class HadithService {
     const cachedData = this.getCachedData(key, oldKey);
 
     if (cachedData) {
-      return of(cachedData);
+      return of(this.normalizeHadithResponse(cachedData));
     }
 
     return throwError(() => new Error('No cached hadith data available.'));

@@ -81,7 +81,6 @@
         <div>
           <span>الكتاب الحالي</span>
           <h2>{{ selectedBook().label }}</h2>
-          <p>{{ data.metadata.name }}</p>
         </div>
 
         <div class="summary-pills">
@@ -96,18 +95,12 @@
             <article class="hadith-card reveal">
               <div class="hadith-header">
                 <span class="number-pill">#{{ hadith.hadithnumber }}</span>
-                <span class="section-pill">{{ getSectionName(hadith) }}</span>
+                @if (getSectionName(hadith); as sectionName) {
+                  <span class="section-pill">{{ sectionName }}</span>
+                }
               </div>
 
               <p class="hadith-text">{{ hadith.text }}</p>
-
-              @if (hadith.grades?.length) {
-                <div class="grades-box">
-                  @for (grade of hadith.grades; track grade.name + grade.grade) {
-                    <span>{{ grade.name }}: {{ grade.grade }}</span>
-                  }
-                </div>
-              }
 
               <div class="hadith-actions">
                 <small>{{ getReferenceText(hadith) }}</small>

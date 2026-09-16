@@ -216,10 +216,20 @@ export class HadithList {
     const sectionNumber = hadith.reference?.book?.toString();
 
     if (!sectionNumber) {
-      return 'باب الحديث';
+      return '';
     }
 
-    return sections[sectionNumber] ?? `باب رقم ${sectionNumber}`;
+    const sectionName = sections[sectionNumber];
+
+    if (!sectionName || this.containsEnglish(sectionName)) {
+      return '';
+    }
+
+    return sectionName;
+  }
+
+  private containsEnglish(value: string): boolean {
+    return /[A-Za-z]/.test(value);
   }
 
   getReferenceText(hadith: HadithItem): string {

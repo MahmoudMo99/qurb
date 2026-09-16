@@ -60,8 +60,17 @@
   gap: 1rem;
 }
 
+.ayah-card {
+  order: 1;
+}
+
 .zikr-card {
+  order: 2;
+}
+
+.hadith-card {
   grid-column: 1 / -1;
+  order: 3;
 }
 
 .daily-card {
@@ -97,6 +106,10 @@
 }
 
 .zikr-card {
+  min-height: 300px;
+}
+
+.hadith-card {
   min-height: 245px;
 }
 
@@ -188,6 +201,8 @@
   font-size: clamp(1.45rem, 2vw, 2rem);
   font-weight: 400;
   line-height: 2.12;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
 
 .zikr-card .main-text {
@@ -263,7 +278,7 @@
     grid-template-columns: 1fr;
   }
 
-  .zikr-card {
+  .hadith-card {
     grid-column: auto;
   }
 

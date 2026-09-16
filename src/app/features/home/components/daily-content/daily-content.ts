@@ -244,7 +244,7 @@ export class DailyContent {
 
     const hadith$ = this.hadithService.getEdition(hadithBook.edition).pipe(
       map((data) => {
-        const hadith = data.hadiths[this.getDailyIndex(data.hadiths.length, 43)] ?? null;
+        const hadith = this.selectDailyHadith(data.hadiths);
 
         if (!hadith) {
           return null;
@@ -297,6 +297,22 @@ export class DailyContent {
           this.isLoading.set(false);
         },
       });
+  }
+
+  private selectDailyHadith(hadiths: HadithItem[]): HadithItem | null {
+    const suitableHadiths = hadiths.filter((hadith) => {
+      const length = this.getPlainTextLength(hadith.text);
+
+      return length >= 40 && length <= 850;
+    });
+
+    const source = suitableHadiths.length ? suitableHadiths : hadiths;
+
+    return source[this.getDailyIndex(source.length, 43)] ?? null;
+  }
+
+  private getPlainTextLength(value: string): number {
+    return value.replace(/\s+/g, ' ').trim().length;
   }
 
   private getDailyIndex(length: number, salt: number): number {

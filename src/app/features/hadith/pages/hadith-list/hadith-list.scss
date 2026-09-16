@@ -305,7 +305,6 @@
 
 .hadith-header,
 .hadith-text,
-.grades-box,
 .hadith-actions {
   position: relative;
 }
@@ -345,23 +344,8 @@
   font-size: clamp(1.55rem, 2.2vw, 2.18rem);
   font-weight: 400;
   line-height: 2.2;
-}
-
-.grades-box {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.42rem;
-  margin-top: 0.9rem;
-  padding: 0.8rem;
-  border-radius: 16px;
-  background-color: #f8f5ec;
-  border: 1px solid rgba(15, 61, 46, 0.08);
-}
-
-.grades-box span {
-  color: var(--color-primary);
-  font-size: 0.78rem;
-  font-weight: 900;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
 
 .hadith-actions {

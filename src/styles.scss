@@ -1,8 +1,14 @@
-/* Importing @ngxpert/hot-toast base styles. */
 @use '@ngxpert/hot-toast/styles';
 
-/* Importing @ngxpert/hot-toast minimal theme. */
 @use '@ngxpert/hot-toast/themes/minimal';
+
+@font-face {
+  font-family: 'KFGQPC Hafs';
+  src: url('/fonts/kfgqpc-hafs-v30.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 :root {
   --color-primary: #0f3d2e;
@@ -20,6 +26,7 @@
 
   --font-ui: 'Cairo', system-ui, sans-serif;
   --font-quran: 'Amiri Quran', serif;
+  --font-mushaf: 'KFGQPC Hafs', 'Amiri Quran', serif;
 }
 
 * {

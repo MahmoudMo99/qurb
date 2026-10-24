@@ -70,28 +70,44 @@
             {{ currentSurah.revelationType === 'Meccan' ? 'سورة مكية' : 'سورة مدنية' }}
           </span>
 
-          <div class="surah-save">
-            <app-favorite-button
-              mode="default"
-              label="حفظ السورة"
-              savedLabel="محفوظة"
-              [favoriteItem]="getCurrentSurahFavoriteItem(currentSurah)"
-            ></app-favorite-button>
-          </div>
+          @if (favoriteTargetSurah(); as favoriteSurah) {
+            <div class="surah-save">
+              <app-favorite-button
+                mode="default"
+                label="حفظ السورة"
+                savedLabel="محفوظة"
+                [favoriteItem]="getCurrentSurahFavoriteItem(favoriteSurah)"
+              ></app-favorite-button>
+            </div>
+          }
         </div>
 
         <div class="surah-title-area">
-          <h1>{{ currentSurah.name }}</h1>
+          <h1 [class.mushaf-page-title]="readingMode() === 'mushaf'">
+            @if (readingMode() === 'mushaf') {
+              صفحة {{ currentMushafPage() }} من المصحف
+            } @else {
+              {{ currentSurah.name }}
+            }
+          </h1>
         </div>
 
         <div class="surah-info">
-          <span>رقم السورة {{ currentSurah.number }}</span>
-          <span>{{ currentSurah.numberOfAyahs }} آية</span>
-
-          @if (firstMushafPage(); as firstPage) {
-            @if (lastMushafPage(); as lastPage) {
-              <span>من صفحة {{ firstPage }} إلى {{ lastPage }}</span>
+          @if (readingMode() === 'mushaf') {
+            @if (currentMushafPageInfo(); as pageInfo) {
+              <span>الصفحة {{ pageInfo.page }} من 604</span>
+              <span>الجزء {{ pageInfo.juz }}</span>
+              <span class="mushaf-surah-names">
+                {{ pageInfo.surahNames.join(' - ') }}
+              </span>
             }
+          } @else {
+            <span>رقم السورة {{ currentSurah.number }}</span>
+            <span>{{ currentSurah.numberOfAyahs }} آية</span>
+            <span>
+              من صفحة {{ firstMushafPage() }} إلى
+              {{ lastMushafPage() }}
+            </span>
           }
         </div>
       </header>
@@ -114,13 +130,14 @@
               </span>
 
               <small>
-                @if (readingMode() === 'surah') {
-                  النص بالرسم العثماني
-                } @else {
-                  صفحة {{ currentMushafPage() }} من المصحف
-                  @if (totalMushafPages()) {
-                    - {{ currentMushafPageIndex() }} من {{ totalMushafPages() }} داخل السورة
+                @if (readingMode() === 'mushaf') {
+                  @if (currentMushafPageInfo(); as pageInfo) {
+                    الصفحة {{ pageInfo.page }} من 604 • الجزء {{ pageInfo.juz }} •
+                    {{ pageInfo.ayahCount }} آية في الصفحة
                   }
+                } @else {
+                  {{ surah()?.numberOfAyahs }} آية • من صفحة {{ firstMushafPage() }} إلى صفحة
+                  {{ lastMushafPage() }}
                 }
               </small>
             </div>
@@ -197,17 +214,47 @@
                 type="button"
                 (click)="goToPreviousMushafPage()"
                 [disabled]="!canGoToPreviousMushafPage()"
+                aria-label="الصفحة السابقة"
               >
                 <svg lucideChevronRight aria-hidden="true"></svg>
                 <span>الصفحة السابقة</span>
               </button>
 
-              <strong>صفحة {{ currentMushafPage() }}</strong>
+              <div class="mushaf-page-nav__center">
+                <button
+                  type="button"
+                  class="mushaf-index-trigger"
+                  (click)="openMushafIndex()"
+                  aria-label="فتح فهرس المصحف"
+                  aria-haspopup="dialog"
+                  [attr.aria-expanded]="isMushafIndexOpen()"
+                >
+                  <svg lucideList aria-hidden="true"></svg>
+                  <span>الفهرس</span>
+                </button>
+                <div class="mushaf-page-selector">
+                  <label for="mushaf-page-input">صفحة</label>
+
+                  <input
+                    #pageInput
+                    id="mushaf-page-input"
+                    type="number"
+                    min="1"
+                    max="604"
+                    [value]="currentMushafPage()"
+                    (keydown.enter)="goToMushafPage(pageInput.valueAsNumber)"
+                    aria-label="رقم الصفحة"
+                  />
+
+                  <span class="mushaf-page-total">/ 604</span>
+                </div>
+              </div>
 
               <button
                 type="button"
                 (click)="goToNextMushafPage()"
                 [disabled]="!canGoToNextMushafPage()"
+                aria-label="الصفحة التالية"
               >
                 <span>الصفحة التالية</span>
                 <svg lucideChevronLeft aria-hidden="true"></svg>
@@ -215,7 +262,7 @@
             </div>
           }
 
-          @if (shouldShowBasmalahInView()) {
+          @if (readingMode() === 'surah' && shouldShowBasmalahInView()) {
             <p class="basmalah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
           }
 
@@ -224,15 +271,34 @@
               @for (ayah of displayAyahs(); track ayah.number) {
                 <p class="ayah-line">
                   <span class="ayah-text">{{ ayah.text }}</span>
-                  <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                  @if (!isOfficialQuran()) {
+                    <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                  }
                 </p>
               }
             } @else {
               @for (ayah of currentMushafPageAyahs(); track ayah.number) {
-                <p class="ayah-line">
+                @if (getMushafSurahStart(ayah.number); as surahStart) {
+                  <div class="mushaf-surah-start">
+                    <div class="mushaf-surah-title">
+                      {{ surahStart.surahName }}
+                    </div>
+
+                    @if (surahStart.showBasmalah) {
+                      <div class="mushaf-surah-basmalah">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                      </div>
+                    }
+                  </div>
+                }
+
+                <span class="ayah-line">
                   <span class="ayah-text">{{ ayah.text }}</span>
-                  <span class="ayah-number">{{ ayah.numberInSurah }}</span>
-                </p>
+
+                  @if (!isOfficialQuran()) {
+                    <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                  }
+                </span>
               }
             }
           </div>
@@ -325,4 +391,117 @@
       }
     }
   </div>
+
+  @if (isMushafIndexOpen() && readingMode() === 'mushaf') {
+    <div class="mushaf-index-layer" (pointerdown)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="mushaf-index-backdrop"
+        aria-label="إغلاق فهرس المصحف"
+        (click)="closeMushafIndex()"
+      ></button>
+
+      <aside
+        class="mushaf-index-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mushaf-index-title"
+        dir="rtl"
+      >
+        <div class="mushaf-index-drawer__header">
+          <div>
+            <span class="mushaf-index-drawer__eyebrow">تصفّح المصحف</span>
+            <h2 id="mushaf-index-title">فهرس المصحف</h2>
+            <p>انتقل إلى أي سورة أو جزء بسهولة</p>
+          </div>
+          <button
+            type="button"
+            class="mushaf-index-close"
+            aria-label="إغلاق الفهرس"
+            (click)="closeMushafIndex()"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="mushaf-index-tabs" role="tablist" aria-label="نوع الفهرس">
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="mushafIndexTab() === 'surahs'"
+            [class.active]="mushafIndexTab() === 'surahs'"
+            (click)="setMushafIndexTab('surahs')"
+          >
+            السور <span>114</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="mushafIndexTab() === 'juz'"
+            [class.active]="mushafIndexTab() === 'juz'"
+            (click)="setMushafIndexTab('juz')"
+          >
+            الأجزاء <span>30</span>
+          </button>
+        </div>
+
+        @if (mushafIndexTab() === 'surahs') {
+          <div class="mushaf-index-search">
+            <label for="mushaf-index-search">ابحث عن سورة</label>
+            <input
+              id="mushaf-index-search"
+              type="search"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="اسم السورة أو رقمها"
+              [value]="mushafIndexSearch()"
+              (input)="setMushafIndexSearch($any($event.target).value)"
+            />
+          </div>
+        }
+
+        <div class="mushaf-index-list" tabindex="0">
+          @if (mushafIndexTab() === 'surahs') {
+            @for (item of filteredMushafSurahs(); track item.number) {
+              <button
+                type="button"
+                class="mushaf-index-item"
+                [class.is-current]="currentMushafLocation()?.surah === item.number"
+                [attr.aria-current]="
+                  currentMushafLocation()?.surah === item.number ? 'location' : null
+                "
+                (click)="goToMushafSurah(item.number)"
+              >
+                <span class="mushaf-index-item__number">{{ item.number }}</span>
+                <span class="mushaf-index-item__name mushaf-index-item__name--surah">{{
+                  item.name
+                }}</span>
+                <span class="mushaf-index-item__page">ص {{ item.page }}</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </button>
+            } @empty {
+              <p class="mushaf-index-empty">لا توجد سور مطابقة للبحث.</p>
+            }
+          } @else {
+            @for (item of mushafJuzOptions(); track item.number) {
+              <button
+                type="button"
+                class="mushaf-index-item"
+                [class.is-current]="currentMushafLocation()?.juz === item.number"
+                [attr.aria-current]="
+                  currentMushafLocation()?.juz === item.number ? 'location' : null
+                "
+                (click)="goToMushafJuz(item.number)"
+              >
+                <span class="mushaf-index-item__number">{{ item.number }}</span>
+                <span class="mushaf-index-item__name">الجزء {{ item.number }}</span>
+                <span class="mushaf-index-item__page">ص {{ item.page }}</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </button>
+            }
+          }
+        </div>
+      </aside>
+    </div>
+  }
 </section>

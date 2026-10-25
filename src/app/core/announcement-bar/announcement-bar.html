@@ -1,0 +1,43 @@
+@if (isVisible()) {
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <div class="announcement-message">
+        <span class="announcement-icon" aria-hidden="true">
+          <svg lucideSparkles></svg>
+        </span>
+
+        <div class="announcement-copy">
+          <strong>خلّي قُرب دايمًا معاك.</strong>
+          <span> ثبّت التطبيق على جهازك، ووصل للقرآن والأذكار بسهولة. </span>
+        </div>
+      </div>
+
+      <div class="announcement-actions">
+        <button
+          class="install-button"
+          type="button"
+          [disabled]="isInstalling()"
+          (click)="installApp()"
+        >
+          <svg lucideDownload aria-hidden="true"></svg>
+          <span>
+            {{ isInstalling() ? 'جارٍ التثبيت...' : 'تثبيت قُرب' }}
+          </span>
+        </button>
+
+        <span class="announcement-divider" aria-hidden="true"></span>
+
+        <button class="close-button" type="button" aria-label="إغلاق الإعلان" (click)="close()">
+          <svg lucideX aria-hidden="true"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showInstallDialog()) {
+  <app-install-dialog
+    [platform]="installPlatform()"
+    (closed)="closeInstallDialog()"
+  ></app-install-dialog>
+}

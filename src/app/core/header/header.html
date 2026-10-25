@@ -1,6 +1,5 @@
 <header class="site-header" [class.scrolled]="isScrolled()" [class.menu-open]="isMenuOpen()">
   <nav class="container header-nav" aria-label="القائمة الرئيسية">
-    <!-- Brand -->
     <a class="brand" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية" (click)="closeAll()">
       <span class="brand-mark" aria-hidden="true">
         <span class="brand-letter">ق</span>
@@ -12,7 +11,6 @@
       </span>
     </a>
 
-    <!-- Desktop navigation -->
     <div class="desktop-navigation">
       <ul class="desktop-links">
         @for (link of primaryLinks; track link.route) {
@@ -75,13 +73,11 @@
       </ul>
     </div>
 
-    <!-- Desktop CTA -->
     <a class="header-cta" routerLink="/quran" (click)="closeAll()">
       <svg lucideBookOpen aria-hidden="true"></svg>
       <span>افتح المصحف</span>
     </a>
 
-    <!-- Mobile menu trigger -->
     <button
       #mobileMenuButton
       class="mobile-menu-button"
@@ -98,7 +94,6 @@
       }
     </button>
 
-    <!-- Mobile navigation -->
     <div
       #mobilePanel
       id="mobile-navigation"

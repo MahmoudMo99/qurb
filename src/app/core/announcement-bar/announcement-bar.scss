@@ -1,0 +1,215 @@
+:host {
+  display: block;
+}
+
+.announcement-bar {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 1001;
+  height: 64px;
+  background: #10382c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.announcement-content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.announcement-message {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.announcement-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(234, 207, 112, 0.08);
+  border: 1px solid rgba(234, 207, 112, 0.15);
+  color: #e8cc75;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.announcement-copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  strong {
+    color: #f7f3e8;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  > span {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px;
+    font-weight: 400;
+  }
+}
+
+.announcement-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.install-button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 1px solid #e5cd86;
+  border-radius: 9px;
+  background: #e5cd86;
+  color: #15382d;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #f0dda5;
+    border-color: #f0dda5;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+}
+
+.announcement-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.close-button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.48);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+}
+
+@media (max-width: 900px) {
+  .announcement-copy {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+
+    > span {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .announcement-content {
+    gap: 10px;
+  }
+
+  .announcement-message {
+    gap: 8px;
+  }
+
+  .announcement-icon {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    border-radius: 9px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .announcement-copy {
+    strong {
+      font-size: 12px;
+    }
+
+    > span {
+      display: none;
+    }
+  }
+
+  .announcement-actions {
+    gap: 8px;
+  }
+
+  .install-button {
+    min-height: 34px;
+    padding: 0 10px;
+    gap: 5px;
+    font-size: 11px;
+
+    svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .announcement-divider {
+    display: none;
+  }
+
+  .close-button {
+    width: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .announcement-icon {
+    display: none;
+  }
+}

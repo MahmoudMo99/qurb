@@ -1,6 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, shareReplay, tap, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  defer,
+  finalize,
+  map,
+  of,
+  shareReplay,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import {
   AzkarApiResponse,
@@ -18,6 +28,7 @@ export class AzkarService {
   private readonly oldCachePrefix = 'quran_sunnah_azkar_cache';
 
   private categoriesRequest$: Observable<AzkarCategoriesData> | null = null;
+
   private readonly categoryRequests = new Map<string, Observable<AzkarCategoryDetailsData>>();
 
   getCategories(): Observable<AzkarCategoriesData> {
@@ -28,16 +39,26 @@ export class AzkarService {
     const cacheKey = `${this.cachePrefix}_categories`;
     const oldCacheKey = `${this.oldCachePrefix}_categories`;
 
-    this.categoriesRequest$ = this.http
-      .get<AzkarApiResponse<AzkarCategoriesData>>(`${this.apiUrl}/dhikr`)
-      .pipe(
+    const request$ = defer(() => {
+      if (!this.isOnline()) {
+        return this.getCachedOrThrow<AzkarCategoriesData>(cacheKey, oldCacheKey);
+      }
+
+      return this.http.get<AzkarApiResponse<AzkarCategoriesData>>(`${this.apiUrl}/dhikr`).pipe(
         map((response) => response.data),
         tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
         catchError(() => this.getCachedOrThrow<AzkarCategoriesData>(cacheKey, oldCacheKey)),
-        shareReplay(1),
       );
+    }).pipe(
+      finalize(() => {
+        this.categoriesRequest$ = null;
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
 
-    return this.categoriesRequest$;
+    this.categoriesRequest$ = request$;
+
+    return request$;
   }
 
   getAzkarByCategory(category: string): Observable<AzkarCategoryDetailsData> {
@@ -50,18 +71,32 @@ export class AzkarService {
     const cacheKey = `${this.cachePrefix}_category_${category}`;
     const oldCacheKey = `${this.oldCachePrefix}_category_${category}`;
 
-    const request$ = this.http
-      .get<AzkarApiResponse<AzkarCategoryDetailsData>>(`${this.apiUrl}/dhikr/${category}`)
-      .pipe(
-        map((response) => response.data),
-        tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
-        catchError(() => this.getCachedOrThrow<AzkarCategoryDetailsData>(cacheKey, oldCacheKey)),
-        shareReplay(1),
-      );
+    const request$ = defer(() => {
+      if (!this.isOnline()) {
+        return this.getCachedOrThrow<AzkarCategoryDetailsData>(cacheKey, oldCacheKey);
+      }
+
+      return this.http
+        .get<AzkarApiResponse<AzkarCategoryDetailsData>>(`${this.apiUrl}/dhikr/${category}`)
+        .pipe(
+          map((response) => response.data),
+          tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
+          catchError(() => this.getCachedOrThrow<AzkarCategoryDetailsData>(cacheKey, oldCacheKey)),
+        );
+    }).pipe(
+      finalize(() => {
+        this.categoryRequests.delete(category);
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
 
     this.categoryRequests.set(category, request$);
 
     return request$;
+  }
+
+  private isOnline(): boolean {
+    return typeof navigator === 'undefined' || navigator.onLine;
   }
 
   private saveCache<T>(key: string, oldKey: string, data: T): void {
@@ -83,7 +118,7 @@ export class AzkarService {
   private getCachedOrThrow<T>(key: string, oldKey: string): Observable<T> {
     const cachedData = this.getCachedData<T>(key, oldKey);
 
-    if (cachedData) {
+    if (cachedData !== null) {
       return of(cachedData);
     }
 

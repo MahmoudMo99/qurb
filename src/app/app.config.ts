@@ -1,6 +1,7 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 
 import { routes } from './app.routes';
@@ -17,5 +18,9 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideHotToastConfig(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

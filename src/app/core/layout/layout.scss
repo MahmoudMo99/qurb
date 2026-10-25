@@ -20,3 +20,25 @@
 .app-main.focus-mode {
   padding-top: 0;
 }
+
+.app-shell.has-announcement .app-main {
+  padding-top: 146px;
+}
+
+.app-shell.has-announcement.focus-mode .app-main {
+  padding-top: 0;
+}
+
+@media (max-width: 520px) {
+  .app-main {
+    padding-top: 74px;
+  }
+
+  .app-shell.has-announcement .app-main {
+    padding-top: 138px;
+  }
+
+  .app-shell.has-announcement.focus-mode .app-main {
+    padding-top: 0;
+  }
+}

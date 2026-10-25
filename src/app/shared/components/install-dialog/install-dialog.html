@@ -1,0 +1,171 @@
+<div class="dialog-backdrop" (click)="close()">
+  <section
+    class="install-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="install-dialog-title"
+    aria-describedby="install-dialog-description"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      #closeButton
+      class="close-button"
+      type="button"
+      aria-label="إغلاق النافذة"
+      (click)="close()"
+    >
+      <svg lucideX></svg>
+    </button>
+
+    <div class="dialog-heading">
+      <div class="dialog-icon">
+        <svg lucideDownload></svg>
+      </div>
+
+      <span class="dialog-eyebrow">تطبيق قُرب</span>
+
+      <h2 id="install-dialog-title">خلّي قُرب دايمًا معاك</h2>
+
+      <p id="install-dialog-description">ثبّت قُرب على جهازك، وارجع للقرآن والأذكار بسهولة.</p>
+    </div>
+
+    <div class="dialog-platform">
+      <div class="platform-icon">
+        @if (platform() === 'ios') {
+          <svg lucideSmartphone></svg>
+        } @else {
+          <svg lucideMonitor></svg>
+        }
+      </div>
+
+      <div>
+        <strong>
+          @switch (platform()) {
+            @case ('ios') {
+              التثبيت على iPhone وiPad
+            }
+            @case ('firefox') {
+              بتستخدم Firefox؟
+            }
+            @default {
+              التثبيت من المتصفح
+            }
+          }
+        </strong>
+
+        <span>
+          @if (platform() === 'firefox') {
+            التثبيت المباشر غير متاح من Firefox على الكمبيوتر
+          } @else {
+            اتبع الخطوات البسيطة دي
+          }
+        </span>
+      </div>
+    </div>
+
+    <div class="install-steps">
+      @switch (platform()) {
+        @case ('ios') {
+          <div class="install-step">
+            <span class="step-number">01</span>
+
+            <div class="step-content">
+              <strong>افتح قُرب في Safari</strong>
+              <p>لو بتستخدم متصفح تاني، افتح الموقع في Safari.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">02</span>
+
+            <div class="step-content">
+              <strong>اضغط على زر المشاركة</strong>
+              <p>هتلاقي علامة المشاركة في قائمة المتصفح.</p>
+            </div>
+
+            <svg lucideShare2 class="step-icon"></svg>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">03</span>
+
+            <div class="step-content">
+              <strong>اختار «إضافة إلى الشاشة الرئيسية»</strong>
+              <p>وبعدها اضغط «إضافة» علشان يظهر قُرب وسط تطبيقاتك.</p>
+            </div>
+          </div>
+        }
+
+        @case ('firefox') {
+          <div class="install-step">
+            <span class="step-number">01</span>
+
+            <div class="step-content">
+              <strong>افتح قُرب في Chrome أو Edge</strong>
+              <p>انسخ رابط الموقع وافتحه في أحد المتصفحين.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">02</span>
+
+            <div class="step-content">
+              <strong>اضغط على «تثبيت قُرب»</strong>
+              <p>لو التثبيت متاح، هتظهر نافذة التثبيت الرسمية.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">03</span>
+
+            <div class="step-content">
+              <strong>أكد التثبيت</strong>
+              <p>وبكده تقدر تفتح قُرب كتطبيق مستقل من جهازك.</p>
+            </div>
+          </div>
+        }
+
+        @default {
+          <div class="install-step">
+            <span class="step-number">01</span>
+
+            <div class="step-content">
+              <strong>افتح قائمة المتصفح</strong>
+              <p>ابحث عن خيارات التثبيت في Chrome أو Edge.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">02</span>
+
+            <div class="step-content">
+              <strong>اختار «تثبيت التطبيق»</strong>
+              <p>قد يظهر الخيار في شريط العنوان أو قائمة المتصفح.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <span class="step-number">03</span>
+
+            <div class="step-content">
+              <strong>أكد التثبيت</strong>
+              <p>هيظهر قُرب كتطبيق مستقل على جهازك.</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="dialog-footer">
+      <div class="footer-note">
+        <svg lucideCheck></svg>
+        <span>مجاني، ومن غير خطوات تسجيل إضافية.</span>
+      </div>
+
+      <button class="done-button" type="button" (click)="close()">
+        <span>تمام، فهمت</span>
+        <svg lucideArrowLeft></svg>
+      </button>
+    </div>
+  </section>
+</div>

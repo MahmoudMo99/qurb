@@ -1,5 +1,13 @@
-<div class="app-shell" [class.focus-mode]="isFocusMode()">
+<div
+  class="app-shell"
+  [class.focus-mode]="isFocusMode()"
+  [class.has-announcement]="!isFocusMode() && isAnnouncementVisible()"
+>
   @if (!isFocusMode()) {
+    @if (isAnnouncementVisible()) {
+      <app-announcement-bar (closed)="hideAnnouncement()"></app-announcement-bar>
+    }
+
     <app-header></app-header>
   }
 

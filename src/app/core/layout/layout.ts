@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
@@ -8,10 +15,11 @@ import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { FocusModeService } from '../services/focus-mode';
 import { SeoService } from '../services/seo';
+import { AnnouncementBar } from '../announcement-bar/announcement-bar';
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterOutlet, Header, Footer, ScrollToTop],
+  imports: [RouterOutlet, Header, Footer, ScrollToTop, AnnouncementBar],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +32,12 @@ export class Layout implements OnInit {
   private readonly focusModeService = inject(FocusModeService);
 
   readonly isFocusMode = this.focusModeService.isEnabled;
+
+  readonly isAnnouncementVisible = signal(true);
+
+  hideAnnouncement(): void {
+    this.isAnnouncementVisible.set(false);
+  }
 
   ngOnInit(): void {
     this.updateSeo();

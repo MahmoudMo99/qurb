@@ -1,0 +1,93 @@
+<section class="prayer-section" id="prayer-times" aria-labelledby="prayer-title">
+  <div class="container">
+    <div class="prayer-heading">
+      <div class="heading-content">
+        <span class="section-label">مواقيت الصلاة</span>
+        <h2 id="prayer-title">صلاتك في وقتها، أينما كنت.</h2>
+
+        <p>تعرّف على مواقيت الصلوات الخمس والصلاة القادمة حسب موقعك المختار.</p>
+      </div>
+
+      <div class="heading-actions">
+        <span class="location-label">
+          <svg lucideMapPin aria-hidden="true"></svg>
+          {{ prayerService.locationLabel() }}
+        </span>
+
+        <a routerLink="/prayer-times" class="location-link">
+          تغيير المدينة
+          <svg lucideArrowUpLeft aria-hidden="true"></svg>
+        </a>
+      </div>
+    </div>
+
+    @if (prayerService.isLoading()) {
+      <div class="prayer-state" aria-live="polite">
+        <span class="loading-spinner"></span>
+        <p>جاري تحميل مواقيت الصلاة...</p>
+      </div>
+    } @else if (prayerService.errorMessage()) {
+      <div class="prayer-state prayer-state--error">
+        <p>{{ prayerService.errorMessage() }}</p>
+
+        <button type="button" (click)="prayerService.reload()">
+          <svg lucideRotateCcw aria-hidden="true"></svg>
+          إعادة المحاولة
+        </button>
+      </div>
+    } @else {
+      <div class="prayer-content">
+        <div class="next-prayer-panel">
+          <div class="next-prayer-top">
+            <span class="next-prayer-icon">
+              <svg lucideClock3 aria-hidden="true"></svg>
+            </span>
+
+            <span class="next-prayer-label">الصلاة القادمة</span>
+          </div>
+
+          @if (prayerService.nextPrayer(); as prayer) {
+            <div class="next-prayer-details">
+              <h3>{{ prayer.name }}</h3>
+              <strong>{{ prayer.time }}</strong>
+            </div>
+          } @else {
+            <div class="next-prayer-details">
+              <h3>غير متاحة</h3>
+            </div>
+          }
+
+          <span class="next-prayer-note"> بتوقيت {{ prayerService.locationLabel() }} </span>
+        </div>
+
+        <div class="prayer-schedule">
+          @for (prayer of prayerService.prayers(); track prayer.key) {
+            <div class="prayer-row" [class.prayer-row--next]="prayer.isNext">
+              <div class="prayer-name">
+                <span class="prayer-indicator"></span>
+                <span>{{ prayer.name }}</span>
+              </div>
+
+              <div class="prayer-time">
+                <strong>{{ prayer.time }}</strong>
+
+                @if (prayer.isNext) {
+                  <span class="next-label">القادمة</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="prayer-footer">
+      <p>يمكنك عرض التفاصيل واختيار مدينة أخرى من صفحة مواقيت الصلاة.</p>
+
+      <a routerLink="/prayer-times">
+        عرض جميع المواقيت
+        <svg lucideArrowUpLeft aria-hidden="true"></svg>
+      </a>
+    </div>
+  </div>
+</section>

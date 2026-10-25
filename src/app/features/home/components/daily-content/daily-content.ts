@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import {
   LucideBookOpen,
   LucideCalendarDays,
+  LucideCheck,
   LucideChevronLeft,
   LucideCopy,
   LucideScrollText,
@@ -62,6 +63,8 @@ interface DailyZikrCategory {
   value: string;
 }
 
+type DailyCopyType = 'ayah' | 'hadith' | 'zikr';
+
 @Component({
   selector: 'app-daily-content',
   imports: [
@@ -71,6 +74,7 @@ interface DailyZikrCategory {
     FavoriteButton,
     LucideBookOpen,
     LucideCalendarDays,
+    LucideCheck,
     LucideChevronLeft,
     LucideCopy,
     LucideScrollText,
@@ -87,7 +91,7 @@ export class DailyContent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(HotToastService);
 
-  private readonly hadithBooks: DailyHadithBook[] = [
+  private readonly hadithBooks: readonly DailyHadithBook[] = [
     { label: 'صحيح البخاري', edition: 'ara-bukhari' },
     { label: 'صحيح مسلم', edition: 'ara-muslim' },
     { label: 'سنن أبي داود', edition: 'ara-abudawud' },
@@ -98,7 +102,7 @@ export class DailyContent {
     { label: 'الأحاديث القدسية', edition: 'ara-qudsi' },
   ];
 
-  private readonly zikrCategories: DailyZikrCategory[] = [
+  private readonly zikrCategories: readonly DailyZikrCategory[] = [
     { label: 'أذكار الصباح', value: 'morning' },
     { label: 'أذكار المساء', value: 'evening' },
     { label: 'الأذكار بعد الصلاة', value: 'after-prayer' },
@@ -118,16 +122,16 @@ export class DailyContent {
   readonly dailyContent = signal<DailyContentData | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
-  readonly copiedItem = signal('');
+  readonly copiedItem = signal<DailyCopyType | null>(null);
 
-  readonly todayLabel = computed(() => {
-    return new Intl.DateTimeFormat('ar-EG', {
+  readonly todayLabel = computed(() =>
+    new Intl.DateTimeFormat('ar-EG', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(new Date());
-  });
+    }).format(new Date()),
+  );
 
   constructor() {
     this.loadDailyContent();
@@ -137,10 +141,10 @@ export class DailyContent {
     this.loadDailyContent();
   }
 
-  copyText(type: 'ayah' | 'hadith' | 'zikr'): void {
+  async copyText(type: DailyCopyType): Promise<void> {
     const content = this.dailyContent();
 
-    const labelMap = {
+    const labels: Record<DailyCopyType, string> = {
       ayah: 'الآية',
       hadith: 'الحديث',
       zikr: 'الذكر',
@@ -151,37 +155,38 @@ export class DailyContent {
       return;
     }
 
-    const textMap = {
+    const texts: Record<DailyCopyType, string> = {
       ayah: content.ayah
         ? `${content.ayah.ayah.text}\n\n${content.ayah.surah.name} - آية ${content.ayah.ayah.numberInSurah}`
         : '',
-      hadith: content.hadith ? `${content.hadith.hadith.text}\n\n${content.hadith.bookLabel}` : '',
+      hadith: content.hadith
+        ? `${content.hadith.hadith.text}\n\n${content.hadith.bookLabel} - حديث رقم ${content.hadith.hadith.hadithnumber}`
+        : '',
       zikr: content.zikr ? `${content.zikr.zikr.ar.text}\n\n${content.zikr.categoryLabel}` : '',
     };
 
-    const text = textMap[type];
+    const text = texts[type];
 
     if (!text) {
-      this.toastService.info(`لا يوجد نص متاح لنسخ ${labelMap[type]}`);
+      this.toastService.info(`لا يوجد نص متاح لنسخ ${labels[type]}`);
       return;
     }
 
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        this.copiedItem.set(type);
-        this.toastService.success(`تم نسخ ${labelMap[type]} بنجاح`);
+    try {
+      await navigator.clipboard.writeText(text);
 
-        setTimeout(() => {
-          if (this.copiedItem() === type) {
-            this.copiedItem.set('');
-          }
-        }, 1600);
-      })
-      .catch(() => {
-        this.copiedItem.set('');
-        this.toastService.error(`تعذر نسخ ${labelMap[type]} الآن`);
-      });
+      this.copiedItem.set(type);
+      this.toastService.success(`تم نسخ ${labels[type]} بنجاح`);
+
+      setTimeout(() => {
+        if (this.copiedItem() === type) {
+          this.copiedItem.set(null);
+        }
+      }, 1600);
+    } catch {
+      this.copiedItem.set(null);
+      this.toastService.error(`تعذر نسخ ${labels[type]} الآن`);
+    }
   }
 
   getDailyAyahFavoriteItem(ayah: DailyAyah): Omit<FavoriteItem, 'createdAt'> {
@@ -220,20 +225,21 @@ export class DailyContent {
   private loadDailyContent(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
+    this.dailyContent.set(null);
 
     const ayah$ = this.quranService.getSurahs().pipe(
       switchMap((surahs) => {
-        const surahIndex = this.getDailyIndex(surahs.length, 11);
-        const selectedSurah = surahs[surahIndex];
+        const selectedSurah = surahs[this.getDailyIndex(surahs.length, 11)];
+
+        if (!selectedSurah) {
+          return of(null);
+        }
 
         return this.quranService.getSurahDetails(selectedSurah.number).pipe(
           map((surah) => {
-            const ayahIndex = this.getDailyIndex(surah.ayahs.length, 19);
+            const ayah = surah.ayahs[this.getDailyIndex(surah.ayahs.length, 19)];
 
-            return {
-              surah,
-              ayah: surah.ayahs[ayahIndex],
-            };
+            return ayah ? { surah, ayah } : null;
           }),
         );
       }),
@@ -246,15 +252,13 @@ export class DailyContent {
       map((data) => {
         const hadith = this.selectDailyHadith(data.hadiths);
 
-        if (!hadith) {
-          return null;
-        }
-
-        return {
-          bookLabel: hadithBook.label,
-          edition: hadithBook.edition,
-          hadith,
-        };
+        return hadith
+          ? {
+              bookLabel: hadithBook.label,
+              edition: hadithBook.edition,
+              hadith,
+            }
+          : null;
       }),
       catchError(() => of(null)),
     );
@@ -263,16 +267,14 @@ export class DailyContent {
 
     const zikr$ = this.azkarService.getAzkarByCategory(zikrCategory.value).pipe(
       map((data) => {
-        const zikr = data.duas[this.getDailyIndex(data.duas.length, 67)] ?? null;
+        const zikr = data.duas[this.getDailyIndex(data.duas.length, 67)];
 
-        if (!zikr) {
-          return null;
-        }
-
-        return {
-          categoryLabel: zikrCategory.label,
-          zikr,
-        };
+        return zikr
+          ? {
+              categoryLabel: zikrCategory.label,
+              zikr,
+            }
+          : null;
       }),
       catchError(() => of(null)),
     );
@@ -302,7 +304,6 @@ export class DailyContent {
   private selectDailyHadith(hadiths: HadithItem[]): HadithItem | null {
     const suitableHadiths = hadiths.filter((hadith) => {
       const length = this.getPlainTextLength(hadith.text);
-
       return length >= 40 && length <= 850;
     });
 
@@ -325,10 +326,7 @@ export class DailyContent {
 
   private getTodaySeed(): number {
     const today = new Date();
-    const day = today.getDate();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
 
-    return year * 10000 + month * 100 + day;
+    return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
   }
 }

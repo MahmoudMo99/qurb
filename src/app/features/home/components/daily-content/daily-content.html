@@ -1,20 +1,22 @@
-<section class="daily-section">
+<section class="daily-section" aria-labelledby="daily-title">
   <div class="container">
-    <div class="section-heading reveal">
-      <span class="section-badge">ورد اليوم</span>
+    <div class="daily-heading">
+      <div class="heading-content">
+        <span class="heading-eyebrow">ورد اليوم</span>
 
-      <h2>ثلاث وقفات هادئة ليومك</h2>
+        <h2 id="daily-title">كلمات قليلة، وأثر لا يزول.</h2>
 
-      <p>آية وحديث وذكر يتم اختيارهم يوميًا داخل قُرب، لتبدأ يومك بمعنى قصير وسهل الرجوع إليه.</p>
+        <p>آية من القرآن، وحديث نبوي، وذكر تختاره لك قُرب كل يوم.</p>
+      </div>
 
-      <small>
+      <div class="daily-date">
         <svg lucideCalendarDays aria-hidden="true"></svg>
         <span>{{ todayLabel() }}</span>
-      </small>
+      </div>
     </div>
 
     @if (isLoading()) {
-      <div class="daily-loader">
+      <div class="daily-loader" aria-live="polite">
         <app-skeleton-card [count]="3" [rows]="4"></app-skeleton-card>
       </div>
     } @else if (errorMessage()) {
@@ -28,16 +30,20 @@
     } @else if (dailyContent(); as content) {
       <div class="daily-grid">
         @if (content.ayah) {
-          <article class="daily-card ayah-card reveal">
-            <div class="card-top">
-              <span class="card-label">
-                <span class="label-icon">
+          <article class="daily-card ayah-card">
+            <div class="card-header">
+              <div class="card-identity">
+                <span class="card-icon">
                   <svg lucideBookOpen aria-hidden="true"></svg>
                 </span>
-                <strong>آية اليوم</strong>
-              </span>
 
-              <div class="daily-actions">
+                <div class="card-heading">
+                  <span>من القرآن الكريم</span>
+                  <h3>آية اليوم</h3>
+                </div>
+              </div>
+
+              <div class="card-actions">
                 <app-favorite-button
                   mode="small"
                   label="حفظ"
@@ -45,60 +51,44 @@
                   [favoriteItem]="getDailyAyahFavoriteItem(content.ayah)"
                 ></app-favorite-button>
 
-                <button type="button" (click)="copyText('ayah')">
-                  <svg lucideCopy aria-hidden="true"></svg>
-                  <span>{{ copiedItem() === 'ayah' ? 'تم النسخ' : 'نسخ' }}</span>
+                <button
+                  class="copy-button"
+                  type="button"
+                  [attr.aria-label]="copiedItem() === 'ayah' ? 'تم نسخ الآية' : 'نسخ الآية'"
+                  (click)="copyText('ayah')"
+                >
+                  @if (copiedItem() === 'ayah') {
+                    <svg lucideCheck aria-hidden="true"></svg>
+                  } @else {
+                    <svg lucideCopy aria-hidden="true"></svg>
+                  }
+
+                  <span>
+                    {{ copiedItem() === 'ayah' ? 'تم النسخ' : 'نسخ' }}
+                  </span>
                 </button>
               </div>
             </div>
 
-            <p class="main-text">{{ content.ayah.ayah.text }}</p>
+            <div class="card-body">
+              <p class="daily-text ayah-text quran-ayah" lang="ar">
+                {{ content.ayah.ayah.text }}
+              </p>
+            </div>
 
             <div class="card-footer">
-              <small
-                >{{ content.ayah.surah.name }} - آية {{ content.ayah.ayah.numberInSurah }}</small
-              >
-
-              <a [routerLink]="['/quran', content.ayah.surah.number]">
-                <span>فتح السورة</span>
-                <svg lucideChevronLeft aria-hidden="true"></svg>
-              </a>
-            </div>
-          </article>
-        }
-
-        @if (content.hadith) {
-          <article class="daily-card hadith-card reveal">
-            <div class="card-top">
-              <span class="card-label">
-                <span class="label-icon">
-                  <svg lucideScrollText aria-hidden="true"></svg>
+              <span class="source-label">
+                <span class="quran-surah-name">
+                  {{ content.ayah.surah.name }}
                 </span>
-                <strong>حديث اليوم</strong>
+
+                <span class="source-separator">·</span>
+
+                <span>الآية {{ content.ayah.ayah.numberInSurah }}</span>
               </span>
 
-              <div class="daily-actions">
-                <app-favorite-button
-                  mode="small"
-                  label="حفظ"
-                  savedLabel="محفوظ"
-                  [favoriteItem]="getDailyHadithFavoriteItem(content.hadith)"
-                ></app-favorite-button>
-
-                <button type="button" (click)="copyText('hadith')">
-                  <svg lucideCopy aria-hidden="true"></svg>
-                  <span>{{ copiedItem() === 'hadith' ? 'تم النسخ' : 'نسخ' }}</span>
-                </button>
-              </div>
-            </div>
-
-            <p class="main-text">{{ content.hadith.hadith.text }}</p>
-
-            <div class="card-footer">
-              <small>{{ content.hadith.bookLabel }}</small>
-
-              <a routerLink="/hadith">
-                <span>فتح الأحاديث</span>
+              <a class="card-link" [routerLink]="['/quran', content.ayah.surah.number]">
+                <span>اقرأ السورة</span>
                 <svg lucideChevronLeft aria-hidden="true"></svg>
               </a>
             </div>
@@ -106,16 +96,20 @@
         }
 
         @if (content.zikr) {
-          <article class="daily-card zikr-card reveal">
-            <div class="card-top">
-              <span class="card-label">
-                <span class="label-icon">
+          <article class="daily-card zikr-card">
+            <div class="card-header">
+              <div class="card-identity">
+                <span class="card-icon">
                   <svg lucideSparkles aria-hidden="true"></svg>
                 </span>
-                <strong>ذكر اليوم</strong>
-              </span>
 
-              <div class="daily-actions">
+                <div class="card-heading">
+                  <span>{{ content.zikr.categoryLabel }}</span>
+                  <h3>ذكر اليوم</h3>
+                </div>
+              </div>
+
+              <div class="card-actions">
                 <app-favorite-button
                   mode="small"
                   label="حفظ"
@@ -123,20 +117,100 @@
                   [favoriteItem]="getDailyZikrFavoriteItem(content.zikr)"
                 ></app-favorite-button>
 
-                <button type="button" (click)="copyText('zikr')">
-                  <svg lucideCopy aria-hidden="true"></svg>
-                  <span>{{ copiedItem() === 'zikr' ? 'تم النسخ' : 'نسخ' }}</span>
+                <button
+                  class="copy-button"
+                  type="button"
+                  [attr.aria-label]="copiedItem() === 'zikr' ? 'تم نسخ الذكر' : 'نسخ الذكر'"
+                  (click)="copyText('zikr')"
+                >
+                  @if (copiedItem() === 'zikr') {
+                    <svg lucideCheck aria-hidden="true"></svg>
+                  } @else {
+                    <svg lucideCopy aria-hidden="true"></svg>
+                  }
+
+                  <span>
+                    {{ copiedItem() === 'zikr' ? 'تم النسخ' : 'نسخ' }}
+                  </span>
                 </button>
               </div>
             </div>
 
-            <p class="main-text">{{ content.zikr.zikr.ar.text }}</p>
+            <div class="card-body">
+              <p class="daily-text zikr-text" lang="ar">
+                {{ content.zikr.zikr.ar.text }}
+              </p>
+            </div>
 
             <div class="card-footer">
-              <small>{{ content.zikr.categoryLabel }}</small>
+              <span class="source-label">
+                {{ content.zikr.categoryLabel }}
+              </span>
 
-              <a routerLink="/azkar">
-                <span>فتح الأذكار</span>
+              <a class="card-link" routerLink="/azkar">
+                <span>تصفح الأذكار</span>
+                <svg lucideChevronLeft aria-hidden="true"></svg>
+              </a>
+            </div>
+          </article>
+        }
+
+        @if (content.hadith) {
+          <article class="daily-card hadith-card">
+            <div class="card-header">
+              <div class="card-identity">
+                <span class="card-icon">
+                  <svg lucideScrollText aria-hidden="true"></svg>
+                </span>
+
+                <div class="card-heading">
+                  <span>من السنة النبوية</span>
+                  <h3>حديث اليوم</h3>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <app-favorite-button
+                  mode="small"
+                  label="حفظ"
+                  savedLabel="محفوظ"
+                  [favoriteItem]="getDailyHadithFavoriteItem(content.hadith)"
+                ></app-favorite-button>
+
+                <button
+                  class="copy-button"
+                  type="button"
+                  [attr.aria-label]="copiedItem() === 'hadith' ? 'تم نسخ الحديث' : 'نسخ الحديث'"
+                  (click)="copyText('hadith')"
+                >
+                  @if (copiedItem() === 'hadith') {
+                    <svg lucideCheck aria-hidden="true"></svg>
+                  } @else {
+                    <svg lucideCopy aria-hidden="true"></svg>
+                  }
+
+                  <span>
+                    {{ copiedItem() === 'hadith' ? 'تم النسخ' : 'نسخ' }}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="daily-text hadith-text" lang="ar">
+                {{ content.hadith.hadith.text }}
+              </p>
+            </div>
+
+            <div class="card-footer">
+              <span class="source-label">
+                {{ content.hadith.bookLabel }}
+                <span class="source-separator">·</span>
+                حديث رقم {{ content.hadith.hadith.hadithnumber }}
+              </span>
+
+              <a class="card-link" routerLink="/hadith">
+                <span>تصفح الأحاديث</span>
                 <svg lucideChevronLeft aria-hidden="true"></svg>
               </a>
             </div>

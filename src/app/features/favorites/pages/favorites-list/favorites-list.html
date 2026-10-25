@@ -1,165 +1,249 @@
 <section class="favorites-page">
   <div class="container">
-    <div class="page-hero reveal">
-      <span class="section-badge">المفضلة</span>
+    <header class="favorites-hero">
+      <div class="hero-content">
+        <span class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          مكتبتك الخاصة
+        </span>
 
-      <h1>محفوظاتك داخل قُرب</h1>
+        <h1>
+          كل ما أحببت،
+          <span>في مكان واحد.</span>
+        </h1>
 
-      <p>
-        اجمع السور والآيات والأذكار والأحاديث التي تهمك في مكان واحد، وارجع إليها بسهولة في أي وقت.
-      </p>
+        <p>احتفظ بالآيات والأذكار والأحاديث والسور القريبة إلى قلبك، وعُد إليها متى شئت.</p>
 
-      <div class="favorites-control-panel">
-        <div class="control-top-row">
-          <div class="favorites-stats">
-            <div>
-              <strong>{{ totalCount() }}</strong>
-              <span>عنصر محفوظ</span>
-            </div>
+        <div class="hero-note">
+          <span class="note-symbol">✦</span>
+          مساحة صغيرة لما تحب أن يبقى معك.
+        </div>
+      </div>
 
-            <div>
-              <strong>{{ surahsCount() }}</strong>
-              <span>سور</span>
-            </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-ring art-ring-one"></div>
+        <div class="art-ring art-ring-two"></div>
+        <div class="art-ring art-ring-three"></div>
 
-            <div>
-              <strong>{{ ayahsCount() }}</strong>
-              <span>آيات</span>
-            </div>
+        <div class="art-content">
+          <span class="art-ornament">✦</span>
+          <span class="art-title">قُرب</span>
+          <span class="art-divider"></span>
+          <span class="art-caption">ما تحفظه اليوم، تجد أثره غدًا.</span>
+        </div>
+      </div>
+    </header>
 
-            <div>
-              <strong>{{ azkarCount() }}</strong>
-              <span>أذكار</span>
-            </div>
+    <section class="favorites-overview" aria-label="إحصائيات المفضلة">
+      <div class="overview-heading">
+        <div>
+          <span class="section-eyebrow">مكتبتك في أرقام</span>
+          <h2>محفوظاتك، بنظرة واحدة.</h2>
+        </div>
 
-            <div>
-              <strong>{{ hadithCount() }}</strong>
-              <span>أحاديث</span>
-            </div>
-          </div>
+        <span class="overview-caption"> كل ما حفظته داخل قُرب </span>
+      </div>
 
-          @if (hasFavorites()) {
-            <div class="favorites-actions">
-              <div>
-                <span>عدد النتائج</span>
-                <strong>{{ resultCount() }}</strong>
-              </div>
+      <div class="favorites-stats">
+        <div class="stat-card stat-card-primary">
+          <span class="stat-label">إجمالي المحفوظات</span>
+          <strong>{{ totalCount() }}</strong>
+          <span class="stat-description">عنصر في مكتبتك</span>
+        </div>
 
-              <div class="bulk-actions">
-                @if (hasActiveSearch()) {
-                  <button type="button" class="clear-filter-button" (click)="clearAllFilters()">
-                    <svg lucideX aria-hidden="true"></svg>
-                    <span>إزالة التصفية</span>
-                  </button>
-                }
+        <div class="stat-card">
+          <span class="stat-label">السور</span>
+          <strong>{{ surahsCount() }}</strong>
+          <span class="stat-description">سورة محفوظة</span>
+        </div>
 
-                <button type="button" class="clear-all-button" (click)="clearFavorites()">
-                  <svg lucideTrash2 aria-hidden="true"></svg>
-                  <span>مسح الكل</span>
-                </button>
-              </div>
-            </div>
-          }
+        <div class="stat-card">
+          <span class="stat-label">الآيات</span>
+          <strong>{{ ayahsCount() }}</strong>
+          <span class="stat-description">آية محفوظة</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">الأذكار</span>
+          <strong>{{ azkarCount() }}</strong>
+          <span class="stat-description">ذكر محفوظ</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">الأحاديث</span>
+          <strong>{{ hadithCount() }}</strong>
+          <span class="stat-description">حديث محفوظ</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="favorites-library" aria-label="العناصر المحفوظة">
+      <div class="library-heading">
+        <div>
+          <span class="section-eyebrow">بين يديك الآن</span>
+          <h2>مكتبتك المحفوظة</h2>
+          <p>ابحث بين محفوظاتك، أو اختر القسم الذي ترغب في تصفحه.</p>
         </div>
 
         @if (hasFavorites()) {
-          <div class="control-bottom-row">
-            <div class="favorites-search">
-              <svg lucideSearch aria-hidden="true"></svg>
-
-              <input
-                type="text"
-                placeholder="ابحث داخل المفضلة..."
-                [value]="searchTerm()"
-                (input)="updateSearchTerm($event)"
-              />
-
-              @if (searchTerm()) {
-                <button type="button" aria-label="مسح البحث" (click)="clearSearch()">
-                  <svg lucideX aria-hidden="true"></svg>
-                </button>
-              }
-            </div>
-
-            <div class="filters" aria-label="تصفية المفضلة">
-              @for (filter of filters; track filter.value) {
-                <button
-                  type="button"
-                  class="filter-button"
-                  [class.active]="activeFilter() === filter.value"
-                  (click)="setFilter(filter.value)"
-                >
-                  <span>{{ filter.label }}</span>
-                  <small>{{ getFilterCount(filter.value) }}</small>
-                </button>
-              }
-            </div>
-          </div>
+          <button type="button" class="clear-all-button" (click)="clearFavorites()">
+            <svg lucideTrash2 aria-hidden="true"></svg>
+            <span>مسح المفضلة</span>
+          </button>
         }
       </div>
-    </div>
 
-    @if (filteredFavorites().length) {
-      <div class="favorites-grid">
-        @for (item of filteredFavorites(); track item.id) {
-          <article
-            class="favorite-card reveal"
-            [class.no-content]="!item.content"
-            [class.type-surah]="item.type === 'surah'"
-            [class.type-ayah]="item.type === 'ayah'"
-            [class.type-zikr]="item.type === 'zikr'"
-            [class.type-hadith]="item.type === 'hadith'"
-          >
-            <div class="favorite-header">
-              <span>{{ getTypeLabel(item.type) }}</span>
+      @if (hasFavorites()) {
+        <div class="favorites-toolbar">
+          <div class="favorites-search">
+            <svg lucideSearch aria-hidden="true"></svg>
 
-              <div class="header-actions">
-                @if (item.content) {
-                  <button type="button" class="copy-button" (click)="copyFavorite(item)">
-                    <svg lucideCopy aria-hidden="true"></svg>
-                    <span>{{ copiedFavoriteId() === item.id ? 'تم النسخ' : 'نسخ' }}</span>
-                  </button>
-                }
+            <input
+              type="search"
+              placeholder="ابحث داخل محفوظاتك..."
+              aria-label="البحث داخل المفضلة"
+              [value]="searchTerm()"
+              (input)="updateSearchTerm($event)"
+            />
 
-                <button type="button" class="remove-button" (click)="removeFavorite(item)">
-                  <svg lucideTrash2 aria-hidden="true"></svg>
-                  <span>إزالة</span>
-                </button>
-              </div>
-            </div>
-
-            <h2>{{ item.title }}</h2>
-
-            <p class="subtitle">{{ item.subtitle }}</p>
-
-            @if (item.content) {
-              <p class="favorite-content">{{ item.content }}</p>
-            } @else {
-              <p class="empty-content">{{ getEmptyContentMessage(item) }}</p>
+            @if (searchTerm()) {
+              <button type="button" aria-label="مسح البحث" (click)="clearSearch()">
+                <svg lucideX aria-hidden="true"></svg>
+              </button>
             }
+          </div>
 
-            <div class="favorite-footer">
-              @if (item.route) {
-                <a [routerLink]="item.route">فتح</a>
-              } @else {
-                <span>محفوظ</span>
-              }
+          <div class="filters" aria-label="تصفية المفضلة">
+            @for (filter of filters; track filter.value) {
+              <button
+                type="button"
+                class="filter-button"
+                [class.active]="activeFilter() === filter.value"
+                [attr.aria-pressed]="activeFilter() === filter.value"
+                (click)="setFilter(filter.value)"
+              >
+                <span>{{ filter.label }}</span>
+                <small>{{ getFilterCount(filter.value) }}</small>
+              </button>
+            }
+          </div>
+        </div>
 
-              <small>{{ formatDate(item.createdAt) }}</small>
-            </div>
-          </article>
-        }
-      </div>
-    } @else {
-      <app-page-state
-        type="empty"
-        [title]="hasFavorites() ? 'لا توجد نتائج مطابقة' : 'لا توجد عناصر محفوظة'"
-        [message]="
-          hasFavorites()
-            ? 'جرّب كلمة بحث مختلفة أو غيّر نوع التصفية.'
-            : 'ابدأ بحفظ سورة أو آية أو ذكر أو حديث وسيظهر هنا.'
-        "
-      ></app-page-state>
-    }
+        <div class="results-heading">
+          <div class="results-label">
+            <span class="results-dot"></span>
+            <span>العناصر المعروضة</span>
+            <strong>{{ resultCount() }}</strong>
+          </div>
+
+          @if (hasActiveSearch()) {
+            <button type="button" class="clear-filter-button" (click)="clearAllFilters()">
+              <svg lucideX aria-hidden="true"></svg>
+              إزالة التصفية
+            </button>
+          }
+        </div>
+      }
+
+      @if (filteredFavorites().length) {
+        <div class="favorites-grid">
+          @for (item of filteredFavorites(); track item.id) {
+            <article
+              class="favorite-card"
+              [class.no-content]="!item.content"
+              [class.type-surah]="item.type === 'surah'"
+              [class.type-ayah]="item.type === 'ayah'"
+              [class.type-zikr]="item.type === 'zikr'"
+              [class.type-hadith]="item.type === 'hadith'"
+            >
+              <div class="favorite-header">
+                <span class="favorite-type">
+                  <span class="type-dot"></span>
+                  {{ getTypeLabel(item.type) }}
+                </span>
+
+                <div class="header-actions">
+                  @if (item.content) {
+                    <button
+                      type="button"
+                      class="copy-button"
+                      [attr.aria-label]="'نسخ ' + getTypeLabel(item.type)"
+                      (click)="copyFavorite(item)"
+                    >
+                      <svg lucideCopy aria-hidden="true"></svg>
+                      <span>
+                        {{ copiedFavoriteId() === item.id ? 'تم النسخ' : 'نسخ' }}
+                      </span>
+                    </button>
+                  }
+
+                  <button
+                    type="button"
+                    class="remove-button"
+                    [attr.aria-label]="'إزالة ' + getTypeLabel(item.type) + ' من المفضلة'"
+                    (click)="removeFavorite(item)"
+                  >
+                    <svg lucideTrash2 aria-hidden="true"></svg>
+                    <span>إزالة</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="favorite-body">
+                <h3>{{ item.title }}</h3>
+
+                <p class="favorite-subtitle">
+                  {{ item.subtitle }}
+                </p>
+
+                @if (item.content) {
+                  <p class="favorite-content">{{ item.content }}</p>
+                } @else {
+                  <p class="empty-content">
+                    {{ getEmptyContentMessage(item) }}
+                  </p>
+                }
+              </div>
+
+              <div class="favorite-footer">
+                <div class="favorite-date">
+                  <span>أُضيف في</span>
+                  <time [attr.datetime]="item.createdAt">
+                    {{ formatDate(item.createdAt) }}
+                  </time>
+                </div>
+
+                @if (item.route) {
+                  <a [routerLink]="item.route" class="open-button">
+                    فتح العنصر
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                } @else {
+                  <span class="saved-label">محفوظ في مكتبتك</span>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="favorites-empty">
+          <app-page-state
+            type="empty"
+            [title]="hasFavorites() ? 'لا توجد نتائج مطابقة' : 'مكتبتك تنتظر أول إضافة'"
+            [message]="
+              hasFavorites()
+                ? 'جرّب كلمة بحث مختلفة أو غيّر نوع التصفية.'
+                : 'ابدأ بحفظ سورة أو آية أو ذكر أو حديث، وستجد كل ما أحببت هنا.'
+            "
+          ></app-page-state>
+
+          @if (hasActiveSearch()) {
+            <button type="button" class="empty-reset-button" (click)="clearAllFilters()">
+              عرض جميع المحفوظات
+            </button>
+          }
+        </div>
+      }
+    </section>
   </div>
 </section>

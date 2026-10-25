@@ -1,23 +1,95 @@
 <header class="site-header" [class.scrolled]="isScrolled()" [class.menu-open]="isMenuOpen()">
   <nav class="container header-nav" aria-label="القائمة الرئيسية">
-    <a class="brand" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية" (click)="closeMenu()">
+    <!-- Brand -->
+    <a class="brand" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية" (click)="closeAll()">
       <span class="brand-mark" aria-hidden="true">
         <span class="brand-letter">ق</span>
       </span>
 
       <span class="brand-content">
         <strong>قُرب</strong>
-        <small>Quran • Sunnah • Azkar</small>
+        <small>QURB · القرآن والسنة</small>
       </span>
     </a>
 
+    <!-- Desktop navigation -->
+    <div class="desktop-navigation">
+      <ul class="desktop-links">
+        @for (link of primaryLinks; track link.route) {
+          <li>
+            <a
+              [routerLink]="link.route"
+              routerLinkActive="active"
+              #activeLink="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: link.exact === true }"
+              [attr.aria-current]="activeLink.isActive ? 'page' : null"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        }
+
+        <li class="more-wrapper">
+          <button
+            #moreButton
+            class="more-trigger"
+            type="button"
+            aria-controls="desktop-more-panel"
+            [class.active]="isMoreOpen() || isMoreActive()"
+            [attr.aria-expanded]="isMoreOpen()"
+            (click)="toggleMore()"
+          >
+            المزيد
+            <svg lucideChevronDown aria-hidden="true"></svg>
+          </button>
+
+          @if (isMoreOpen()) {
+            <div #morePanel id="desktop-more-panel" class="more-panel">
+              @for (link of moreLinks; track link.route) {
+                <a
+                  [routerLink]="link.route"
+                  routerLinkActive="active"
+                  #moreActive="routerLinkActive"
+                  [routerLinkActiveOptions]="{ exact: false }"
+                  [attr.aria-current]="moreActive.isActive ? 'page' : null"
+                  (click)="closeMore()"
+                >
+                  <span class="more-link-icon" aria-hidden="true">
+                    @switch (link.icon) {
+                      @case ('hadith') {
+                        <svg lucideScrollText></svg>
+                      }
+
+                      @case ('favorites') {
+                        <svg lucideHeart></svg>
+                      }
+                    }
+                  </span>
+
+                  <span>{{ link.label }}</span>
+                </a>
+              }
+            </div>
+          }
+        </li>
+      </ul>
+    </div>
+
+    <!-- Desktop CTA -->
+    <a class="header-cta" routerLink="/quran" (click)="closeAll()">
+      <svg lucideBookOpen aria-hidden="true"></svg>
+      <span>افتح المصحف</span>
+    </a>
+
+    <!-- Mobile menu trigger -->
     <button
-      class="menu-button"
+      #mobileMenuButton
+      class="mobile-menu-button"
       type="button"
-      (click)="toggleMenu()"
-      [class.open]="isMenuOpen()"
+      aria-controls="mobile-navigation"
       [attr.aria-expanded]="isMenuOpen()"
       [attr.aria-label]="isMenuOpen() ? 'إغلاق القائمة' : 'فتح القائمة'"
+      (click)="toggleMobileMenu()"
     >
       @if (isMenuOpen()) {
         <svg lucideX aria-hidden="true"></svg>
@@ -26,44 +98,58 @@
       }
     </button>
 
-    <div class="nav-panel" [class.show]="isMenuOpen()">
-      <ul class="nav-links">
+    <!-- Mobile navigation -->
+    <div
+      #mobilePanel
+      id="mobile-navigation"
+      class="mobile-panel"
+      [class.show]="isMenuOpen()"
+      [attr.inert]="isMenuOpen() ? null : ''"
+    >
+      <div class="mobile-panel-heading">
+        <span>استكشف قُرب</span>
+        <small>كل ما تحتاجه في مكان واحد</small>
+      </div>
+
+      <ul class="mobile-links">
         @for (link of navLinks; track link.route) {
-          <li>
+          <li [class.mobile-links__secondary]="link.route === '/hadith'">
             <a
               [routerLink]="link.route"
               routerLinkActive="active"
+              #mobileActive="routerLinkActive"
               [routerLinkActiveOptions]="{ exact: link.exact === true }"
-              (click)="closeMenu()"
+              [attr.aria-current]="mobileActive.isActive ? 'page' : null"
+              (click)="closeMobileMenu()"
             >
-              <span class="link-icon">
+              <span class="mobile-link-icon" aria-hidden="true">
                 @switch (link.icon) {
                   @case ('home') {
-                    <svg lucideHome aria-hidden="true"></svg>
+                    <svg lucideHome></svg>
                   }
 
                   @case ('quran') {
-                    <svg lucideBookOpen aria-hidden="true"></svg>
+                    <svg lucideBookOpen></svg>
                   }
 
                   @case ('wird') {
-                    <svg lucideCheck aria-hidden="true"></svg>
+                    <svg lucideCheck></svg>
                   }
 
                   @case ('prayer') {
-                    <svg lucideClock aria-hidden="true"></svg>
+                    <svg lucideClock3></svg>
                   }
 
                   @case ('azkar') {
-                    <svg lucideSparkles aria-hidden="true"></svg>
+                    <svg lucideSparkles></svg>
                   }
 
                   @case ('hadith') {
-                    <svg lucideScrollText aria-hidden="true"></svg>
+                    <svg lucideScrollText></svg>
                   }
 
                   @case ('favorites') {
-                    <svg lucideHeart aria-hidden="true"></svg>
+                    <svg lucideHeart></svg>
                   }
                 }
               </span>
@@ -73,15 +159,20 @@
           </li>
         }
       </ul>
+
+      <div class="mobile-panel-footer">
+        <span>قُرب منك، أينما كنت</span>
+        <span aria-hidden="true">✦</span>
+      </div>
     </div>
   </nav>
-
-  @if (isMenuOpen()) {
-    <button
-      class="nav-backdrop"
-      type="button"
-      aria-label="إغلاق القائمة"
-      (click)="closeMenu()"
-    ></button>
-  }
 </header>
+
+@if (isMenuOpen()) {
+  <button
+    class="nav-backdrop"
+    type="button"
+    aria-label="إغلاق القائمة"
+    (click)="closeMobileMenu(true)"
+  ></button>
+}

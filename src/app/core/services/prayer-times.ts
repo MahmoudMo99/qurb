@@ -18,15 +18,20 @@ export class PrayerTimesService {
   private readonly cachePrefix = 'qurb_prayer_times_cache';
   private readonly oldCachePrefix = 'quran_sunnah_prayer_times_cache';
 
-  getPrayerTimesByCity(location: PrayerLocation): Observable<PrayerTimesData> {
-    const todayDate = this.getTodayDate();
+  getPrayerTimesByCity(
+    location: PrayerLocation,
+    date: Date = new Date(),
+  ): Observable<PrayerTimesData> {
+    const dateString = this.formatDate(date);
+
     const cacheName = this.buildCacheName([
       'city',
-      todayDate,
+      dateString,
       location.city,
       location.country,
       location.method,
     ]);
+
     const cacheKey = `${this.cachePrefix}_${cacheName}`;
     const oldCacheKey = `${this.oldCachePrefix}_${cacheName}`;
 
@@ -36,9 +41,7 @@ export class PrayerTimesService {
       .set('method', location.method.toString());
 
     return this.http
-      .get<PrayerTimesApiResponse>(`${this.apiUrl}/timingsByCity/${todayDate}`, {
-        params,
-      })
+      .get<PrayerTimesApiResponse>(`${this.apiUrl}/timingsByCity/${dateString}`, { params })
       .pipe(
         map((response) => response.data),
         tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
@@ -46,13 +49,17 @@ export class PrayerTimesService {
       );
   }
 
-  getPrayerTimesByCoordinates(coordinates: PrayerCoordinates): Observable<PrayerTimesData> {
-    const todayDate = this.getTodayDate();
+  getPrayerTimesByCoordinates(
+    coordinates: PrayerCoordinates,
+    date: Date = new Date(),
+  ): Observable<PrayerTimesData> {
+    const dateString = this.formatDate(date);
     const latitude = coordinates.latitude.toFixed(4);
     const longitude = coordinates.longitude.toFixed(4);
     const method = coordinates.method?.toString() ?? 'default';
 
-    const cacheName = this.buildCacheName(['coordinates', todayDate, latitude, longitude, method]);
+    const cacheName = this.buildCacheName(['coordinates', dateString, latitude, longitude, method]);
+
     const cacheKey = `${this.cachePrefix}_${cacheName}`;
     const oldCacheKey = `${this.oldCachePrefix}_${cacheName}`;
 
@@ -65,7 +72,7 @@ export class PrayerTimesService {
     }
 
     return this.http
-      .get<PrayerTimesApiResponse>(`${this.apiUrl}/timings/${todayDate}`, { params })
+      .get<PrayerTimesApiResponse>(`${this.apiUrl}/timings/${dateString}`, { params })
       .pipe(
         map((response) => response.data),
         tap((data) => this.saveCache(cacheKey, oldCacheKey, data)),
@@ -73,11 +80,10 @@ export class PrayerTimesService {
       );
   }
 
-  private getTodayDate(): string {
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
+  private formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
 
     return `${day}-${month}-${year}`;
   }

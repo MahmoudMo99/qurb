@@ -1,46 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  LucideBookOpen,
-  LucideCheck,
-  LucideClock,
-  LucideExternalLink,
-  LucideGlobe,
-  LucideHeart,
-  LucideLink,
-  LucideScrollText,
-  LucideSparkles,
-} from '@lucide/angular';
-
-type FooterExternalIcon = 'github' | 'portfolio' | 'linkedin';
-type FooterNavIcon = 'quran' | 'wird' | 'prayer' | 'azkar' | 'hadith' | 'favorites';
-
-interface FooterLink {
-  label: string;
-  href: string;
-  icon: FooterExternalIcon;
-}
+import { LucideArrowUpLeft } from '@lucide/angular';
 
 interface FooterNavLink {
   label: string;
   route: string;
-  icon: FooterNavIcon;
+}
+
+interface FooterExternalLink {
+  label: string;
+  href: string;
 }
 
 @Component({
   selector: 'app-footer',
-  imports: [
-    RouterLink,
-    LucideBookOpen,
-    LucideCheck,
-    LucideClock,
-    LucideExternalLink,
-    LucideGlobe,
-    LucideHeart,
-    LucideLink,
-    LucideScrollText,
-    LucideSparkles,
-  ],
+  imports: [RouterLink, LucideArrowUpLeft],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,29 +23,26 @@ export class Footer {
   readonly currentYear = new Date().getFullYear();
 
   readonly quickLinks: FooterNavLink[] = [
-    { label: 'القرآن الكريم', route: '/quran', icon: 'quran' },
-    { label: 'وردي اليومي', route: '/daily-wird', icon: 'wird' },
-    { label: 'مواقيت الصلاة', route: '/prayer-times', icon: 'prayer' },
-    { label: 'الأذكار', route: '/azkar', icon: 'azkar' },
-    { label: 'الأحاديث', route: '/hadith', icon: 'hadith' },
-    { label: 'المفضلة', route: '/favorites', icon: 'favorites' },
+    { label: 'القرآن الكريم', route: '/quran' },
+    { label: 'وردي اليومي', route: '/daily-wird' },
+    { label: 'الأذكار', route: '/azkar' },
+    { label: 'الأحاديث', route: '/hadith' },
+    { label: 'مواقيت الصلاة', route: '/prayer-times' },
+    { label: 'المفضلة', route: '/favorites' },
   ];
 
-  readonly links: FooterLink[] = [
+  readonly externalLinks: FooterExternalLink[] = [
     {
-      label: 'Portfolio',
+      label: 'الموقع الشخصي',
       href: 'https://mahmoud-mohamed-portfolio.vercel.app',
-      icon: 'portfolio',
     },
     {
       label: 'GitHub',
       href: 'https://github.com/MahmoudMo99',
-      icon: 'github',
     },
     {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/mahmoud-mo-mahmoud',
-      icon: 'linkedin',
     },
   ];
 }

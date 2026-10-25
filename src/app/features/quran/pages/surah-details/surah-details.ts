@@ -838,4 +838,8 @@ export class SurahDetails implements OnInit {
       .replace(/ى/g, 'ي')
       .trim();
   }
+
+  formatAyahText(text: string): string {
+    return text.replace(/(۝[٠-٩]+)/g, '$1\u00A0');
+  }
 }

@@ -42,7 +42,7 @@ export class HadithList {
   private readonly toastService = inject(HotToastService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly pageSize = 24;
-
+  private requestId = 0;
   readonly books: HadithBookOption[] = [
     {
       label: 'صحيح البخاري',
@@ -248,6 +248,8 @@ export class HadithList {
   }
 
   private loadHadithBook(edition: string): void {
+    const currentRequestId = ++this.requestId;
+
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.hadithData.set(null);
@@ -257,10 +259,18 @@ export class HadithList {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
+          if (currentRequestId !== this.requestId) {
+            return;
+          }
+
           this.hadithData.set(data);
           this.isLoading.set(false);
         },
         error: () => {
+          if (currentRequestId !== this.requestId) {
+            return;
+          }
+
           this.errorMessage.set('تعذر تحميل الأحاديث الآن، حاول مرة أخرى لاحقًا.');
           this.isLoading.set(false);
         },

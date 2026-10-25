@@ -1,333 +1,472 @@
+:host {
+  display: block;
+}
+
 .daily-section {
-  position: relative;
-  padding: 5rem 0;
-  background-color: rgba(255, 255, 255, 0.22);
-  border-block: 1px solid rgba(15, 61, 46, 0.05);
+  padding-block: 5.5rem;
+  background: #ffffff;
 }
 
-.section-heading {
-  max-width: 760px;
-  margin: 0 auto 2rem;
-  text-align: center;
+.daily-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-.section-heading h2 {
-  margin: 1rem 0 0.7rem;
+.heading-content {
+  max-width: 690px;
+}
+
+.heading-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.heading-content h2 {
+  margin: 0;
   color: var(--color-primary-dark);
-  font-size: clamp(2rem, 4vw, 3.35rem);
-  font-weight: 900;
-  line-height: 1.28;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.45;
   letter-spacing: -0.025em;
 }
 
-.section-heading p {
-  max-width: 620px;
-  margin: 0 auto;
+.heading-content p {
+  margin: 0.75rem 0 0;
   color: var(--color-muted);
-  font-size: 1.02rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 400;
   line-height: 2;
 }
 
-.section-heading > small {
+.daily-date {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.42rem;
-  margin-top: 1rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  color: var(--color-primary);
-  background-color: rgba(15, 61, 46, 0.08);
-  font-weight: 900;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  margin-bottom: 0.25rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #e7ebe6;
+  border-radius: 10px;
+  color: #64766a;
+  background: #f8faf7;
+  font-size: 0.77rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.section-heading > small svg {
+.daily-date svg {
   width: 16px;
   height: 16px;
-  stroke-width: 2.5;
+  color: var(--color-primary);
 }
 
-.daily-loader,
-.daily-grid {
-  width: min(100%, 1020px);
-  margin: 0 auto;
+.daily-loader {
+  width: 100%;
 }
 
 .daily-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  align-items: stretch;
+  gap: 1.125rem;
+}
+
+.daily-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 310px;
+  padding: 1.5rem;
+  border: 1px solid #e7ebe6;
+  border-radius: 18px;
+  background: #ffffff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.daily-card:hover {
+  border-color: #d3ded4;
+  box-shadow: 0 10px 26px rgba(15, 61, 46, 0.045);
 }
 
 .ayah-card {
-  order: 1;
+  background: #f8faf7;
 }
 
 .zikr-card {
-  order: 2;
+  background: #fcfaf5;
+  border-color: #eee9dc;
 }
 
 .hadith-card {
   grid-column: 1 / -1;
-  order: 3;
+  min-height: 0;
+  background: #ffffff;
 }
 
-.daily-card {
-  position: relative;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  padding: 1.35rem;
-  border-radius: 26px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 14px 34px rgba(15, 61, 46, 0.07);
-  transition:
-    transform 0.16s ease,
-    box-shadow 0.16s ease,
-    border-color 0.12s ease;
-}
-
-.daily-card::before {
-  content: '';
-  position: absolute;
-  inset-inline: 1.35rem;
-  top: 0;
-  height: 4px;
-  border-radius: 0 0 999px 999px;
-  background-color: rgba(201, 162, 39, 0.78);
-}
-
-.daily-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(201, 162, 39, 0.42);
-  box-shadow: 0 22px 48px rgba(15, 61, 46, 0.11);
-}
-
-.zikr-card {
-  min-height: 300px;
-}
-
-.hadith-card {
-  min-height: 245px;
-}
-
-.card-top {
+.card-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.9rem;
 }
 
-.card-label {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.42rem 0.35rem 0.75rem;
-  border-radius: 999px;
-  color: var(--color-primary-dark);
-  background-color: rgba(15, 61, 46, 0.06);
-  font-size: 0.84rem;
-  font-weight: 900;
-}
-
-.label-icon {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: var(--color-primary-dark);
-  background: linear-gradient(135deg, #ecd46d, #caa331);
-}
-
-.label-icon svg {
-  width: 15px;
-  height: 15px;
-  stroke-width: 2.6;
-}
-
-.card-label strong {
-  font: inherit;
-}
-
-.daily-actions {
+.card-identity {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.7rem;
+  min-width: 0;
 }
 
-.daily-actions > button {
-  min-height: 38px;
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 41px;
+  height: 41px;
+  flex: 0 0 auto;
+  border: 1px solid #dce8db;
+  border-radius: 11px;
+  color: var(--color-primary);
+  background: #eaf2e9;
+}
+
+.card-icon svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 1.9;
+}
+
+.zikr-card .card-icon {
+  color: #947829;
+  background: #f5eedb;
+  border-color: #e9dfc5;
+}
+
+.hadith-card .card-icon {
+  background: #eef3ed;
+}
+
+.card-heading {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.card-heading > span {
+  color: #74857a;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.card-heading h3 {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.copy-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.36rem;
-  padding: 0.48rem 0.78rem;
-  border: 0;
-  border-radius: 999px;
-  color: #ffffff;
-  background-color: var(--color-primary);
+  gap: 0.4rem;
+  min-height: 34px;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #dce6dc;
+  border-radius: 9px;
+  color: var(--color-primary);
+  background: #ffffff;
   font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 900;
+  font-size: 0.76rem;
+  font-weight: 600;
   cursor: pointer;
   transition:
-    transform 0.16s ease,
-    background-color 0.12s ease;
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.daily-actions > button svg {
+.copy-button svg {
   width: 15px;
   height: 15px;
-  flex: 0 0 auto;
-  stroke-width: 2.6;
+  stroke-width: 2;
 }
 
-.daily-actions > button:hover {
-  transform: translateY(-2px);
-  background-color: var(--color-primary-dark);
+.copy-button:hover {
+  border-color: #b9cfbc;
+  background: #f0f6ef;
 }
 
-.main-text {
+.copy-button:focus-visible,
+.card-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.card-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  margin: 0;
-  color: var(--color-primary-dark);
-  font-family: var(--font-quran);
-  font-size: clamp(1.45rem, 2vw, 2rem);
-  font-weight: 400;
-  line-height: 2.12;
-  white-space: pre-line;
-  overflow-wrap: break-word;
+  min-width: 0;
+  padding: 1.6rem 0 1.8rem;
 }
 
-.zikr-card .main-text {
-  font-size: clamp(1.55rem, 2.1vw, 2.1rem);
+.daily-text {
+  width: 100%;
+  margin: 0;
+  color: #183d2e;
+  font-family: var(--font-quran);
+  font-size: clamp(1.5rem, 2vw, 1.85rem);
+  font-weight: 400;
+  line-height: 2;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.ayah-text {
+  font-family: var(--font-mushaf);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 2.15;
+  text-align: center;
+  overflow-wrap: normal;
+}
+
+.zikr-card .card-body {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.zikr-text {
+  font-size: clamp(1.45rem, 1.9vw, 1.75rem);
+  line-height: 1.95;
+  text-align: start;
+}
+
+.hadith-card .card-body {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 1.5rem 0 1.7rem;
+}
+
+.hadith-text {
+  max-width: 100%;
+  font-size: clamp(1.4rem, 1.75vw, 1.7rem);
+  line-height: 2;
+  text-align: start;
 }
 
 .card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.9rem;
-  margin-top: 1.2rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(15, 61, 46, 0.08);
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.95rem;
+  border-top: 1px solid rgba(15, 61, 46, 0.1);
 }
 
-.card-footer small {
-  color: var(--color-primary);
-  font-weight: 900;
-  line-height: 1.7;
+.source-label {
+  min-width: 0;
+  color: #687b6e;
+  font-size: 0.77rem;
+  font-weight: 500;
+  line-height: 1.75;
 }
 
-.card-footer a {
-  min-height: 36px;
+.ayah-card .source-label {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.ayah-card .source-label .quran-surah-name {
+  font-family: var(--font-mushaf);
+  font-size: 1.15rem;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.65;
+}
+
+.source-separator {
+  padding-inline: 0.2rem;
+  color: #b09a5e;
+}
+
+.card-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
   flex: 0 0 auto;
-  padding: 0.42rem 0.75rem;
-  border-radius: 999px;
   color: var(--color-primary);
-  background-color: rgba(15, 61, 46, 0.07);
-  font-size: 0.8rem;
-  font-weight: 900;
+  font-size: 0.8125rem;
+  font-weight: 600;
   text-decoration: none;
-  transition:
-    transform 0.16s ease,
-    color 0.12s ease,
-    background-color 0.12s ease;
+  transition: gap 0.2s ease;
 }
 
-.card-footer a svg {
-  width: 15px;
-  height: 15px;
-  stroke-width: 2.6;
+.card-link svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
 }
 
-.card-footer a:hover {
-  transform: translateY(-2px);
-  color: #ffffff;
-  background-color: var(--color-primary);
+.card-link:hover {
+  gap: 0.65rem;
 }
 
-.reveal {
-  animation: fadeUp 0.65s ease both;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
+@media (min-width: 901px) {
+  .daily-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: 2rem;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .daily-date {
+    justify-self: start;
+    margin-inline-start: 0;
   }
 }
 
 @media (max-width: 900px) {
+  .daily-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
   .daily-grid {
     grid-template-columns: 1fr;
+  }
+
+  .daily-card {
+    min-height: 0;
   }
 
   .hadith-card {
     grid-column: auto;
   }
 
-  .daily-card,
-  .zikr-card {
-    min-height: auto;
+  .card-body {
+    min-height: 150px;
+    padding-block: 1.5rem;
+  }
+
+  .hadith-card .card-body {
+    min-height: 0;
   }
 }
 
 @media (max-width: 520px) {
   .daily-section {
-    padding: 3.5rem 0;
+    padding-block: 3.5rem;
+  }
+
+  .daily-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .heading-eyebrow {
+    font-size: 0.75rem;
+  }
+
+  .heading-content h2 {
+    font-size: clamp(1.75rem, 7vw, 1.875rem);
+    line-height: 1.45;
+  }
+
+  .heading-content p {
+    font-size: 0.875rem;
+    line-height: 1.95;
+  }
+
+  .daily-date {
+    font-size: 0.74rem;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .daily-grid {
+    gap: 0.875rem;
   }
 
   .daily-card {
-    padding: 1.2rem;
-    border-radius: 22px;
+    padding: 1.1rem;
+    border-radius: 16px;
   }
 
-  .daily-card::before {
-    inset-inline: 1.2rem;
+  .card-header {
+    gap: 0.85rem;
   }
 
-  .main-text,
-  .zikr-card .main-text {
-    font-size: clamp(1.45rem, 8vw, 2rem);
-  }
-
-  .card-top,
-  .daily-actions,
-  .card-footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .card-label,
-  .daily-actions,
-  .daily-actions app-favorite-button,
-  .daily-actions > button,
-  .card-footer a {
+  .card-actions {
     width: 100%;
+    justify-content: flex-start;
   }
 
-  .daily-actions > button,
-  .card-footer a {
-    justify-content: center;
+  .card-heading h3 {
+    font-size: 1rem;
+  }
+
+  .card-body {
+    min-height: 125px;
+    padding-block: 1.4rem;
+  }
+
+  .daily-text {
+    font-size: clamp(1.4rem, 6.2vw, 1.7rem);
+    line-height: 2;
+  }
+
+  .ayah-text {
+    line-height: 2.15;
+  }
+
+  .ayah-card .source-label .quran-surah-name {
+    font-size: 1.1rem;
+  }
+
+  .zikr-text {
+    font-size: clamp(1.35rem, 5.9vw, 1.65rem);
+    line-height: 1.95;
+  }
+
+  .hadith-card .card-body {
+    min-height: 0;
+    padding-block: 1.3rem;
+  }
+
+  .hadith-text {
+    font-size: clamp(1.35rem, 5.8vw, 1.6rem);
+    line-height: 1.95;
   }
 
   .card-footer {
-    gap: 0.75rem;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daily-card,
+  .copy-button,
+  .card-link {
+    transition: none;
   }
 }

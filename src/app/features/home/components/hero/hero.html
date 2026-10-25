@@ -1,0 +1,85 @@
+<section class="home-hero" aria-labelledby="home-hero-title">
+  <div class="container hero-layout">
+    <div class="hero-content">
+      <span class="hero-overline">قُرب · رفيق يومك</span>
+
+      <h1 id="home-hero-title">
+        وسط زحمة الحياة،
+        <span>خُد لحظة قُرب.</span>
+      </h1>
+
+      <p class="hero-description">
+        القرآن الكريم، والأذكار، ومواقيت الصلاة، ووردك اليومي في مكان واحد يساعدك تحافظ على ما تحب،
+        بهدوء وبساطة.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/daily-wird" class="hero-button hero-button--primary">
+          <span>ابدأ وردك اليوم</span>
+          <svg lucideArrowLeft aria-hidden="true"></svg>
+        </a>
+
+        <a routerLink="/quran" class="hero-button hero-button--secondary">
+          <svg lucideBookOpen aria-hidden="true"></svg>
+          <span>تصفح القرآن</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="quran-card">
+        <div class="quran-card-header">
+          <span>من القرآن الكريم</span>
+          <svg lucideBookOpen aria-hidden="true"></svg>
+        </div>
+
+        <div class="quran-card-content">
+          <p class="quran-verse quran-ayah" lang="ar">﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</p>
+
+          <span class="quran-reference">
+            <span class="quran-surah-name">سورة طه</span>
+            <span>· الآية ١١٤</span>
+          </span>
+        </div>
+
+        <a routerLink="/quran/20" class="quran-card-link" aria-label="اقرأ سورة طه">
+          <span>اقرأ السورة</span>
+          <svg lucideArrowLeft aria-hidden="true"></svg>
+        </a>
+      </div>
+
+      <div class="prayer-summary">
+        <div class="prayer-summary-icon" aria-hidden="true">
+          <svg lucideClock3></svg>
+        </div>
+
+        <div class="prayer-summary-content">
+          <span class="prayer-summary-label">الصلاة القادمة</span>
+
+          @if (prayerLoading()) {
+            <strong>جاري تحميل المواقيت...</strong>
+            <small>{{ locationLabel() }}</small>
+          } @else if (prayer(); as nextPrayer) {
+            <strong>{{ nextPrayer.name }}</strong>
+
+            <small>
+              {{ nextPrayer.time }}
+
+              @if (locationLabel()) {
+                <span aria-hidden="true">·</span>
+                {{ locationLabel() }}
+              }
+            </small>
+          } @else {
+            <strong>المواقيت غير متاحة</strong>
+            <small>يمكنك عرض مواقيت الصلاة من الصفحة المخصصة.</small>
+          }
+        </div>
+
+        <a routerLink="/prayer-times" class="prayer-summary-link" aria-label="عرض مواقيت الصلاة">
+          <svg lucideArrowLeft aria-hidden="true"></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

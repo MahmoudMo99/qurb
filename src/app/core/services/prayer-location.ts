@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 import { PrayerCoordinates, PrayerLocation } from '../models/prayer-times.model';
 
@@ -51,6 +51,9 @@ export class PrayerLocationService {
     { id: 'doha-qa', label: 'الدوحة، قطر', city: 'Doha', country: 'Qatar', method: 10 },
   ];
 
+  readonly selectedLocationId = signal(this.getStoredLocationId());
+  readonly selectedCoordinates = signal<PrayerCoordinates | null>(this.getStoredCoordinates());
+
   getStoredLocationId(): string {
     try {
       const storedValue =
@@ -76,8 +79,11 @@ export class PrayerLocationService {
       localStorage.setItem(this.locationStorageKey, locationId);
       localStorage.removeItem(this.oldLocationStorageKey);
     } catch {
+      this.selectedLocationId.set(locationId);
       return;
     }
+
+    this.selectedLocationId.set(locationId);
   }
 
   getStoredCoordinates(): PrayerCoordinates | null {
@@ -92,7 +98,12 @@ export class PrayerLocationService {
 
       const coordinates = JSON.parse(storedCoordinates) as PrayerCoordinates;
 
-      if (typeof coordinates.latitude !== 'number' || typeof coordinates.longitude !== 'number') {
+      if (
+        typeof coordinates.latitude !== 'number' ||
+        typeof coordinates.longitude !== 'number' ||
+        !Number.isFinite(coordinates.latitude) ||
+        !Number.isFinite(coordinates.longitude)
+      ) {
         return null;
       }
 
@@ -107,8 +118,11 @@ export class PrayerLocationService {
       localStorage.setItem(this.coordinatesStorageKey, JSON.stringify(coordinates));
       localStorage.removeItem(this.oldCoordinatesStorageKey);
     } catch {
+      this.selectedCoordinates.set(coordinates);
       return;
     }
+
+    this.selectedCoordinates.set(coordinates);
   }
 
   getLocationById(locationId: string): PrayerLocation | null {

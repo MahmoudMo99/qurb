@@ -1,94 +1,44 @@
 <footer id="contact" class="site-footer">
-  <div class="container footer-content">
-    <div class="footer-brand">
-      <a class="footer-logo" routerLink="/home" aria-label="قُرب - الصفحة الرئيسية">
-        <span class="footer-mark" aria-hidden="true">
-          <span>ق</span>
-        </span>
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-identity">
+        <a routerLink="/home" class="footer-logo" aria-label="قُرب - الصفحة الرئيسية">
+          <span class="logo-symbol">ق</span>
+          <span class="logo-name">قُرب</span>
+        </a>
 
-        <span>
-          <strong>قُرب</strong>
-          <small>Quran • Sunnah • Azkar</small>
-        </span>
-      </a>
+        <p>مساحة هادئة للقرآن والذكر، أقرب ليومك.</p>
+      </div>
 
-      <p>
-        قُرب تطبيق إسلامي عربي يجمع القرآن الكريم، مواقيت الصلاة، الأذكار، الأحاديث النبوية، ومتابعة
-        الورد اليومي في تجربة هادئة ومنظمة تساعدك على جعل الذكر جزءًا من يومك.
-      </p>
-    </div>
-
-    <div class="footer-column">
-      <h3>روابط سريعة</h3>
-
-      <div class="footer-nav">
+      <nav class="footer-navigation" aria-label="روابط قُرب">
         @for (link of quickLinks; track link.route) {
           <a [routerLink]="link.route">
-            <span class="footer-link-icon">
-              @switch (link.icon) {
-                @case ('quran') {
-                  <svg lucideBookOpen aria-hidden="true"></svg>
-                }
-
-                @case ('wird') {
-                  <svg lucideCheck aria-hidden="true"></svg>
-                }
-
-                @case ('prayer') {
-                  <svg lucideClock aria-hidden="true"></svg>
-                }
-
-                @case ('azkar') {
-                  <svg lucideSparkles aria-hidden="true"></svg>
-                }
-
-                @case ('hadith') {
-                  <svg lucideScrollText aria-hidden="true"></svg>
-                }
-
-                @case ('favorites') {
-                  <svg lucideHeart aria-hidden="true"></svg>
-                }
-              }
-            </span>
-
-            <span>{{ link.label }}</span>
+            {{ link.label }}
           </a>
         }
+      </nav>
+
+      <div class="footer-developer">
+        <div class="developer-heading">
+          <strong>محمود محمد</strong>
+          <span>Software Engineer · Angular Developer</span>
+        </div>
+
+        <div class="developer-links">
+          @for (link of externalLinks; track link.href) {
+            <a [href]="link.href" target="_blank" rel="noopener noreferrer">
+              {{ link.label }}
+              <svg lucideArrowUpLeft aria-hidden="true"></svg>
+            </a>
+          }
+        </div>
       </div>
     </div>
 
-    <div class="footer-column">
-      <h3>تواصل معي</h3>
+    <div class="footer-bottom">
+      <span class="footer-credit"> صُنع بعناية، ليكون الخير أقرب. </span>
 
-      <div class="footer-links">
-        @for (link of links; track link.href) {
-          <a [href]="link.href" target="_blank" rel="noopener noreferrer">
-            <span class="footer-link-icon">
-              @switch (link.icon) {
-                @case ('github') {
-                  <svg lucideLink aria-hidden="true"></svg>
-                }
-
-                @case ('portfolio') {
-                  <svg lucideGlobe aria-hidden="true"></svg>
-                }
-
-                @case ('linkedin') {
-                  <svg lucideLink aria-hidden="true"></svg>
-                }
-              }
-            </span>
-
-            <span>{{ link.label }}</span>
-            <svg class="external-icon" lucideExternalLink aria-hidden="true"></svg>
-          </a>
-        }
-      </div>
+      <span class="footer-copyright" dir="ltr"> © {{ currentYear }} Mahmoud Mohamed </span>
     </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p dir="ltr">© {{ currentYear }} Mahmoud Mohamed. Built with care for Qurb.</p>
   </div>
 </footer>

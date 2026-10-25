@@ -24,7 +24,7 @@
   --radius-lg: 28px;
   --radius-md: 18px;
 
-  --font-ui: 'Cairo', system-ui, sans-serif;
+  --font-ui: 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --font-quran: 'Amiri Quran', serif;
   --font-mushaf: 'KFGQPC Hafs', 'Amiri Quran', serif;
 }
@@ -75,6 +75,27 @@ textarea {
   background-color: rgba(201, 162, 39, 0.16);
   font-size: 0.86rem;
   font-weight: 800;
+}
+
+.quran-text,
+.quran-ayah,
+.quran-surah-name,
+.quran-basmalah {
+  font-family: var(--font-mushaf);
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  direction: rtl;
+}
+
+.quran-text,
+.quran-ayah,
+.quran-basmalah {
+  line-height: 2;
+}
+
+.quran-surah-name {
+  line-height: 1.6;
 }
 
 ::selection {

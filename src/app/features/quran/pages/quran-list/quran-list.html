@@ -1,47 +1,117 @@
 <section class="quran-page">
   <div class="container">
-    <div class="page-hero reveal">
-      <span class="section-badge">القرآن الكريم</span>
+    <div class="quran-intro reveal">
+      <div class="intro-copy">
+        <span class="intro-eyebrow">القرآن الكريم</span>
 
-      <h1>تصفح سور القرآن بهدوء</h1>
+        <h1>
+          رحلتك مع القرآن
+          <span>تبدأ من هنا.</span>
+        </h1>
 
-      <p>اختر السورة التي تريد قراءتها، أو ابحث بالاسم أو الرقم للوصول إليها بسرعة داخل قُرب.</p>
+        <p>
+          بين يديك سور القرآن الكريم. اختر سورة لتبدأ قراءتها، أو عُد إلى حيث توقفت، واجعل للقرآن
+          نصيبًا من يومك.
+        </p>
 
-      <div class="quran-stats" aria-label="إحصائيات القرآن">
-        @for (stat of stats(); track stat.label) {
-          <div>
-            <strong>{{ stat.value }}</strong>
-            <span>{{ stat.label }}</span>
+        <div class="intro-stats" aria-label="إحصائيات القرآن">
+          @for (stat of stats(); track stat.label) {
+            <div class="intro-stat">
+              <strong>{{ stat.value }}</strong>
+              <span>{{ stat.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="intro-feature">
+        <div class="feature-ornament" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        @if (lastReadSurah(); as lastRead) {
+          <div class="feature-content">
+            <span class="feature-label">
+              <svg lucideClock aria-hidden="true"></svg>
+              تابع من حيث توقفت
+            </span>
+
+            <span class="feature-caption">آخر سورة قرأتها</span>
+
+            <h2 class="quran-surah-name">{{ lastRead.name }}</h2>
+
+            <p>{{ lastRead.numberOfAyahs }} آية</p>
+
+            <a [routerLink]="['/quran', lastRead.number]" class="feature-action">
+              <span>استكمل القراءة</span>
+              <svg lucideBookOpen aria-hidden="true"></svg>
+            </a>
           </div>
+        } @else {
+          <div class="feature-content">
+            <span class="feature-label">
+              <svg lucideBookOpen aria-hidden="true"></svg>
+              لحظة مع القرآن
+            </span>
+
+            <span class="feature-caption">بداية طيبة ليومك</span>
+
+            <h2>اقْرَأْ</h2>
+
+            <p>كل رحلة جميلة تبدأ بخطوة.</p>
+
+            <a routerLink="/quran/1" class="feature-action">
+              <span>ابدأ بسورة الفاتحة</span>
+              <svg lucideBookOpen aria-hidden="true"></svg>
+            </a>
+          </div>
+        }
+
+        <div class="feature-bottom">
+          <span>قُرب</span>
+          <span aria-hidden="true">✦</span>
+          <span>رفيق رحلتك مع القرآن</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="surahs-section">
+      <div class="surahs-heading">
+        <div>
+          <span class="section-eyebrow">تصفّح القرآن</span>
+          <h2>سور القرآن الكريم</h2>
+          <p>ابحث عن السورة التي تريدها، وابدأ القراءة بسهولة.</p>
+        </div>
+
+        @if (!isLoading() && !errorMessage()) {
+          <span class="surahs-count">
+            <strong>{{ resultCount() }}</strong>
+            سورة
+          </span>
         }
       </div>
 
-      @if (lastReadSurah(); as lastRead) {
-        <a class="last-read-card" [routerLink]="['/quran', lastRead.number]">
-          <span class="last-read-label">
-            <svg lucideClock aria-hidden="true"></svg>
-            <strong>آخر قراءة</strong>
-          </span>
-
-          <span class="last-read-name">{{ lastRead.name }}</span>
-
-          <small>{{ lastRead.numberOfAyahs }} آية</small>
-        </a>
-      }
-
       <div class="quran-toolbar">
         <div class="search-box">
-          <svg class="search-icon" lucideSearch aria-hidden="true"></svg>
+          <svg lucideSearch aria-hidden="true"></svg>
 
           <input
-            type="text"
+            type="search"
+            aria-label="البحث عن سورة"
             placeholder="ابحث باسم السورة أو رقمها..."
             [value]="searchTerm()"
             (input)="updateSearchTerm($event)"
           />
 
           @if (searchTerm()) {
-            <button type="button" aria-label="مسح البحث" (click)="clearSearch()">
+            <button
+              type="button"
+              class="clear-search"
+              aria-label="مسح البحث"
+              (click)="clearSearch()"
+            >
               <svg lucideX aria-hidden="true"></svg>
             </button>
           }
@@ -53,86 +123,86 @@
               type="button"
               class="filter-button"
               [class.active]="activeFilter() === filter.value"
+              [attr.aria-pressed]="activeFilter() === filter.value"
               (click)="setFilter(filter.value)"
             >
               {{ filter.label }}
             </button>
           }
         </div>
+      </div>
 
-        @if (!isLoading() && !errorMessage()) {
-          <div class="results-summary">
-            <div>
-              <span>السور المعروضة</span>
-              <strong>{{ resultCount() }}</strong>
-            </div>
+      @if (!isLoading() && !errorMessage() && hasActiveSearch()) {
+        <div class="active-search-summary">
+          <span>
+            تم العثور على
+            <strong>{{ resultCount() }}</strong>
+            سورة
+          </span>
 
-            @if (hasActiveSearch()) {
-              <button type="button" (click)="clearAllFilters()">
-                <svg lucideX aria-hidden="true"></svg>
-                <span>إزالة التصفية</span>
-              </button>
+          <button type="button" (click)="clearAllFilters()">
+            <svg lucideX aria-hidden="true"></svg>
+            إزالة التصفية
+          </button>
+        </div>
+      }
+
+      @if (isLoading()) {
+        <app-skeleton-card [count]="8" [rows]="2"></app-skeleton-card>
+      } @else if (errorMessage()) {
+        <app-page-state
+          type="error"
+          title="تعذر تحميل السور"
+          [message]="errorMessage()"
+          actionLabel="إعادة المحاولة"
+          (action)="reloadSurahs()"
+        ></app-page-state>
+      } @else {
+        @if (filteredSurahs().length) {
+          <div class="surah-grid">
+            @for (surah of filteredSurahs(); track surah.number) {
+              <article class="surah-card reveal">
+                <div class="surah-card-top">
+                  <span class="surah-number">{{ surah.number }}</span>
+
+                  <span class="surah-type">
+                    {{ surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية' }}
+                  </span>
+                </div>
+
+                <div class="surah-card-body">
+                  <h3 class="quran-surah-name">{{ surah.name }}</h3>
+                  <p>{{ surah.numberOfAyahs }} آية</p>
+                </div>
+
+                <div class="surah-card-footer">
+                  <a
+                    class="open-surah-link"
+                    [routerLink]="['/quran', surah.number]"
+                    [attr.aria-label]="'قراءة ' + surah.name"
+                  >
+                    <span>قراءة السورة</span>
+                    <svg lucideBookOpen aria-hidden="true"></svg>
+                  </a>
+
+                  <app-favorite-button
+                    mode="small"
+                    label="حفظ"
+                    savedLabel="محفوظة"
+                    [favoriteItem]="getSurahFavoriteItem(surah)"
+                  ></app-favorite-button>
+                </div>
+              </article>
             }
           </div>
+        } @else {
+          <app-page-state
+            type="empty"
+            title="لا توجد نتائج"
+            message="جرّب البحث باسم سورة آخر أو غيّر نوع التصفية."
+          ></app-page-state>
         }
-      </div>
-    </div>
-
-    @if (isLoading()) {
-      <app-skeleton-card [count]="8" [rows]="2"></app-skeleton-card>
-    } @else if (errorMessage()) {
-      <app-page-state
-        type="error"
-        title="تعذر تحميل السور"
-        [message]="errorMessage()"
-        actionLabel="إعادة المحاولة"
-        (action)="reloadSurahs()"
-      ></app-page-state>
-    } @else {
-      @if (filteredSurahs().length) {
-        <div class="surah-grid">
-          @for (surah of filteredSurahs(); track surah.number) {
-            <article class="surah-card reveal">
-              <div class="surah-card-header">
-                <div class="surah-number">{{ surah.number }}</div>
-
-                <span class="surah-type">
-                  {{ surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية' }}
-                </span>
-              </div>
-
-              <div class="surah-content">
-                <h2>{{ surah.name }}</h2>
-              </div>
-
-              <div class="surah-meta">
-                <span>{{ surah.numberOfAyahs }} آية</span>
-                <span>ترتيبها {{ surah.number }}</span>
-              </div>
-
-              <div class="surah-actions">
-                <a class="open-surah-link" [routerLink]="['/quran', surah.number]">
-                  <svg lucideBookOpen aria-hidden="true"></svg>
-                  <span>قراءة السورة</span>
-                </a>
-
-                <app-favorite-button
-                  mode="small"
-                  label="حفظ"
-                  savedLabel="محفوظة"
-                  [favoriteItem]="getSurahFavoriteItem(surah)"
-                ></app-favorite-button>
-              </div>
-            </article>
-          }
-        </div>
-      } @else {
-        <app-page-state
-          type="empty"
-          title="لا توجد نتائج"
-          message="جرّب البحث باسم سورة آخر أو غيّر نوع التصفية."
-        ></app-page-state>
       }
-    }
+    </div>
   </div>
 </section>

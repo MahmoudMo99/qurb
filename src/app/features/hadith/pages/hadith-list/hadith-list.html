@@ -1,58 +1,91 @@
 <section class="hadith-page">
   <div class="container">
-    <div class="page-hero reveal">
-      <span class="section-badge">الأحاديث النبوية</span>
+    <header class="page-hero reveal">
+      <span class="section-eyebrow">
+        <span class="eyebrow-dot"></span>
+        الأحاديث النبوية
+      </span>
 
-      <h1>تصفح كتب الحديث بهدوء</h1>
+      <h1>
+        من هَدي النبي ﷺ،
+        <span>نورٌ لحياتك.</span>
+      </h1>
 
       <p>
-        اختر الكتاب المناسب، وابحث داخل الأحاديث بسهولة مع عرض رقم الحديث والباب ودرجة الحديث إن
-        كانت متاحة.
+        بين كلمات النبي ﷺ، تجد ما يُنير قلبك ويُعينك على يومك. تصفّح كتب السنة، واقرأ واحفظ ما يلامس
+        قلبك.
       </p>
+    </header>
 
-      <div class="hadith-stats">
+    <section class="books-section reveal" aria-labelledby="books-title">
+      <div class="section-heading">
         <div>
-          <strong>{{ books.length }}</strong>
-          <span>كتب مختارة</span>
+          <span class="section-eyebrow">من كنوز السنة</span>
+          <h2 id="books-title">اختر كتابًا لتبدأ القراءة</h2>
+          <p>ثماني مجموعات حديثية بين يديك، اختر منها ما تحب.</p>
         </div>
 
-        <div>
-          <strong>{{ hadithData()?.hadiths?.length ?? 0 }}</strong>
-          <span>حديث في الكتاب</span>
-        </div>
-
-        <div>
-          <strong>{{ resultCount() }}</strong>
-          <span>نتيجة معروضة</span>
-        </div>
+        <span class="books-count">
+          <svg lucideBookOpen aria-hidden="true"></svg>
+          {{ books.length }} كتب
+        </span>
       </div>
-    </div>
 
-    <div class="hadith-controls reveal">
       <div class="books-grid" aria-label="اختيار كتاب الحديث">
         @for (book of books; track book.edition) {
           <button
             type="button"
             class="book-card"
             [class.active]="selectedEdition() === book.edition"
+            [attr.aria-pressed]="selectedEdition() === book.edition"
             (click)="selectBook(book.edition)"
           >
-            <svg lucideBookOpen aria-hidden="true"></svg>
+            <span class="book-icon">
+              <svg lucideBookOpen aria-hidden="true"></svg>
+            </span>
 
-            <span>{{ book.label }}</span>
+            <span class="book-info">
+              <strong>{{ book.label }}</strong>
+              <small>{{ book.description }}</small>
+            </span>
 
-            <small>{{ book.description }}</small>
+            <span class="book-indicator"></span>
           </button>
         }
       </div>
+    </section>
 
-      <div class="hadith-toolbar">
+    <section class="reading-section" aria-labelledby="reading-title">
+      <div class="reading-header reveal">
+        <div class="reading-title">
+          <span class="section-eyebrow">رحلتك مع الحديث</span>
+          <h2 id="reading-title">{{ selectedBook().label }}</h2>
+          <p>اقرأ بتأنٍّ، واحتفظ بالأحاديث التي ترغب في الرجوع إليها.</p>
+        </div>
+
+        <div class="reading-stats">
+          <div class="reading-stat">
+            <strong>{{ hadithData()?.hadiths?.length ?? 0 }}</strong>
+            <span>حديث</span>
+          </div>
+
+          <span class="stat-divider"></span>
+
+          <div class="reading-stat">
+            <strong>{{ sectionsCount() }}</strong>
+            <span>باب</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hadith-toolbar reveal">
         <div class="search-box">
           <svg lucideSearch aria-hidden="true"></svg>
 
           <input
-            type="text"
-            placeholder="ابحث في نص الحديث أو رقم الحديث..."
+            type="search"
+            aria-label="البحث في الأحاديث"
+            placeholder="ابحث عن حديث أو كلمة أو رقم..."
             [value]="searchTerm()"
             (input)="updateSearchTerm($event)"
           />
@@ -63,81 +96,97 @@
             </button>
           }
         </div>
-      </div>
-    </div>
 
-    @if (isLoading()) {
-      <app-skeleton-card [count]="6" [rows]="4"></app-skeleton-card>
-    } @else if (errorMessage()) {
-      <app-page-state
-        type="error"
-        title="تعذر تحميل الأحاديث"
-        [message]="errorMessage()"
-        actionLabel="إعادة المحاولة"
-        (action)="reloadHadith()"
-      ></app-page-state>
-    } @else if (hadithData(); as data) {
-      <div class="book-summary reveal">
-        <div>
-          <span>الكتاب الحالي</span>
-          <h2>{{ selectedBook().label }}</h2>
-        </div>
-
-        <div class="summary-pills">
-          <strong>{{ data.hadiths.length }} حديث</strong>
-          <strong>{{ sectionsCount() }} باب</strong>
-        </div>
+        <span class="results-label" aria-live="polite">
+          {{ resultCount() }}
+          {{ searchTerm() ? 'نتيجة مطابقة' : 'حديث في الكتاب' }}
+        </span>
       </div>
 
-      @if (visibleHadiths().length) {
-        <div class="hadith-grid">
-          @for (hadith of visibleHadiths(); track getHadithId(hadith)) {
-            <article class="hadith-card reveal">
-              <div class="hadith-header">
-                <span class="number-pill">#{{ hadith.hadithnumber }}</span>
-                @if (getSectionName(hadith); as sectionName) {
-                  <span class="section-pill">{{ sectionName }}</span>
-                }
-              </div>
-
-              <p class="hadith-text">{{ hadith.text }}</p>
-
-              <div class="hadith-actions">
-                <small>{{ getReferenceText(hadith) }}</small>
-
-                <div class="action-buttons">
-                  <app-favorite-button
-                    mode="small"
-                    label="حفظ"
-                    savedLabel="محفوظ"
-                    [favoriteItem]="getHadithFavoriteItem(hadith)"
-                  ></app-favorite-button>
-
-                  <button type="button" (click)="copyHadith(hadith)">
-                    <svg lucideCopy aria-hidden="true"></svg>
-                    <span>
-                      {{ copiedHadithId() === getHadithId(hadith) ? 'تم النسخ' : 'نسخ الحديث' }}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </article>
-          }
-        </div>
-
-        @if (canLoadMore()) {
-          <button type="button" class="load-more-button" (click)="loadMore()">
-            <svg lucidePlus aria-hidden="true"></svg>
-            <span>عرض المزيد</span>
-          </button>
-        }
-      } @else {
+      @if (isLoading()) {
+        <app-skeleton-card [count]="6" [rows]="4"></app-skeleton-card>
+      } @else if (errorMessage()) {
         <app-page-state
-          type="empty"
-          title="لا توجد نتائج"
-          message="جرّب كلمة بحث مختلفة أو غيّر الكتاب."
+          type="error"
+          title="تعذر تحميل الأحاديث"
+          [message]="errorMessage()"
+          actionLabel="إعادة المحاولة"
+          (action)="reloadHadith()"
         ></app-page-state>
+      } @else if (hadithData()) {
+        @if (visibleHadiths().length) {
+          <div class="hadith-grid">
+            @for (hadith of visibleHadiths(); track getHadithId(hadith)) {
+              <article class="hadith-card reveal">
+                <div class="hadith-card-header">
+                  <span class="hadith-number"> حديث رقم {{ hadith.hadithnumber }} </span>
+
+                  @if (getSectionName(hadith); as sectionName) {
+                    <span class="hadith-section">{{ sectionName }}</span>
+                  }
+                </div>
+
+                <div class="hadith-card-body">
+                  <p class="hadith-text">{{ hadith.text }}</p>
+                </div>
+
+                <div class="hadith-card-footer">
+                  <div class="hadith-reference">
+                    <svg lucideBookOpen aria-hidden="true"></svg>
+
+                    <span>
+                      {{ selectedBook().label }}
+
+                      @if (getReferenceText(hadith)) {
+                        <span class="reference-detail"> · {{ getReferenceText(hadith) }} </span>
+                      }
+                    </span>
+                  </div>
+
+                  <div class="action-buttons">
+                    <app-favorite-button
+                      mode="small"
+                      label="حفظ"
+                      savedLabel="محفوظ"
+                      [favoriteItem]="getHadithFavoriteItem(hadith)"
+                    ></app-favorite-button>
+
+                    <button
+                      class="copy-button"
+                      type="button"
+                      [attr.aria-label]="'نسخ الحديث رقم ' + hadith.hadithnumber"
+                      (click)="copyHadith(hadith)"
+                    >
+                      <svg lucideCopy aria-hidden="true"></svg>
+
+                      <span>
+                        {{ copiedHadithId() === getHadithId(hadith) ? 'تم النسخ' : 'نسخ' }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+
+          @if (canLoadMore()) {
+            <div class="load-more-wrapper">
+              <p>يتم عرض {{ visibleHadiths().length }} من أصل {{ resultCount() }} حديث</p>
+
+              <button type="button" class="load-more-button" (click)="loadMore()">
+                <svg lucidePlus aria-hidden="true"></svg>
+                عرض المزيد من الأحاديث
+              </button>
+            </div>
+          }
+        } @else {
+          <app-page-state
+            type="empty"
+            title="لا توجد نتائج"
+            message="جرّب كلمة بحث مختلفة أو اختر كتابًا آخر."
+          ></app-page-state>
+        }
       }
-    }
+    </section>
   </div>
 </section>

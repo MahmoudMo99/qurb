@@ -83,7 +83,10 @@
         </div>
 
         <div class="surah-title-area">
-          <h1 [class.mushaf-page-title]="readingMode() === 'mushaf'">
+          <h1
+            [class.quran-surah-name]="readingMode() === 'surah'"
+            [class.mushaf-page-title]="readingMode() === 'mushaf'"
+          >
             @if (readingMode() === 'mushaf') {
               صفحة {{ currentMushafPage() }} من المصحف
             } @else {
@@ -270,7 +273,7 @@
             @if (readingMode() === 'surah') {
               @for (ayah of displayAyahs(); track ayah.number) {
                 <p class="ayah-line">
-                  <span class="ayah-text">{{ ayah.text }}</span>
+                  <span class="ayah-text">{{ formatAyahText(ayah.text) }}</span>
                   @if (!isOfficialQuran()) {
                     <span class="ayah-number">{{ ayah.numberInSurah }}</span>
                   }
@@ -280,7 +283,7 @@
               @for (ayah of currentMushafPageAyahs(); track ayah.number) {
                 @if (getMushafSurahStart(ayah.number); as surahStart) {
                   <div class="mushaf-surah-start">
-                    <div class="mushaf-surah-title">
+                    <div class="mushaf-surah-title quran-surah-name">
                       {{ surahStart.surahName }}
                     </div>
 
@@ -293,7 +296,7 @@
                 }
 
                 <span class="ayah-line">
-                  <span class="ayah-text">{{ ayah.text }}</span>
+                  <span class="ayah-text">{{ formatAyahText(ayah.text) }}</span>
 
                   @if (!isOfficialQuran()) {
                     <span class="ayah-number">{{ ayah.numberInSurah }}</span>

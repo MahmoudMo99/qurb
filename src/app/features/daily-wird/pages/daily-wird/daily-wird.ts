@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
+  LucideArrowLeft,
+  LucideBookOpen,
   LucideCheck,
   LucideChevronLeft,
   LucideMinus,
@@ -16,6 +18,8 @@ import { DailyWirdService } from '../../../../core/services/daily-wird';
   selector: 'app-daily-wird',
   imports: [
     RouterLink,
+    LucideArrowLeft,
+    LucideBookOpen,
     LucideCheck,
     LucideChevronLeft,
     LucideMinus,

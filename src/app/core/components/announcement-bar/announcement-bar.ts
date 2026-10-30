@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { LucideDownload, LucideSparkles, LucideX } from '@lucide/angular';
-import { InstallDialog } from '../../shared/components/install-dialog/install-dialog';
+import { InstallDialog } from '../../../shared/components/install-dialog/install-dialog';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;

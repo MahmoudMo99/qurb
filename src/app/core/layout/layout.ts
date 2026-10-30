@@ -11,11 +11,11 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter } from 'rxjs';
 
 import { ScrollToTop } from '../../shared/components/scroll-to-top/scroll-to-top';
+import { AnnouncementBar } from '../components/announcement-bar/announcement-bar';
 import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { FocusModeService } from '../services/focus-mode';
 import { SeoService } from '../services/seo';
-import { AnnouncementBar } from '../announcement-bar/announcement-bar';
 
 @Component({
   selector: 'app-layout',

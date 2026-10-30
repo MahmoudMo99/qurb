@@ -1,0 +1,30 @@
+@if (pwaUpdate.updateAvailable()) {
+  <aside class="update-notice" role="status" aria-live="polite">
+    <div class="notice-icon" aria-hidden="true">
+      <span>✦</span>
+    </div>
+
+    <div class="notice-content">
+      <span class="notice-eyebrow">تحديث جديد</span>
+      <h2>قُرب أصبح أجمل ✨</h2>
+      <p>هناك نسخة جديدة من قُرب جاهزة للاستخدام. حدّث التطبيق للاستمتاع بأحدث التحسينات.</p>
+
+      <div class="notice-actions">
+        <button type="button" class="update-btn" (click)="pwaUpdate.installUpdate()">
+          تحديث الآن
+        </button>
+
+        <button type="button" class="later-btn" (click)="pwaUpdate.dismissUpdate()">لاحقًا</button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="close-btn"
+      aria-label="إغلاق إشعار التحديث"
+      (click)="pwaUpdate.dismissUpdate()"
+    >
+      ×
+    </button>
+  </aside>
+}

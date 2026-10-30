@@ -1,0 +1,202 @@
+:host {
+  display: contents;
+}
+
+.update-notice {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  left: 1.5rem;
+  z-index: 9999;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+
+  width: min(420px, calc(100vw - 3rem));
+  padding: 1.25rem;
+
+  direction: rtl;
+  text-align: right;
+
+  background: #fffdf8;
+  border: 1px solid #dce8d9;
+  border-radius: 20px;
+  box-shadow: 0 16px 48px rgba(22, 65, 47, 0.16);
+
+  animation: notice-enter 0.35s ease both;
+}
+
+.notice-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 46px;
+
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+
+  background: #e6f1e8;
+  color: #23654c;
+  font-size: 1.5rem;
+}
+
+.notice-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notice-eyebrow {
+  display: block;
+  margin-bottom: 0.3rem;
+
+  color: #468568;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.notice-content h2 {
+  margin: 0 0 0.4rem;
+
+  color: #174b37;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.notice-content p {
+  margin: 0;
+
+  color: #64766a;
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+
+.notice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.notice-actions button {
+  min-height: 38px;
+  padding: 0.5rem 1rem;
+
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.notice-actions button:active {
+  transform: scale(0.97);
+}
+
+.update-btn {
+  background: #206349;
+  color: #fff;
+}
+
+.update-btn:hover {
+  background: #174b37;
+}
+
+.later-btn {
+  background: #edf3ec;
+  color: #456c55;
+}
+
+.later-btn:hover {
+  background: #dfeade;
+}
+
+.close-btn {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 26px;
+  height: 26px;
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+
+  color: #8a9a8d;
+  font-size: 1.35rem;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #edf3ec;
+  color: #174b37;
+}
+
+@keyframes notice-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .update-notice {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 1rem;
+
+    width: calc(100vw - 2rem);
+    padding: 1rem;
+    gap: 0.75rem;
+
+    border-radius: 16px;
+  }
+
+  .notice-icon {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 1.25rem;
+  }
+
+  .notice-content h2 {
+    font-size: 0.95rem;
+  }
+
+  .notice-content p {
+    font-size: 0.75rem;
+  }
+
+  .notice-actions {
+    gap: 0.5rem;
+  }
+
+  .notice-actions button {
+    padding-inline: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update-notice {
+    animation: none;
+  }
+
+  .notice-actions button {
+    transition: none;
+  }
+}

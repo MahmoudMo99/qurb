@@ -1,43 +1,60 @@
 import { ViewportScroller } from '@angular/common';
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  HostListener,
-  OnInit,
   computed,
+  DestroyRef,
+  effect,
+  HostListener,
   inject,
+  Injector,
+  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   LucideArrowRight,
+  LucideBookmark,
   LucideBookOpen,
   LucideChevronLeft,
   LucideChevronRight,
+  LucideCopy,
   LucideList,
   LucideMinus,
   LucidePlus,
   LucideRotateCcw,
+  LucideShare2,
+  LucideX,
 } from '@lucide/angular';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
 
+import { HotToastService } from '@ngxpert/hot-toast';
 import { FavoriteItem } from '../../../../core/models/favorite.model';
 import {
   OfficialQuranAyah,
   QuranAyah,
   QuranSurah,
   QuranSurahDetails,
+  SelectedQuranAyah,
 } from '../../../../core/models/quran.model';
+import { FavoritesService } from '../../../../core/services/favorites';
 import { FocusModeService } from '../../../../core/services/focus-mode';
 import { QuranService } from '../../../../core/services/quran';
+import { TafsirService } from '../../../../core/services/tafsir';
+import { createAyahFavoriteItem } from '../../../../core/utils/ayah-favorite';
 import { FavoriteButton } from '../../../../shared/components/favorite-button/favorite-button';
 import { PageState } from '../../../../shared/components/page-state/page-state';
 import { SkeletonCard } from '../../../../shared/components/skeleton-card/skeleton-card';
 
 type ReadingMode = 'surah' | 'mushaf';
 type MushafIndexTab = 'surahs' | 'juz';
+
+interface TafsirPart {
+  text: string;
+  isQuran: boolean;
+}
 
 @Component({
   selector: 'app-surah-details',
@@ -54,6 +71,10 @@ type MushafIndexTab = 'surahs' | 'juz';
     LucideMinus,
     LucidePlus,
     LucideRotateCcw,
+    LucideBookmark,
+    LucideCopy,
+    LucideShare2,
+    LucideX,
   ],
   templateUrl: './surah-details.html',
   styleUrl: './surah-details.scss',
@@ -65,6 +86,9 @@ export class SurahDetails implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly viewportScroller = inject(ViewportScroller);
   private readonly focusModeService = inject(FocusModeService);
+  private readonly toastService = inject(HotToastService);
+  private readonly favoritesService = inject(FavoritesService);
+  private readonly injector = inject(Injector);
 
   private readonly lastReadStorageKey = 'qurb_last_read_surah';
   private readonly oldLastReadStorageKey = 'quran_sunnah_last_read_surah';
@@ -88,9 +112,126 @@ export class SurahDetails implements OnInit {
   readonly mushafIndexSearch = signal('');
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly requestedAyahNumber = signal<number | null>(null);
+  private pendingAyahNavigation = false;
 
   readonly isFocusMode = this.focusModeService.isEnabled;
   readonly isFocusControlsVisible = signal(false);
+
+  readonly selectedAyah = signal<SelectedQuranAyah | null>(null);
+
+  private readonly tafsirService = inject(TafsirService);
+
+  readonly isTafsirOpen = signal(false);
+  readonly isTafsirLoading = signal(false);
+  readonly tafsirError = signal('');
+  readonly tafsirText = signal('');
+
+  readonly tafsirAyah = signal<SelectedQuranAyah | null>(null);
+
+  private tafsirRequestId = 0;
+
+  openAyahTafsir(): void {
+    const ayah = this.selectedAyah();
+
+    if (!ayah) return;
+
+    const requestId = ++this.tafsirRequestId;
+
+    this.tafsirAyah.set({ ...ayah });
+    this.tafsirText.set('');
+    this.tafsirError.set('');
+    this.isTafsirLoading.set(true);
+    this.isTafsirOpen.set(true);
+
+    this.tafsirService
+      .getAyahTafsir(ayah.surahNumber, ayah.ayahNumber)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (text) => {
+          if (requestId !== this.tafsirRequestId) return;
+
+          this.tafsirText.set(text);
+          this.isTafsirLoading.set(false);
+        },
+        error: () => {
+          if (requestId !== this.tafsirRequestId) return;
+
+          this.tafsirError.set('تعذّر تحميل التفسير. حاول مرة أخرى.');
+          this.isTafsirLoading.set(false);
+        },
+      });
+  }
+
+  closeAyahTafsir(): void {
+    ++this.tafsirRequestId;
+
+    this.isTafsirOpen.set(false);
+    this.isTafsirLoading.set(false);
+    this.tafsirAyah.set(null);
+  }
+
+  retryAyahTafsir(): void {
+    const ayah = this.tafsirAyah();
+
+    if (!ayah) return;
+
+    this.selectedAyah.set(ayah);
+    this.openAyahTafsir();
+  }
+
+  readonly isSelectedAyahSaved = computed(() => {
+    const ayah = this.selectedAyah();
+
+    if (!ayah) return false;
+
+    return this.favoritesService.isFavorite(
+      this.getAyahFavoriteId(ayah.surahNumber, ayah.ayahNumber),
+    );
+  });
+
+  private getAyahFavoriteId(surahNumber: number, ayahNumber: number): string {
+    return `ayah-${surahNumber}-${ayahNumber}`;
+  }
+
+  readonly tafsirParts = computed<TafsirPart[]>(() => {
+    const raw = this.tafsirText();
+
+    if (!raw) return [];
+
+    const parts: TafsirPart[] = [];
+
+    const regex = /<span\s+class=['"]aya['"]\s*>([\s\S]*?)<\/span>/gi;
+
+    let lastIndex = 0;
+
+    for (const match of raw.matchAll(regex)) {
+      const index = match.index ?? 0;
+
+      if (index > lastIndex) {
+        parts.push({
+          text: raw.slice(lastIndex, index),
+          isQuran: false,
+        });
+      }
+
+      parts.push({
+        text: match[1],
+        isQuran: true,
+      });
+
+      lastIndex = index + match[0].length;
+    }
+
+    if (lastIndex < raw.length) {
+      parts.push({
+        text: raw.slice(lastIndex),
+        isQuran: false,
+      });
+    }
+
+    return parts;
+  });
 
   readonly canRetry = computed(() => {
     const surahNumber = this.currentSurahNumber();
@@ -118,7 +259,6 @@ export class SurahDetails implements OnInit {
     return Array.from({ length: 604 }, (_, index) => index + 1);
   });
 
-  // First page of every surah and juz, derived from the official Mushaf data.
   readonly mushafSurahOptions = computed(() => {
     const firstPages = new Map<number, { number: number; name: string; page: number }>();
 
@@ -135,7 +275,6 @@ export class SurahDetails implements OnInit {
     return [...firstPages.values()].sort((a, b) => a.number - b.number);
   });
 
-  // Highlight the surah and juz actually shown on the current page.
   readonly currentMushafLocation = computed(() => {
     const firstAyah = this.officialMushafAyahs().find(
       (ayah) => ayah.page === this.currentMushafPage(),
@@ -208,6 +347,7 @@ export class SurahDetails implements OnInit {
         number: ayah.id,
         text: ayah.aya_text_unicode,
         numberInSurah: ayah.aya_no,
+        surahNumber: ayah.sura_no,
         juz: ayah.jozz,
         page: ayah.page,
       }));
@@ -327,6 +467,25 @@ export class SurahDetails implements OnInit {
     return this.currentMushafPageIndex() < this.totalMushafPages();
   });
 
+  constructor() {
+    effect(() => {
+      const surah = this.surah();
+      const requestedAyah = this.requestedAyahNumber();
+      const mode = this.readingMode();
+      const officialAyahs = this.officialMushafAyahs();
+
+      if (!surah || !requestedAyah || this.isLoading()) {
+        return;
+      }
+
+      if (mode === 'mushaf' && !officialAyahs.length) {
+        return;
+      }
+
+      this.navigateToRequestedAyah();
+    });
+  }
+
   ngOnInit(): void {
     this.destroyRef.onDestroy(() => {
       this.leaveFocusModeSilently();
@@ -360,6 +519,7 @@ export class SurahDetails implements OnInit {
       .pipe(
         map((params) => Number(params.get('surahNumber'))),
         tap((surahNumber) => {
+          this.clearSelectedAyah();
           this.currentSurahNumber.set(surahNumber);
           this.isLoading.set(true);
           this.errorMessage.set('');
@@ -387,10 +547,81 @@ export class SurahDetails implements OnInit {
       .subscribe((surah) => {
         this.handleSurahResponse(surah);
       });
+
+    this.route.queryParamMap
+      .pipe(
+        map((params) => {
+          const value = params.get('ayah');
+
+          if (value === null || !/^[1-9]\d*$/.test(value)) {
+            return null;
+          }
+
+          const ayahNumber = Number(value);
+
+          return Number.isSafeInteger(ayahNumber) ? ayahNumber : null;
+        }),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((ayahNumber) => {
+        this.requestedAyahNumber.set(ayahNumber);
+      });
   }
 
+  private navigateToRequestedAyah(): void {
+    const surah = this.surah();
+    const ayahNumber = this.requestedAyahNumber();
+
+    if (!surah || !ayahNumber || this.pendingAyahNavigation) {
+      return;
+    }
+
+    const ayah = surah.ayahs.find((item) => item.numberInSurah === ayahNumber);
+
+    if (!ayah) {
+      this.requestedAyahNumber.set(null);
+      return;
+    }
+
+    this.pendingAyahNavigation = true;
+
+    if (this.readingMode() === 'mushaf') {
+      this.currentMushafPage.set(ayah.page);
+      this.saveCurrentMushafPage(ayah.page);
+    }
+
+    this.selectAyah(surah.number, ayah.numberInSurah, ayah.text, ayah.page);
+
+    afterNextRender(
+      () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const target = document.getElementById(`ayah-${surah.number}-${ayahNumber}`);
+
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest',
+              });
+            }
+
+            this.pendingAyahNavigation = false;
+            this.requestedAyahNumber.set(null);
+          });
+        });
+      },
+      { injector: this.injector },
+    );
+  }
   @HostListener('window:keydown.escape')
   onEscape(): void {
+    if (this.isTafsirOpen()) {
+      this.closeAyahTafsir();
+      return;
+    }
+
     if (this.isMushafIndexOpen()) {
       this.closeMushafIndex();
       return;
@@ -440,6 +671,7 @@ export class SurahDetails implements OnInit {
   }
 
   setReadingMode(mode: ReadingMode): void {
+    this.clearSelectedAyah();
     this.closeMushafIndex();
     this.readingMode.set(mode);
     this.saveReadingMode(mode);
@@ -460,6 +692,7 @@ export class SurahDetails implements OnInit {
   }
 
   goToMushafPage(page: number): void {
+    this.clearSelectedAyah();
     if (!Number.isInteger(page) || page < 1 || page > 604) {
       return;
     }
@@ -616,6 +849,7 @@ export class SurahDetails implements OnInit {
   }
 
   private handleSurahResponse(surah: QuranSurahDetails | null): void {
+    this.clearSelectedAyah();
     this.surah.set(surah);
 
     if (surah) {
@@ -841,5 +1075,119 @@ export class SurahDetails implements OnInit {
 
   formatAyahText(text: string): string {
     return text.replace(/(۝[٠-٩]+)/g, '$1\u00A0');
+  }
+
+  private formatAyahForSharing(text: string): string {
+    return text.replace(/\u06DD[\u0660-\u0669\u0030-\u0039]*/g, '').trim();
+  }
+
+  selectAyah(surahNumber: number, ayahNumber: number, text: string, page: number): void {
+    const current = this.selectedAyah();
+
+    if (current?.surahNumber === surahNumber && current.ayahNumber === ayahNumber) {
+      this.clearSelectedAyah();
+      return;
+    }
+
+    this.selectedAyah.set({
+      surahNumber,
+      ayahNumber,
+      text,
+      page,
+    });
+
+    if (this.isFocusMode()) {
+      this.hideFocusControls();
+    }
+  }
+
+  clearSelectedAyah(): void {
+    this.selectedAyah.set(null);
+  }
+
+  isAyahSelected(surahNumber: number, ayahNumber: number): boolean {
+    const selected = this.selectedAyah();
+
+    return selected?.surahNumber === surahNumber && selected.ayahNumber === ayahNumber;
+  }
+
+  async copySelectedAyah(): Promise<void> {
+    const ayah = this.selectedAyah();
+
+    if (!ayah) return;
+
+    const surahName = this.getSurahName(ayah.surahNumber);
+
+    const text = `${ayah.text}\n[سورة ${surahName} - الآية ${ayah.ayahNumber}]`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+
+      this.toastService.success('تم نسخ الآية بنجاح');
+    } catch {
+      this.toastService.error('تعذّر نسخ الآية، حاول مرة أخرى');
+    }
+  }
+
+  saveSelectedAyah(): void {
+    const ayah = this.selectedAyah();
+
+    if (!ayah) return;
+
+    const surahName = this.getSurahName(ayah.surahNumber);
+
+    const isAdded = this.favoritesService.toggleFavorite(
+      createAyahFavoriteItem({
+        surahNumber: ayah.surahNumber,
+        surahName: this.getSurahName(ayah.surahNumber),
+        ayahNumber: ayah.ayahNumber,
+        text: ayah.text,
+        page: ayah.page,
+      }),
+    );
+
+    if (isAdded) {
+      this.toastService.success('تم حفظ الآية في المفضلة');
+    } else {
+      this.toastService.info('تمت إزالة الآية من المفضلة');
+    }
+  }
+
+  async shareSelectedAyah(): Promise<void> {
+    const ayah = this.selectedAyah();
+
+    if (!ayah) return;
+
+    const ayahText = this.formatAyahForSharing(ayah.text);
+
+    const surahName = this.getSurahName(ayah.surahNumber);
+
+    const text = [`﴿ ${ayahText} ﴾`, '', `سورة ${surahName} - الآية (${ayah.ayahNumber})`].join(
+      '\n',
+    );
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'آية من القرآن الكريم | قُرب',
+          text,
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to share ayah.');
+        }
+      }
+
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      console.error('Failed to copy share text.');
+    }
+  }
+  getSurahName(surahNumber: number): string {
+    return this.allSurahs().find((surah) => surah.number === surahNumber)?.name ?? '';
   }
 }

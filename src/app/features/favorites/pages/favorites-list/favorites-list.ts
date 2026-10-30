@@ -25,6 +25,10 @@ export class FavoritesList {
   private readonly favoritesService = inject(FavoritesService);
   private readonly toastService = inject(HotToastService);
 
+  ngOnInit(): void {
+    this.favoritesService.migrateLegacyAyahFavorites();
+  }
+
   readonly activeFilter = signal<FavoritesFilter>('all');
   readonly searchTerm = signal('');
   readonly copiedFavoriteId = signal('');
@@ -171,5 +175,46 @@ export class FavoritesList {
       .replace(/[ٱأإآ]/g, 'ا')
       .replace(/ى/g, 'ي')
       .trim();
+  }
+
+  getFavoriteRoute(item: FavoriteItem): string {
+    if (item.type !== 'ayah') {
+      return item.route ?? '/favorites';
+    }
+
+    const match = /^ayah-(\d+)-(\d+)$/.exec(item.id);
+
+    if (!match) {
+      return item.route ?? '/favorites';
+    }
+
+    return `/quran/${Number(match[1])}`;
+  }
+
+  getFavoriteQueryParams(item: FavoriteItem): { ayah: number } | null {
+    if (item.type !== 'ayah') {
+      return null;
+    }
+
+    const match = /^ayah-(\d+)-(\d+)$/.exec(item.id);
+
+    if (!match) {
+      return null;
+    }
+
+    const surahNumber = Number(match[1]);
+    const ayahNumber = Number(match[2]);
+
+    if (
+      !Number.isInteger(surahNumber) ||
+      surahNumber < 1 ||
+      surahNumber > 114 ||
+      !Number.isSafeInteger(ayahNumber) ||
+      ayahNumber < 1
+    ) {
+      return null;
+    }
+
+    return { ayah: ayahNumber };
   }
 }

@@ -42,3 +42,16 @@ export interface OfficialQuranAyah {
   aya_text_unicode: string;
   aya_text_emlaey: string;
 }
+
+export interface SelectedQuranAyah {
+  surahNumber: number;
+  ayahNumber: number;
+  text: string;
+  page: number;
+}
+
+export interface QuranTafsirAyah {
+  sura_no: number;
+  aya_no: number;
+  aya_tafseer: string;
+}

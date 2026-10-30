@@ -214,7 +214,11 @@
                 </div>
 
                 @if (item.route) {
-                  <a [routerLink]="item.route" class="open-button">
+                  <a
+                    [routerLink]="getFavoriteRoute(item)"
+                    [queryParams]="getFavoriteQueryParams(item)"
+                    class="open-button"
+                  >
                     فتح العنصر
                     <span aria-hidden="true">↗</span>
                   </a>

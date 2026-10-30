@@ -764,13 +764,24 @@
   }
 
   .surah-card-footer {
-    gap: 0.35rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .open-surah-link {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0.4rem 0.35rem;
+    font-size: 0.6875rem;
+    text-align: center;
   }
 
-  .open-surah-link {
-    min-height: 34px;
-    padding: 0.4rem 0.55rem;
-    font-size: 0.6875rem;
+  .surah-card-footer app-favorite-button {
+    display: block;
+    min-width: 0;
+    width: 100%;
   }
 
   .open-surah-link svg {

@@ -273,9 +273,32 @@
             @if (readingMode() === 'surah') {
               @for (ayah of displayAyahs(); track ayah.number) {
                 <p class="ayah-line">
-                  <span class="ayah-text">{{ formatAyahText(ayah.text) }}</span>
+                  <span
+                    class="ayah-text selectable-ayah"
+                    [id]="'ayah-' + currentSurah.number + '-' + ayah.numberInSurah"
+                    [class.is-selected]="isAyahSelected(currentSurah.number, ayah.numberInSurah)"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-pressed]="isAyahSelected(currentSurah.number, ayah.numberInSurah)"
+                    [attr.aria-label]="'تحديد الآية ' + ayah.numberInSurah"
+                    (click)="
+                      selectAyah(currentSurah.number, ayah.numberInSurah, ayah.text, ayah.page)
+                    "
+                    (keydown.enter)="
+                      selectAyah(currentSurah.number, ayah.numberInSurah, ayah.text, ayah.page)
+                    "
+                    (keydown.space)="
+                      $event.preventDefault();
+                      selectAyah(currentSurah.number, ayah.numberInSurah, ayah.text, ayah.page)
+                    "
+                  >
+                    {{ formatAyahText(ayah.text) }}
+                  </span>
+
                   @if (!isOfficialQuran()) {
-                    <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                    <span class="ayah-number">
+                      {{ ayah.numberInSurah }}
+                    </span>
                   }
                 </p>
               }
@@ -296,10 +319,30 @@
                 }
 
                 <span class="ayah-line">
-                  <span class="ayah-text">{{ formatAyahText(ayah.text) }}</span>
+                  <span
+                    class="ayah-text selectable-ayah"
+                    [id]="'ayah-' + ayah.surahNumber + '-' + ayah.numberInSurah"
+                    [class.is-selected]="isAyahSelected(ayah.surahNumber, ayah.numberInSurah)"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-pressed]="isAyahSelected(ayah.surahNumber, ayah.numberInSurah)"
+                    [attr.aria-label]="'تحديد الآية ' + ayah.numberInSurah"
+                    (click)="selectAyah(ayah.surahNumber, ayah.numberInSurah, ayah.text, ayah.page)"
+                    (keydown.enter)="
+                      selectAyah(ayah.surahNumber, ayah.numberInSurah, ayah.text, ayah.page)
+                    "
+                    (keydown.space)="
+                      $event.preventDefault();
+                      selectAyah(ayah.surahNumber, ayah.numberInSurah, ayah.text, ayah.page)
+                    "
+                  >
+                    {{ formatAyahText(ayah.text) }}
+                  </span>
 
                   @if (!isOfficialQuran()) {
-                    <span class="ayah-number">{{ ayah.numberInSurah }}</span>
+                    <span class="ayah-number">
+                      {{ ayah.numberInSurah }}
+                    </span>
                   }
                 </span>
               }
@@ -505,6 +548,155 @@
           }
         </div>
       </aside>
+    </div>
+  }
+
+  @if (selectedAyah(); as ayah) {
+    <div
+      class="ayah-actions-toolbar"
+      dir="rtl"
+      role="toolbar"
+      aria-label="إجراءات الآية المحددة"
+      (pointerdown)="$event.stopPropagation()"
+      (pointerup)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="ayah-actions-toolbar__info">
+        <span class="ayah-actions-toolbar__indicator"></span>
+        <span> {{ getSurahName(ayah.surahNumber) }} · الآية {{ ayah.ayahNumber }} </span>
+      </div>
+
+      <div class="ayah-actions-toolbar__content">
+        <div class="ayah-actions-toolbar__buttons">
+          <button
+            type="button"
+            class="tafsir-action"
+            title="تفسير الآية"
+            (click)="openAyahTafsir()"
+          >
+            <svg lucideBookOpen aria-hidden="true"></svg>
+            <span>تفسير</span>
+          </button>
+
+          <button type="button" title="مشاركة الآية" (click)="shareSelectedAyah()">
+            <svg lucideShare2 aria-hidden="true"></svg>
+            <span>مشاركة</span>
+          </button>
+
+          <button type="button" title="نسخ الآية" (click)="copySelectedAyah()">
+            <svg lucideCopy aria-hidden="true"></svg>
+            <span>نسخ</span>
+          </button>
+
+          <button
+            type="button"
+            [class.ayah-action-saved]="isSelectedAyahSaved()"
+            [attr.aria-pressed]="isSelectedAyahSaved()"
+            [attr.title]="isSelectedAyahSaved() ? 'إلغاء حفظ الآية' : 'حفظ الآية'"
+            (click)="saveSelectedAyah()"
+          >
+            <svg lucideBookmark aria-hidden="true"></svg>
+            <span>{{ isSelectedAyahSaved() ? 'محفوظة' : 'حفظ' }}</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="ayah-actions-toolbar__close"
+          aria-label="إغلاق إجراءات الآية"
+          title="إغلاق"
+          (click)="clearSelectedAyah()"
+        >
+          <svg lucideX aria-hidden="true"></svg>
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (isTafsirOpen()) {
+    <div
+      class="tafsir-layer"
+      dir="rtl"
+      (pointerdown)="$event.stopPropagation()"
+      (pointerup)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        class="tafsir-backdrop"
+        aria-label="إغلاق التفسير"
+        (click)="closeAyahTafsir()"
+      ></button>
+
+      <section
+        class="tafsir-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tafsir-sheet-title"
+      >
+        <div class="tafsir-sheet__handle"></div>
+
+        <header class="tafsir-sheet__header">
+          <div>
+            <span class="tafsir-sheet__eyebrow"> من تفسير مجمع الملك فهد </span>
+
+            <h2 id="tafsir-sheet-title">التفسير الميسر</h2>
+
+            @if (tafsirAyah(); as ayah) {
+              <p>
+                {{ getSurahName(ayah.surahNumber) }}
+                · الآية {{ ayah.ayahNumber }}
+              </p>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="tafsir-sheet__close"
+            aria-label="إغلاق التفسير"
+            (click)="closeAyahTafsir()"
+          >
+            <svg lucideX aria-hidden="true"></svg>
+          </button>
+        </header>
+
+        <div class="tafsir-sheet__body">
+          @if (isTafsirLoading()) {
+            <div class="tafsir-sheet__state" role="status">جارٍ تحميل التفسير...</div>
+          } @else if (tafsirError()) {
+            <div class="tafsir-sheet__state" role="alert">
+              <p>{{ tafsirError() }}</p>
+              <button type="button" (click)="retryAyahTafsir()">إعادة المحاولة</button>
+            </div>
+          } @else {
+            @if (tafsirAyah(); as ayah) {
+              <div class="tafsir-sheet__ayah">
+                <span class="tafsir-sheet__label">الآية الكريمة</span>
+                <p>{{ ayah.text }}</p>
+              </div>
+            }
+
+            <div class="tafsir-sheet__explanation">
+              <span class="tafsir-sheet__label">معنى الآية</span>
+
+              <p>
+                @for (part of tafsirParts(); track $index) {
+                  @if (part.isQuran) {
+                    <span class="tafsir-sheet__quran-quote">
+                      {{ part.text }}
+                    </span>
+                  } @else {
+                    <span>{{ part.text }}</span>
+                  }
+                }
+              </p>
+            </div>
+          }
+        </div>
+
+        <footer class="tafsir-sheet__footer">
+          المصدر: التفسير الميسر — مجمع الملك فهد لطباعة المصحف الشريف
+        </footer>
+      </section>
     </div>
   }
 </section>

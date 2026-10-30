@@ -1594,3 +1594,542 @@
     padding: 0.95rem 0.78rem 1.25rem;
   }
 }
+
+.selectable-ayah {
+  position: relative;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  &:hover {
+    background-color: rgba(201, 162, 39, 0.1);
+  }
+
+  &.is-selected {
+    background-color: rgba(201, 162, 39, 0.22);
+    box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selectable-ayah {
+    transition: none;
+  }
+}
+
+.ayah-actions-toolbar {
+  position: fixed;
+  z-index: 1050;
+  bottom: max(1.1rem, env(safe-area-inset-bottom));
+  left: 50%;
+
+  width: min(570px, calc(100% - 1.5rem));
+  box-sizing: border-box;
+  padding: 0.75rem 0.9rem;
+
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 18px;
+
+  background: rgba(255, 254, 250, 0.98);
+  box-shadow:
+    0 14px 40px rgba(7, 48, 36, 0.12),
+    0 3px 12px rgba(7, 48, 36, 0.04);
+
+  backdrop-filter: blur(16px);
+  font-family: var(--font-ui);
+
+  transform: translateX(-50%);
+  animation: ayahToolbarIn 0.22s ease-out both;
+}
+
+.ayah-actions-toolbar__info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  margin-bottom: 0.55rem;
+
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ayah-actions-toolbar__indicator {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+}
+
+.ayah-actions-toolbar__content {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ayah-actions-toolbar__buttons {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.ayah-actions-toolbar__buttons button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  min-height: 38px;
+  padding: 0.45rem 0.75rem;
+
+  border: 1px solid rgba(15, 61, 46, 0.09);
+  border-radius: 11px;
+
+  background: #f7f6f0;
+  color: var(--color-primary-dark);
+
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.ayah-actions-toolbar__buttons button:hover {
+  background: #e8eee6;
+  border-color: rgba(15, 61, 46, 0.15);
+  transform: translateY(-1px);
+}
+
+.ayah-actions-toolbar__buttons button svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.1;
+}
+
+.ayah-actions-toolbar__buttons .tafsir-action {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.ayah-actions-toolbar__buttons .tafsir-action:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.ayah-actions-toolbar__close {
+  flex: 0 0 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 38px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--color-primary-dark);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.ayah-actions-toolbar__close:hover {
+  background: rgba(15, 61, 46, 0.07);
+}
+
+.ayah-actions-toolbar__close svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+.ayah-actions-toolbar button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+@keyframes ayahToolbarIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (max-width: 520px) {
+  .ayah-actions-toolbar {
+    bottom: calc(1.15rem + env(safe-area-inset-bottom, 0px));
+
+    width: min(350px, calc(100% - 1.5rem));
+    max-width: 100%;
+
+    padding: 0.45rem 0.55rem;
+    border-radius: 14px;
+  }
+
+  .ayah-actions-toolbar__info {
+    margin-bottom: 0.3rem;
+    font-size: 0.69rem;
+    line-height: 1.3;
+  }
+
+  .ayah-actions-toolbar__indicator {
+    width: 5px;
+    height: 5px;
+  }
+
+  .ayah-actions-toolbar__content {
+    gap: 0.2rem;
+  }
+
+  .ayah-actions-toolbar__buttons {
+    gap: 0.2rem;
+  }
+
+  .ayah-actions-toolbar__buttons button {
+    flex: 1;
+    min-width: 0;
+    min-height: 36px;
+
+    flex-direction: row;
+    gap: 0.22rem;
+
+    padding: 0.3rem 0.25rem;
+    border-radius: 8px;
+
+    font-size: 0.64rem;
+  }
+
+  .ayah-actions-toolbar__buttons button svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .ayah-actions-toolbar__close {
+    flex: 0 0 26px;
+    width: 26px;
+    height: 36px;
+  }
+
+  .ayah-actions-toolbar__close svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 370px) {
+  .ayah-actions-toolbar {
+    width: calc(100% - 1rem);
+    padding-inline: 0.4rem;
+  }
+
+  .ayah-actions-toolbar__buttons button {
+    gap: 0.15rem;
+    padding-inline: 0.15rem;
+    font-size: 0.6rem;
+  }
+
+  .ayah-actions-toolbar__buttons button svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ayah-actions-toolbar {
+    animation: none;
+  }
+
+  .ayah-actions-toolbar button {
+    transition: none;
+  }
+}
+
+/* =========================================
+   Tafsir Bottom Sheet
+========================================= */
+
+.tafsir-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  isolation: isolate;
+  font-family: var(--font-ui);
+}
+
+.tafsir-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(5, 31, 23, 0.55);
+  cursor: pointer;
+}
+
+.tafsir-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(720px, 100%);
+  max-height: min(85dvh, 800px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-bottom: 0;
+  border-radius: 26px 26px 0 0;
+
+  background: #fffdf8;
+  box-shadow: 0 -18px 65px rgba(5, 31, 23, 0.18);
+
+  transform: translateX(-50%);
+  animation: tafsirSheetIn 0.25s ease-out both;
+}
+
+.tafsir-sheet__handle {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 4px;
+  margin: 0.7rem auto 0.3rem;
+  border-radius: 999px;
+  background: #d6d9ce;
+}
+
+.tafsir-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem 1.2rem;
+  border-bottom: 1px solid #eae9df;
+}
+
+.tafsir-sheet__eyebrow {
+  color: #9c7a22;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.tafsir-sheet__header h2 {
+  margin: 0.3rem 0;
+  color: var(--color-primary-dark);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.tafsir-sheet__header p {
+  margin: 0;
+  color: #6c7c70;
+  font-size: 0.85rem;
+}
+
+.tafsir-sheet__close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #e2e6dd;
+  border-radius: 12px;
+  background: #f6f6f0;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+}
+
+.tafsir-sheet__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tafsir-sheet__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.4rem 1.5rem 1.8rem;
+}
+
+.tafsir-sheet__label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #9c7a22;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.tafsir-sheet__ayah {
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 18px;
+  background: #f8f5e9;
+}
+
+.tafsir-sheet__ayah p {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-mushaf);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  line-height: 2.2;
+  text-align: center;
+  direction: rtl;
+}
+
+.tafsir-sheet__explanation p {
+  margin: 0;
+  color: #234336;
+  font-family: var(--font-ui);
+  font-size: 1.03rem;
+  line-height: 2.2;
+  overflow-wrap: anywhere;
+}
+
+.tafsir-sheet__quran-quote {
+  color: #0b513b;
+  font-family: var(--font-mushaf);
+  font-size: 1.25em;
+  line-height: inherit;
+}
+
+.tafsir-sheet__footer {
+  flex: 0 0 auto;
+  padding: 0.9rem 1.5rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid #eae9df;
+  color: #7a887d;
+  background: #fffdf8;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.tafsir-sheet__state {
+  padding: 2rem 1rem;
+  color: #536b5c;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.tafsir-sheet__state button {
+  margin-top: 0.8rem;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: white;
+  font-family: var(--font-ui);
+  cursor: pointer;
+}
+
+@keyframes tafsirSheetIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (max-width: 520px) {
+  .tafsir-sheet {
+    max-height: 88dvh;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .tafsir-sheet__header {
+    padding: 0.8rem 1rem 1rem;
+  }
+
+  .tafsir-sheet__header h2 {
+    font-size: 1.25rem;
+  }
+
+  .tafsir-sheet__body {
+    padding: 1rem 1rem 1.4rem;
+  }
+
+  .tafsir-sheet__ayah {
+    padding: 0.9rem 0.8rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .tafsir-sheet__ayah p {
+    font-size: 1.6rem;
+    line-height: 2;
+  }
+
+  .tafsir-sheet__explanation p {
+    font-size: 0.96rem;
+    line-height: 2;
+  }
+
+  .tafsir-sheet__footer {
+    padding-inline: 0.8rem;
+    font-size: 0.67rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tafsir-sheet {
+    animation: none;
+  }
+}
+
+.ayah-actions-toolbar__buttons button.ayah-action-saved {
+  color: #0b6b4e;
+  background: rgba(11, 107, 78, 0.09);
+  border-color: rgba(11, 107, 78, 0.2);
+
+  svg {
+    fill: rgba(11, 107, 78, 0.16);
+    stroke: #0b6b4e;
+  }
+
+  &:hover {
+    background: rgba(11, 107, 78, 0.15);
+  }
+}
+
+.selectable-ayah {
+  scroll-margin-block: 120px;
+}

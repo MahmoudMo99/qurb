@@ -27,6 +27,7 @@ import { QuranAyah, QuranSurahDetails } from '../../../../core/models/quran.mode
 import { AzkarService } from '../../../../core/services/azkar';
 import { HadithService } from '../../../../core/services/hadith';
 import { QuranService } from '../../../../core/services/quran';
+import { createAyahFavoriteItem } from '../../../../core/utils/ayah-favorite';
 import { FavoriteButton } from '../../../../shared/components/favorite-button/favorite-button';
 import { PageState } from '../../../../shared/components/page-state/page-state';
 import { SkeletonCard } from '../../../../shared/components/skeleton-card/skeleton-card';
@@ -190,14 +191,13 @@ export class DailyContent {
   }
 
   getDailyAyahFavoriteItem(ayah: DailyAyah): Omit<FavoriteItem, 'createdAt'> {
-    return {
-      id: `ayah-${ayah.surah.number}-${ayah.ayah.numberInSurah}`,
-      type: 'ayah',
-      title: `آية من ${ayah.surah.name}`,
-      subtitle: `آية ${ayah.ayah.numberInSurah}`,
-      content: ayah.ayah.text,
-      route: `/quran/${ayah.surah.number}`,
-    };
+    return createAyahFavoriteItem({
+      surahNumber: ayah.surah.number,
+      surahName: ayah.surah.name,
+      ayahNumber: ayah.ayah.numberInSurah,
+      text: ayah.ayah.text,
+      page: ayah.ayah.page,
+    });
   }
 
   getDailyHadithFavoriteItem(hadith: DailyHadith): Omit<FavoriteItem, 'createdAt'> {
